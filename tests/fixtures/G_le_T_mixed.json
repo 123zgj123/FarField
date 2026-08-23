@@ -1,0 +1,63 @@
+{
+  "snapshot_id": "citefix-e0-full-le-2017",
+  "k": 2,
+  "T": 2017,
+  "derived_from": "citefix-e0-full",
+  "nodes": [
+    {
+      "id": "mm_s",
+      "title": "mm seed paper",
+      "year": 2015
+    },
+    {
+      "id": "mm_b",
+      "title": "mm neighborhood B",
+      "year": 2015
+    },
+    {
+      "id": "mm_c",
+      "title": "mm neighborhood C",
+      "year": 2016
+    },
+    {
+      "id": "mm_d",
+      "title": "mm distant D",
+      "year": 2016
+    },
+    {
+      "id": "mm_e",
+      "title": "mm distant leaf E",
+      "year": 2016
+    },
+    {
+      "id": "mm_f",
+      "title": "mm counterexample F",
+      "year": 2016
+    }
+  ],
+  "edges": [
+    [
+      "mm_s",
+      "mm_b"
+    ],
+    [
+      "mm_b",
+      "mm_c"
+    ],
+    [
+      "mm_c",
+      "mm_d"
+    ],
+    [
+      "mm_c",
+      "mm_e"
+    ],
+    [
+      "mm_d",
+      "mm_f"
+    ]
+  ],
+  "counterexample_nodes": [
+    "mm_f"
+  ]
+}

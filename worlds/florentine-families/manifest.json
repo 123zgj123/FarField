@@ -1,0 +1,21 @@
+{
+  "id": "florentine-families",
+  "title": "Padgett Florentine families (business ties)",
+  "source": "J. F. Padgett & C. K. Ansell, Robust Action and the Rise of the Medici, 1400-1434, American Journal of Sociology 98:1259-1319 (1993). 15-family business-tie graph.",
+  "retrieved_at": "2026-08-18",
+  "domains": [
+    "graph",
+    "network",
+    "alliance",
+    "florence",
+    "family",
+    "renaissance"
+  ],
+  "files": [
+    "graph.json"
+  ],
+  "role": "world",
+  "schema": "undirected_named_graph",
+  "load_hint": "payload = json.loads(Path('data/graph.json').read_text(encoding='utf-8')); nodes = payload['nodes']; edges = payload['edges']  # undirected name pairs",
+  "digest": "8af9691f4d18d44ce6cea31217846632b0bd9192f2a6d1869cce533879dfa8c7"
+}

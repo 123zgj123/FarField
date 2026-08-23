@@ -1,0 +1,20 @@
+{
+  "id": "fisher-iris",
+  "title": "Fisher iris measurements (1936)",
+  "source": "R. A. Fisher, The use of multiple measurements in taxonomic problems, Annals of Eugenics 7:179-188 (1936). 150 rows × 4 measurements + species. CSV via mwaskom/seaborn-data, frozen 2026-08-18.",
+  "retrieved_at": "2026-08-18",
+  "domains": [
+    "iris",
+    "flower",
+    "morphometric",
+    "table",
+    "numeric"
+  ],
+  "files": [
+    "iris.json"
+  ],
+  "role": "world",
+  "schema": "numeric_table",
+  "load_hint": "table = json.loads(Path('data/iris.json').read_text(encoding='utf-8')); rows = table['rows']  # dicts with sepal_length, sepal_width, petal_length, petal_width, species",
+  "digest": "e2c14d306e312fd6ef03d8ebc910d41cf45748b65b4c1ca6858d0d66af306a40"
+}

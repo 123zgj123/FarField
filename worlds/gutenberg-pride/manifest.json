@@ -1,0 +1,27 @@
+{
+  "id": "gutenberg-pride",
+  "title": "Pride and Prejudice (Gutenberg 1342), first 50000 official tokens",
+  "source": "Jane Austen, Pride and Prejudice, Project Gutenberg ebook 1342 (public domain). Host-retrieved 2026-08-18 from https://www.gutenberg.org/files/1342/1342-0.txt; slice is the official file's first 50000 whitespace tokens.",
+  "source_url": "https://www.gutenberg.org/files/1342/1342-0.txt",
+  "source_digest": "a5666f87abf2cbfdaa27ea8c73bd284da9649b9a2ab27b4e6c8f6aeab1bd1c88",
+  "retrieved_at": "2026-08-18",
+  "domains": [
+    "prose",
+    "english",
+    "narrative"
+  ],
+  "files": [
+    "keys.json",
+    "origin.json",
+    "stream.json",
+    "text.txt"
+  ],
+  "role": "world",
+  "schema": "text_stream",
+  "load_hint": "text = Path('data/text.txt').read_text(encoding='utf-8'); tokens = json.loads(Path('data/stream.json').read_text(encoding='utf-8'))['tokens']; keys = json.loads(Path('data/keys.json').read_text(encoding='utf-8'))['keys']",
+  "slice_rule": {
+    "kind": "first_tokens",
+    "n": 50000
+  },
+  "digest": "9d02de9f517ce71c30c03cdfe20e25516bbbe3c3a0871ac8b72f1e3da1b428f9"
+}

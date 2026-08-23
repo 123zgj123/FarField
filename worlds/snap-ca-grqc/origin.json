@@ -1,0 +1,21 @@
+{
+  "url": "https://snap.stanford.edu/data/ca-GrQc.txt.gz",
+  "retrieved_at": "2026-08-18",
+  "source_digest": "a254442cdf5d684712578b630c2e0d7543518ab154ef2341cabb607572ce7230",
+  "text_digest": "f8ce6e931e068b878044b783da99ef603f566c87bcbce7991cd53720879f1660",
+  "slice_rule": {
+    "kind": "first_edges",
+    "n": 10000
+  },
+  "parent": {
+    "n": 5241,
+    "m": 14484,
+    "listed_m": 28980,
+    "self_loops": 12,
+    "format": "snap_edgelist"
+  },
+  "slice": {
+    "n": 4309,
+    "m": 10000
+  }
+}

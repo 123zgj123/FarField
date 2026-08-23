@@ -1,0 +1,28 @@
+{
+  "id": "snap-ca-grqc",
+  "title": "SNAP ca-GrQc collaboration, first 10000 official edges",
+  "source": "J. Leskovec, J. Kleinberg and C. Faloutsos, Graph Evolution: Densification and Shrinking Diameters, ACM TKDD 1(1), 2007. SNAP ca-GrQc (Arxiv GR-QC coauthorship). Host-retrieved 2026-08-18 from https://snap.stanford.edu/data/ca-GrQc.txt.gz; slice is the official listing's first 10000 unique undirected edges.",
+  "source_url": "https://snap.stanford.edu/data/ca-GrQc.txt.gz",
+  "source_digest": "a254442cdf5d684712578b630c2e0d7543518ab154ef2341cabb607572ce7230",
+  "retrieved_at": "2026-08-18",
+  "domains": [
+    "graph",
+    "network",
+    "connectivity",
+    "collaboration",
+    "arxiv",
+    "snap"
+  ],
+  "files": [
+    "graph.json",
+    "origin.json"
+  ],
+  "role": "world",
+  "schema": "undirected_graph",
+  "load_hint": "payload = json.loads(Path('data/graph.json').read_text(encoding='utf-8')); nodes = payload['nodes']; edges = payload['edges']  # undirected int pairs; attested SNAP prefix, do not fetch",
+  "slice_rule": {
+    "kind": "first_edges",
+    "n": 10000
+  },
+  "digest": "72c0d4d4e48561ab8599dbc9dcc50cb4e5b92f009b1e7f854490cb0eb3cf126b"
+}

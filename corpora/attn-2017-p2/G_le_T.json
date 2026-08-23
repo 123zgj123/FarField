@@ -1,0 +1,6130 @@
+{
+  "snapshot_id": "attn-2017-p2-ba4acb36e77b-le-2017",
+  "k": 2,
+  "T": 2017,
+  "derived_from": "attn-2017-p2-ba4acb36e77b",
+  "nodes": [
+    {
+      "id": "openalex:W1510835000",
+      "title": "Learning to predict where humans look",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W1533861849",
+      "title": "Understanding the difficulty of training deep feedforward neural networks",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W1566289585",
+      "title": "Aligning Books and Movies: Towards Story-Like Visual Explanations by Watching Movies and Reading Books",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1586939924",
+      "title": "Describing Videos by Exploiting Temporal Structure",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1663984431",
+      "title": "Advances in natural language processing",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1731081199",
+      "title": "Domain-Adversarial Training of Neural Networks",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W1816313093",
+      "title": "Neural Machine Translation of Rare Words with Subword Units",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W1832693441",
+      "title": "Convolutional Neural Networks for Sentence Classification",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W1884191083",
+      "title": "Brain tumor segmentation with Deep Neural Networks",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W1885185971",
+      "title": "Image Super-Resolution Using Deep Convolutional Networks",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1895577753",
+      "title": "Show and tell: A neural image caption generator",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1902237438",
+      "title": "Effective Approaches to Attention-based Neural Machine Translation",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1905882502",
+      "title": "Deep visual-semantic alignments for generating image descriptions",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1932198206",
+      "title": "Deep neural networks are easily fooled: High confidence predictions for unrecognizable images",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1940872118",
+      "title": "Bidirectional LSTM-CRF Models for Sequence Tagging",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1969258103",
+      "title": "Modeling the role of salience in the allocation of overt visual attention",
+      "year": 2002
+    },
+    {
+      "id": "openalex:W1985904252",
+      "title": "Quantifying the contribution of low-level saliency to human eye movements in dynamic scenes",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W1987794317",
+      "title": "Object-based visual attention for computer vision",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W1993254594",
+      "title": "Eye movements and perception: A selective review",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W1999135570",
+      "title": "Neural correlates of attention in primate visual cortex",
+      "year": 2001
+    },
+    {
+      "id": "openalex:W2000617596",
+      "title": "Eye movements and the control of actions in everyday life",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2007339694",
+      "title": "The MNIST Database of Handwritten Digit Images for Machine Learning Research [Best of the Web]",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2008359794",
+      "title": "WM-DOVA maps for accurate polyp highlighting in colonoscopy: Validation vs. saliency maps from physicians",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2010931698",
+      "title": "The brain circuitry of attention",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2011826874",
+      "title": "The 35th Sir Frederick Bartlett Lecture: Eye movements and attention in reading, scene perception, and visual search",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2016053056",
+      "title": "Large-Scale Video Classification with Convolutional Neural Networks",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2016927150",
+      "title": "Top-down search strategies cannot override attentional capture",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2019515298",
+      "title": "Of bits and wows: A Bayesian theory of surprise with applications to attention",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2022508996",
+      "title": "Learning Hierarchical Features for Scene Labeling",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2022732461",
+      "title": "Human gaze control during real-world scene perception",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W2032007016",
+      "title": "Quantitative Analysis of Human-Model Agreement in Visual Saliency Modeling: A Comparative Study",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2033710484",
+      "title": "Visual search: A retrospective",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2034261125",
+      "title": "Attention capture by faces",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2038533067",
+      "title": "A theory of eye movements during target acquisition.",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2039934771",
+      "title": "The where, what and when of gaze allocation in the lab and the natural environment",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2040253108",
+      "title": "The central fixation bias in scene viewing: Selecting an optimal viewing position independently of motor biases and image feature distributions",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2042379996",
+      "title": "Attention and choice: A review on eye movements in decision making",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2046574558",
+      "title": "A Common Neural Mechanism for Preventing and Terminating the Allocation of Attention",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2046863527",
+      "title": "Modeling attention to salient proto-objects",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2049012614",
+      "title": "Attention and Visual Memory in Visualization and Computer Graphics",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2049579898",
+      "title": "Optimal eye movement strategies in visual search",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W2053054573",
+      "title": "A Neurodynamical cortical model of visual attention and invariant object recognition",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W2054802006",
+      "title": "A saliency-based search mechanism for overt and covert shifts of visual attention",
+      "year": 2000
+    },
+    {
+      "id": "openalex:W2055583961",
+      "title": "Detection of emotional faces: Salient physical features guide effective visual search.",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2057175746",
+      "title": "Shape matching and object recognition using shape contexts",
+      "year": 2002
+    },
+    {
+      "id": "openalex:W2062432103",
+      "title": "Edge and line oriented contour detection: State of the art",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2070645165",
+      "title": "Realistic avatar eye and head animation using a neurobiological model of visual attention",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2072128103",
+      "title": "Learning Deep Architectures for AI",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2073767010",
+      "title": "Objects predict fixations better than early saliency",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2076063813",
+      "title": "Deep learning in neural networks: An overview",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2081913479",
+      "title": "Eye guidance in natural vision: Reinterpreting salience",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2082694050",
+      "title": "Scene context guides eye movements during visual search",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W2091005670",
+      "title": "Task-demands can immediately reverse the effects of sensory-driven saliency in complex visual stimuli",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2097117768",
+      "title": "Going deeper with convolutions",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2097295641",
+      "title": "Quantifying center bias of observers in free viewing of dynamic natural scenes",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2097998348",
+      "title": "Random search for hyper-parameter optimization",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2098353881",
+      "title": "Representing multiple objects as an ensemble enhances visual cognition",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2098702446",
+      "title": "A Novel Multiresolution Spatiotemporal Saliency Detection Model and Its Applications in Image and Video Compression",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2099471712",
+      "title": "GAN（Generative Adversarial Nets）",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2100618994",
+      "title": "Gaze-based interaction for semi-automatic photo cropping",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2100664567",
+      "title": "On Using Very Large Target Vocabulary for Neural Machine Translation",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2102605133",
+      "title": "Rich Feature Hierarchies for Accurate Object Detection and Semantic Segmentation",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2102770572",
+      "title": "Top-down versus bottom-up attentional control: a failed theoretical dichotomy",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2105454024",
+      "title": "Segmenting Salient Objects from Images and Videos",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2106411961",
+      "title": "Algorithms for Hyper-Parameter Optimization",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2107032718",
+      "title": "Fast saccades toward faces: Face detection in just 100 ms",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2107363596",
+      "title": "A framework for visual saliency detection with applications to image thumbnailing",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2110745711",
+      "title": "Arousal-Biased Competition in Perception and Memory",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2112796928",
+      "title": "Gradient-based learning applied to document recognition",
+      "year": 1998
+    },
+    {
+      "id": "openalex:W2114876288",
+      "title": "Attention, Intention, and Priority in the Parietal Lobe",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2115569429",
+      "title": "Differential Attention-Dependent Response Modulation across Cell Classes in Macaque Visual Area V4",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2115733720",
+      "title": "One-shot learning of object categories",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2116783544",
+      "title": "Goal-Related Activity in V4 during Free Viewing Visual Search",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W2117130368",
+      "title": "A unified architecture for natural language processing",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2117242469",
+      "title": "What can saliency models predict about eye movements? Spatial and sequential aspects of fixations during encoding and recognition",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2119228922",
+      "title": "Visual correlates of fixation selection: effects of scale and time",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2119577735",
+      "title": "Clustering of Gaze During Dynamic Scene Viewing is Predicted by Motion",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2120615054",
+      "title": "A Convolutional Neural Network for Modelling Sentences",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2120779958",
+      "title": "Vision, eye movements, and natural behavior",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2121947860",
+      "title": "Faces and text attract gaze independent of the task: Experimental data and computer model",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2121995821",
+      "title": "How fast can you change your mind? The speed of top-down guidance in visual search",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2125447031",
+      "title": "Computational Generation of Referring Expressions: A Survey",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2126712529",
+      "title": "Norepinephrine ignites local hotspots of neuronal excitation: How arousal amplifies selectivity in perception and memory",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2127807804",
+      "title": "Rapid Biologically-Inspired Scene Classification Using Features Shared with Visual Attention",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2130184867",
+      "title": "Automatic Foveation for Video Compression Using a Neurobiological Model of Visual Attention",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2133564696",
+      "title": "Neural Machine Translation by Jointly Learning to Align and Translate",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2133589685",
+      "title": "SUN: A Bayesian framework for saliency using natural statistics",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2135957164",
+      "title": "Graph-Based Visual Saliency",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2136869398",
+      "title": "Modeling the influence of task on attention",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2136869907",
+      "title": "Deficits in saccade target selection after inactivation of superior colliculus",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2136922672",
+      "title": "A Fast Learning Algorithm for Deep Belief Nets",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2138608979",
+      "title": "On the plausibility of the discriminant center-surround hypothesis for visual saliency",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2138621090",
+      "title": "Dimensionality Reduction by Learning an Invariant Mapping",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2139734816",
+      "title": "Task and context determine where you look",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2141125852",
+      "title": "Multi-column deep neural networks for image classification",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2141565638",
+      "title": "Gaze allocation in a dynamic situation: Effects of social status and speaking",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2143492062",
+      "title": "Search Goal Tunes Visual Features Optimally",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2143994941",
+      "title": "ATTENTIONAL MODULATION OF VISUAL PROCESSING",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2144499799",
+      "title": "Supervised Sequence Labelling with Recurrent Neural Networks",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2144764737",
+      "title": "Computational modelling of visual attention",
+      "year": 2001
+    },
+    {
+      "id": "openalex:W2145227859",
+      "title": "An Integrated Model of Top-Down and Bottom-Up Attention for Optimizing Detection Speed",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2145287260",
+      "title": "DeepFace: Closing the Gap to Human-Level Performance in Face Verification",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2145339207",
+      "title": "Human-level control through deep reinforcement learning",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2146103513",
+      "title": "Saliency Detection: A Spectral Residual Approach",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2147235552",
+      "title": "The Cognitive Science of Visual‐Spatial Displays: Implications for Design",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2151152593",
+      "title": "The composite face illusion: A whole window into our understanding of holistic face perception",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2152233525",
+      "title": "Visual Saliency Based on Scale-Space Analysis in the Frequency Domain",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2153273516",
+      "title": "Spatiotemporal sensitivity and visual attention for efficient rendering of dynamic environments",
+      "year": 2001
+    },
+    {
+      "id": "openalex:W2153839765",
+      "title": "Modeling Search for People in 900 Scenes: A combined source model of eye guidance.",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2154372982",
+      "title": "Changing your mind: On the contributions of top-down and bottom-up guidance in visual search for feature singletons.",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W2154796476",
+      "title": "The E-Z Reader model of eye-movement control in reading: Comparisons to other models",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W2155968351",
+      "title": "Deep Reinforcement Learning with Double Q-Learning",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2156163116",
+      "title": "Best practices for convolutional neural networks applied to visual document analysis",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W2156232986",
+      "title": "Mechanisms for Allocating Auditory Attention: An Auditory Saliency Map",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W2156387975",
+      "title": "Deep Sparse Rectifier Neural Networks",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2157364932",
+      "title": "Learning a Similarity Metric Discriminatively, with Application to Face Verification",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W2161336407",
+      "title": "Moving Sensory Adaptation beyond Suppressive Effects in Single Neurons",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2161381512",
+      "title": "Learning and Transferring Mid-level Image Representations Using Convolutional Neural Networks",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2162095066",
+      "title": "A Taxonomy of External and Internal Attention",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2162216530",
+      "title": "A coherent computational approach to model bottom-up visual attention",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2163922914",
+      "title": "Representation Learning: A Review and New Perspectives",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2164720308",
+      "title": "Spatiotemporal Saliency in Dynamic Scenes",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2165947725",
+      "title": "Interesting objects are visually salient",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2170161511",
+      "title": "Feature combination strategies for saliency-based visual attention systems",
+      "year": 2001
+    },
+    {
+      "id": "openalex:W2170180978",
+      "title": "Modeling drivers' visual attention allocation while interacting with in-vehicle technologies.",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2170457011",
+      "title": "Selecting and perceiving multiple visual objects",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2180612164",
+      "title": "The Limitations of Deep Learning in Adversarial Settings",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2183182206",
+      "title": "Region-Based Convolutional Networks for Accurate Object Detection and Segmentation",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2194187530",
+      "title": "An End-to-End Trainable Neural Network for Image-Based Sequence Recognition and Its Application to Scene Text Recognition",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2194321275",
+      "title": "Human-level concept learning through probabilistic program induction",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2211192759",
+      "title": "ABCNN: Attention-Based Convolutional Neural Network for Modeling Sentence Pairs",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2212216676",
+      "title": "SALICON: Reducing the Semantic Gap in Saliency Prediction by Adapting Deep Neural Networks",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2214802144",
+      "title": "Deeply-Recursive Convolutional Network for Image Super-Resolution",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2240067561",
+      "title": "Evaluating the Visualization of What a Deep Neural Network Has Learned",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2242218935",
+      "title": "Accurate Image Super-Resolution Using Very Deep Convolutional Networks",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2253429366",
+      "title": "Deep Convolutional Neural Networks for Computer-Aided Detection: CNN Architectures, Dataset Characteristics and Transfer Learning",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2256362396",
+      "title": "DehazeNet: An End-to-End System for Single Image Haze Removal",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2267186426",
+      "title": "Long Short-Term Memory-Networks for Machine Reading",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2285648672",
+      "title": "Nudging healthier food and beverage choices through salience and priming. Evidence from a systematic review",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2289252105",
+      "title": "Eyeriss: An Energy-Efficient Reconfigurable Accelerator for Deep Convolutional Neural Networks",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2294182682",
+      "title": "Hierarchical Image Saliency Detection on Extended CSSD",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2296283641",
+      "title": "Neural Architectures for Named Entity Recognition",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2301358467",
+      "title": "Efficient multi-scale 3D CNN with fully connected CRF for accurate brain lesion segmentation",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2302086703",
+      "title": "Image Captioning with Semantic Attention",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2307770531",
+      "title": "Stacked Hourglass Networks for Human Pose Estimation",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2310992461",
+      "title": "Brain Tumor Segmentation Using Convolutional Neural Networks in MRI Images",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2311132329",
+      "title": "Globally Normalized Transition-Based Neural Networks",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2311607323",
+      "title": "Deep learning in bioinformatics",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2327501763",
+      "title": "Listen, attend and spell: A neural network for large vocabulary conversational speech recognition",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2341282033",
+      "title": "Visual saliency does not account for eye movements during visual search in real-world scenes",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2346062110",
+      "title": "Convolutional Neural Networks for Medical Image Analysis: Full Training or Fine Tuning?",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2398833147",
+      "title": "The Role of Stimulus-Driven and Goal-Driven Control in Saccadic Visual Selection.",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2412782625",
+      "title": "DeepLab: Semantic Image Segmentation with Deep Convolutional Nets, Atrous Convolution, and Fully Connected CRFs",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2413794162",
+      "title": "A Decomposable Attention Model for Natural Language Inference",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2424778531",
+      "title": "Social LSTM: Human Trajectory Prediction in Crowded Spaces",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2463955103",
+      "title": "Show and Tell: Lessons Learned from the 2015 MSCOCO Image Captioning Challenge",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2469314752",
+      "title": "Bidirectional RNN for Medical Event Detection in Electronic Health Records",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2470673105",
+      "title": "Hierarchical Attention Networks for Document Classification",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2473418344",
+      "title": "Deep Learning with Differential Privacy",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2473930607",
+      "title": "Learning without Forgetting",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2488984245",
+      "title": "Structured prediction models for RNN based sequence labeling in clinical text",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2500751094",
+      "title": "Deep Feature Extraction and Classification of Hyperspectral Images Based on Convolutional Neural Networks",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2507009361",
+      "title": "Temporal Segment Networks: Towards Good Practices for Deep Action Recognition",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2510940142",
+      "title": "Learning Text Similarity with Siamese Recurrent Networks",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2511598956",
+      "title": "Investigating LSTMs for Joint Extraction of Opinion Entities and Relations",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2515462165",
+      "title": "Neural Relation Extraction with Selective Attention over Instances",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2516621648",
+      "title": "Summarizing Source Code using a Neural Attention Model",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2520774990",
+      "title": "A Discriminative Feature Learning Approach for Deep Face Recognition",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2526425061",
+      "title": "Joint CTC-attention based end-to-end speech recognition using multi-task learning",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2526471240",
+      "title": "Language as a Latent Variable: Discrete Generative Models for Sentence Compression",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2531207078",
+      "title": "Fully Character-Level Neural Machine Translation without Explicit Segmentation",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2533800772",
+      "title": "Deep Learning in Medical Image Analysis",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2550821151",
+      "title": "Google’s Multilingual Neural Machine Translation System: Enabling Zero-Shot Translation",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2552839021",
+      "title": "A Convolutional Encoder Model for Neural Machine Translation",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2556605533",
+      "title": "Improving sentiment analysis via sentence type classification using BiLSTM-CRF and CNN",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2559281960",
+      "title": "Character-Based LSTM-CRF with Radical-Level Features for Chinese Named Entity Recognition",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2561360547",
+      "title": "Neural Headline Generation on Abstract Meaning Representation",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2562607067",
+      "title": "Attention-based LSTM for Aspect-level Sentiment Classification",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2565516711",
+      "title": "A survey of deep neural network architectures and their applications",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2567657016",
+      "title": "F-Score Driven Max Margin Neural Network for Named Entity Recognition in Chinese Social Media",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2575842049",
+      "title": "Knowing When to Look: Adaptive Attention via a Visual Sentinel for Image Captioning",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2579422678",
+      "title": "Circuits for Action and Cognition: A View from the Superior Colliculus",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2581637843",
+      "title": "Adversarial Learning for Neural Dialogue Generation",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2587809655",
+      "title": "Joint entity and relation extraction based on a hybrid neural network",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2591673470",
+      "title": "Five factors that guide attention in visual search",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2592929672",
+      "title": "A survey on deep learning in medical image analysis",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2593768305",
+      "title": "Adversarial Discriminative Domain Adaptation",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2594990650",
+      "title": "Massive Exploration of Neural Machine Translation Architectures",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2598457882",
+      "title": "Deep Learning‐Based Crack Damage Detection Using Convolutional Neural Networks",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2598569220",
+      "title": "Recent advances in document summarization",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2604231069",
+      "title": "End-to-End Learning of Geometry and Context for Deep Stereo Regression",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2604319603",
+      "title": "Efficient Processing of Deep Neural Networks: A Tutorial and Survey",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2604610161",
+      "title": "Distant Supervision for Relation Extraction with Sentence-Level Attention and Entity Descriptions",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2605215742",
+      "title": "A Unified Model for Cross-Domain and Semi-Supervised Named Entity Recognition in Chinese Social Media",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2606974598",
+      "title": "Get To The Point: Summarization with Pointer-Generator Networks",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2607296803",
+      "title": "DESIRE: Distant Future Prediction in Dynamic Scenes with Interacting Agents",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2608787653",
+      "title": "Enhanced LSTM for Natural Language Inference",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2609482285",
+      "title": "Selective Encoding for Abstractive Sentence Summarization",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2610332124",
+      "title": "Deep learning for healthcare: review, opportunities and challenges",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2613328025",
+      "title": "A Dual-Stage Attention-Based Recurrent Neural Network for Time Series Prediction",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2617211984",
+      "title": "Social Eye Gaze in Human-Robot Interaction: A Review",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2621075239",
+      "title": "De-identification of clinical notes via recurrent neural network and conditional random field",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2622826443",
+      "title": "Deep Convolutional Neural Networks for Image Classification: A Comprehensive Review",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2664267452",
+      "title": "Artificial intelligence in healthcare: past, present and future",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2690721124",
+      "title": "Dipole",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2726375170",
+      "title": "Recurrent neural networks for classifying relations in clinical notes",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2729101176",
+      "title": "Entity recognition from clinical texts via recurrent neural network",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2732026016",
+      "title": "Places: A 10 Million Image Database for Scene Recognition",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2734801606",
+      "title": "Infant viewing of social scenes is under genetic control and is atypical in autism",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2736334449",
+      "title": "Global Context-Aware Attention LSTM Networks for 3D Action Recognition",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2738724892",
+      "title": "Neuroscience-Inspired Artificial Intelligence",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2739046565",
+      "title": "Challenges in Data-to-Document Generation",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2739107216",
+      "title": "Video Captioning With Attention-Based LSTM and Semantic Consistency",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2739179646",
+      "title": "Skeleton-Based Human Action Recognition With Global Context-Aware Attention LSTM Networks",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2740006839",
+      "title": "A Local Detection Approach for Named Entity Recognition and Mention Detection",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2740656274",
+      "title": "Centroid-based Text Summarization through Compositionality of Word Embeddings",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2741075451",
+      "title": "Leveraging Knowledge Bases in LSTMs for Improving Machine Reading",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2741137940",
+      "title": "NTIRE 2017 Challenge on Single Image Super-Resolution: Dataset and Study",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2741249238",
+      "title": "Attentive Collaborative Filtering",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2741252866",
+      "title": "An Unsupervised Neural Attention Model for Aspect Extraction",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2741956709",
+      "title": "Going out on a limb: Joint Extraction of Entity Mentions and Relations without Dependency Trees",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2745673470",
+      "title": "Learning to Attend, Copy, and Generate for Session-Based Query Suggestion",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2746553466",
+      "title": "Deep Reinforcement Learning with Double Q-Learning",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2749348810",
+      "title": "Interpretable Convolutional Neural Networks with Dual Local and Global Attention for Review Rating Prediction",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2754051771",
+      "title": "LSTM Fully Convolutional Networks for Time Series Classification",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2757205734",
+      "title": "Neural Sequence Learning Models for Word Sense Disambiguation",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2757541972",
+      "title": "Recurrent Attention Network on Memory for Aspect Sentiment Analysis",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2759056771",
+      "title": "End-to-End Neural Relation Extraction with Global Optimization",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2759211898",
+      "title": "Position-aware Attention and Supervised Data Improve Slot Filling",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2764034829",
+      "title": "Deep Learning in Remote Sensing: A Comprehensive Review and List of Resources",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2766140847",
+      "title": "Long short-term memory RNN for biomedical named entity recognition",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2766219058",
+      "title": "Hybrid CTC/Attention Architecture for End-to-End Speech Recognition",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2766462585",
+      "title": "Multimodal Fusion with Recurrent Neural Networks for Rumor Detection on Microblogs",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2772700764",
+      "title": "Information extraction and knowledge graph construction from geoscience literature",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2782522152",
+      "title": "Deep learning in remote sensing: A comprehensive review and list of resources",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2785787385",
+      "title": "Deep Active Learning for Named Entity Recognition",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2786411768",
+      "title": "Sentiment Analysis Is a Big Suitcase",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2789876780",
+      "title": "Understanding of a convolutional neural network",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2808142148",
+      "title": "Joint Extraction of Entities and Relations Based on a Novel Tagging Scheme",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2916251204",
+      "title": "Guided Search 4.0",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2919115771",
+      "title": "Deep learning",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2950568498",
+      "title": "An End-to-End Spatio-Temporal Attention Model for Human Action Recognition from Skeleton Data",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2952138241",
+      "title": "SummaRuNNer: A Recurrent Neural Network Based Sequence Model for Extractive Summarization of Documents",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2952230511",
+      "title": "Natural Language Processing (almost) from Scratch",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2962717047",
+      "title": "Learning to Ask: Neural Question Generation for Reading Comprehension",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2962727772",
+      "title": "Automatic differentiation in machine learning: a survey",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2962809918",
+      "title": "A Thorough Examination of the CNN/Daily Mail Reading Comprehension Task",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2962883855",
+      "title": "Building End-To-End Dialogue Systems Using Generative Hierarchical Neural Network Models",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2962891704",
+      "title": "Attention to Scale: Scale-Aware Semantic Image Segmentation",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2962902328",
+      "title": "End-to-end Sequence Labeling via Bi-directional LSTM-CNNs-CRF",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2962949934",
+      "title": "Recent advances in convolutional neural networks",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2962974924",
+      "title": "Deep Recurrent Generative Decoder for Abstractive Text Summarization",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2962985038",
+      "title": "Reading Wikipedia to Answer Open-Domain Questions",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2963088995",
+      "title": "Transfer learning for low-resource neural machine translation",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963167310",
+      "title": "Deep Reinforcement Learning for Dialogue Generation",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963168371",
+      "title": "Aspect Level Sentiment Classification with Deep Memory Network",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963206148",
+      "title": "A Diversity-Promoting Objective Function for Neural Conversation Models",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963208801",
+      "title": "Multilingual Language Processing From Bytes",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963260202",
+      "title": "Modeling Coverage for Neural Machine Translation",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963338481",
+      "title": "Improving Named Entity Recognition for Chinese Social Media with Word Segmentation Representation Learning",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963446712",
+      "title": "Densely Connected Convolutional Networks",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2963463964",
+      "title": "Minimum Risk Training for Neural Machine Translation",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963609956",
+      "title": "Tacotron: Towards End-to-End Speech Synthesis",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2963620441",
+      "title": "Sequence-to-Sequence Learning as Beam-Search Optimization",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963655793",
+      "title": "Data Recombination for Neural Semantic Parsing",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963656855",
+      "title": "Ask, Attend and Answer: Exploring Question-Guided Spatial Attention for Visual Question Answering",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963736842",
+      "title": "Sequence-Level Knowledge Distillation",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963738886",
+      "title": "CFO: Conditional Focused Neural Question Answering with Large-scale Knowledge Bases",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963794306",
+      "title": "Language to Logical Form with Neural Attention",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963797754",
+      "title": "A Network-based End-to-End Trainable Task-oriented Dialogue System",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2963929190",
+      "title": "Abstractive Text Summarization using Sequence-to-sequence RNNs and Beyond",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963954913",
+      "title": "Stacked Attention Networks for Image Question Answering",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2963963856",
+      "title": "Neural Responding Machine for Short-Text Conversation",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2964144561",
+      "title": "Graph-based Neural Multi-Document Summarization",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2964167098",
+      "title": "End-to-End Relation Extraction using LSTMs on Sequences and Tree Structures",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2964268978",
+      "title": "SeqGAN: Sequence Generative Adversarial Nets with Policy Gradient",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2964352131",
+      "title": "A Persona-Based Neural Conversation Model",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W30576533",
+      "title": "Clinical evaluation of adhesively placed Cerec endo-crowns after 2 years--preliminary results.",
+      "year": 1999
+    },
+    {
+      "id": "openalex:W3204406378",
+      "title": "Stanford neural machine translation systems for spoken language domains.",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W4240485910",
+      "title": "Deep Recurrent Neural Networks for Hyperspectral Image Classification",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W54257720",
+      "title": "Learning a Deep Convolutional Network for Image Super-Resolution",
+      "year": 2014
+    }
+  ],
+  "edges": [
+    [
+      "openalex:W1510835000",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W1510835000",
+      "openalex:W2212216676"
+    ],
+    [
+      "openalex:W1510835000",
+      "openalex:W2294182682"
+    ],
+    [
+      "openalex:W1533861849",
+      "openalex:W2097998348"
+    ],
+    [
+      "openalex:W1533861849",
+      "openalex:W2156387975"
+    ],
+    [
+      "openalex:W1533861849",
+      "openalex:W2163922914"
+    ],
+    [
+      "openalex:W1533861849",
+      "openalex:W2301358467"
+    ],
+    [
+      "openalex:W1533861849",
+      "openalex:W2310992461"
+    ],
+    [
+      "openalex:W1533861849",
+      "openalex:W2346062110"
+    ],
+    [
+      "openalex:W1533861849",
+      "openalex:W2473930607"
+    ],
+    [
+      "openalex:W1533861849",
+      "openalex:W2533800772"
+    ],
+    [
+      "openalex:W1533861849",
+      "openalex:W2609482285"
+    ],
+    [
+      "openalex:W1533861849",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W1533861849",
+      "openalex:W2741249238"
+    ],
+    [
+      "openalex:W1533861849",
+      "openalex:W2962902328"
+    ],
+    [
+      "openalex:W1533861849",
+      "openalex:W2962949934"
+    ],
+    [
+      "openalex:W1586939924",
+      "openalex:W2311607323"
+    ],
+    [
+      "openalex:W1586939924",
+      "openalex:W2736334449"
+    ],
+    [
+      "openalex:W1586939924",
+      "openalex:W2739107216"
+    ],
+    [
+      "openalex:W1586939924",
+      "openalex:W2739179646"
+    ],
+    [
+      "openalex:W1586939924",
+      "openalex:W2962891704"
+    ],
+    [
+      "openalex:W1586939924",
+      "openalex:W2963656855"
+    ],
+    [
+      "openalex:W1731081199",
+      "openalex:W2240067561"
+    ],
+    [
+      "openalex:W1731081199",
+      "openalex:W2593768305"
+    ],
+    [
+      "openalex:W1731081199",
+      "openalex:W2604319603"
+    ],
+    [
+      "openalex:W1731081199",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W1832693441",
+      "openalex:W2211192759"
+    ],
+    [
+      "openalex:W1832693441",
+      "openalex:W2267186426"
+    ],
+    [
+      "openalex:W1832693441",
+      "openalex:W2470673105"
+    ],
+    [
+      "openalex:W1832693441",
+      "openalex:W2739046565"
+    ],
+    [
+      "openalex:W1832693441",
+      "openalex:W2785787385"
+    ],
+    [
+      "openalex:W1832693441",
+      "openalex:W2963168371"
+    ],
+    [
+      "openalex:W1832693441",
+      "openalex:W2963797754"
+    ],
+    [
+      "openalex:W1832693441",
+      "openalex:W2963954913"
+    ],
+    [
+      "openalex:W1832693441",
+      "openalex:W2964268978"
+    ],
+    [
+      "openalex:W1884191083",
+      "openalex:W2301358467"
+    ],
+    [
+      "openalex:W1884191083",
+      "openalex:W2310992461"
+    ],
+    [
+      "openalex:W1884191083",
+      "openalex:W2346062110"
+    ],
+    [
+      "openalex:W1884191083",
+      "openalex:W2533800772"
+    ],
+    [
+      "openalex:W1884191083",
+      "openalex:W2592929672"
+    ],
+    [
+      "openalex:W1885185971",
+      "openalex:W2214802144"
+    ],
+    [
+      "openalex:W1885185971",
+      "openalex:W2242218935"
+    ],
+    [
+      "openalex:W1885185971",
+      "openalex:W2256362396"
+    ],
+    [
+      "openalex:W1885185971",
+      "openalex:W2565516711"
+    ],
+    [
+      "openalex:W1885185971",
+      "openalex:W2741137940"
+    ],
+    [
+      "openalex:W1885185971",
+      "openalex:W2962949934"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W1586939924"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W1905882502"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W2302086703"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W2424778531"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W2463955103"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W2561360547"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W2575842049"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W2594990650"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W2739107216"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W2766462585"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W2962883855"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W2963656855"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W2963736842"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W2963794306"
+    ],
+    [
+      "openalex:W1895577753",
+      "openalex:W2963954913"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W1816313093"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2211192759"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2311607323"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2516621648"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2531207078"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2550821151"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2552839021"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2581637843"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2594990650"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2604610161"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2609482285"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2690721124"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2736334449"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2739046565"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2739107216"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2739179646"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2741252866"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2741956709"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2749348810"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2962717047"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2962809918"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2963088995"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2963168371"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2963260202"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2963463964"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2963620441"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2963655793"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2963656855"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2963736842"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W2963794306"
+    ],
+    [
+      "openalex:W1902237438",
+      "openalex:W3204406378"
+    ],
+    [
+      "openalex:W1905882502",
+      "openalex:W1566289585"
+    ],
+    [
+      "openalex:W1905882502",
+      "openalex:W1586939924"
+    ],
+    [
+      "openalex:W1905882502",
+      "openalex:W2302086703"
+    ],
+    [
+      "openalex:W1905882502",
+      "openalex:W2463955103"
+    ],
+    [
+      "openalex:W1905882502",
+      "openalex:W2516621648"
+    ],
+    [
+      "openalex:W1905882502",
+      "openalex:W2533800772"
+    ],
+    [
+      "openalex:W1905882502",
+      "openalex:W2575842049"
+    ],
+    [
+      "openalex:W1905882502",
+      "openalex:W2592929672"
+    ],
+    [
+      "openalex:W1905882502",
+      "openalex:W2607296803"
+    ],
+    [
+      "openalex:W1905882502",
+      "openalex:W2613328025"
+    ],
+    [
+      "openalex:W1905882502",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W1905882502",
+      "openalex:W2739107216"
+    ],
+    [
+      "openalex:W1905882502",
+      "openalex:W2766462585"
+    ],
+    [
+      "openalex:W1905882502",
+      "openalex:W2963794306"
+    ],
+    [
+      "openalex:W1905882502",
+      "openalex:W2963954913"
+    ],
+    [
+      "openalex:W1932198206",
+      "openalex:W2180612164"
+    ],
+    [
+      "openalex:W1932198206",
+      "openalex:W2240067561"
+    ],
+    [
+      "openalex:W1932198206",
+      "openalex:W2565516711"
+    ],
+    [
+      "openalex:W1932198206",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2296283641"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2311132329"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2469314752"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2488984245"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2510940142"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2511598956"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2556605533"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2559281960"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2567657016"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2587809655"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2605215742"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2621075239"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2726375170"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2729101176"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2740006839"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2741075451"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2741956709"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2757205734"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2759056771"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2766140847"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2785787385"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2786411768"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2808142148"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2962902328"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2963208801"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2963338481"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2963738886"
+    ],
+    [
+      "openalex:W1940872118",
+      "openalex:W2964167098"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W1985904252"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2011826874"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2022732461"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2039934771"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2040253108"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2042379996"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2055583961"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2070645165"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2073767010"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2082694050"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2091005670"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2097295641"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2107032718"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2117242469"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2119228922"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2119577735"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2121947860"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2126712529"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2130184867"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2133589685"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2135957164"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2138608979"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2153839765"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2156232986"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2162216530"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2165947725"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2341282033"
+    ],
+    [
+      "openalex:W1969258103",
+      "openalex:W2734801606"
+    ],
+    [
+      "openalex:W1985904252",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W1985904252",
+      "openalex:W2039934771"
+    ],
+    [
+      "openalex:W1985904252",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W1985904252",
+      "openalex:W2119577735"
+    ],
+    [
+      "openalex:W1985904252",
+      "openalex:W2139734816"
+    ],
+    [
+      "openalex:W1985904252",
+      "openalex:W2141565638"
+    ],
+    [
+      "openalex:W1985904252",
+      "openalex:W2165947725"
+    ],
+    [
+      "openalex:W1987794317",
+      "openalex:W2046863527"
+    ],
+    [
+      "openalex:W1987794317",
+      "openalex:W2098702446"
+    ],
+    [
+      "openalex:W1999135570",
+      "openalex:W2107032718"
+    ],
+    [
+      "openalex:W2000617596",
+      "openalex:W1993254594"
+    ],
+    [
+      "openalex:W2000617596",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2000617596",
+      "openalex:W2120779958"
+    ],
+    [
+      "openalex:W2007339694",
+      "openalex:W2962949934"
+    ],
+    [
+      "openalex:W2011826874",
+      "openalex:W2042379996"
+    ],
+    [
+      "openalex:W2011826874",
+      "openalex:W2162095066"
+    ],
+    [
+      "openalex:W2016053056",
+      "openalex:W1586939924"
+    ],
+    [
+      "openalex:W2016053056",
+      "openalex:W2076063813"
+    ],
+    [
+      "openalex:W2016053056",
+      "openalex:W2507009361"
+    ],
+    [
+      "openalex:W2016053056",
+      "openalex:W2962949934"
+    ],
+    [
+      "openalex:W2016927150",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W2016927150",
+      "openalex:W2162095066"
+    ],
+    [
+      "openalex:W2019515298",
+      "openalex:W2110745711"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W1884191083"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W2016053056"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W2076063813"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W2102605133"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W2161381512"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W2183182206"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W2212216676"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W2253429366"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W2307770531"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W2311607323"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W2412782625"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W2592929672"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W2919115771"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W2962891704"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W2962949934"
+    ],
+    [
+      "openalex:W2022508996",
+      "openalex:W4240485910"
+    ],
+    [
+      "openalex:W2022732461",
+      "openalex:W1993254594"
+    ],
+    [
+      "openalex:W2022732461",
+      "openalex:W2011826874"
+    ],
+    [
+      "openalex:W2022732461",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W2022732461",
+      "openalex:W2039934771"
+    ],
+    [
+      "openalex:W2022732461",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2022732461",
+      "openalex:W2107032718"
+    ],
+    [
+      "openalex:W2022732461",
+      "openalex:W2117242469"
+    ],
+    [
+      "openalex:W2022732461",
+      "openalex:W2139734816"
+    ],
+    [
+      "openalex:W2022732461",
+      "openalex:W2141565638"
+    ],
+    [
+      "openalex:W2022732461",
+      "openalex:W2153839765"
+    ],
+    [
+      "openalex:W2022732461",
+      "openalex:W2165947725"
+    ],
+    [
+      "openalex:W2022732461",
+      "openalex:W2341282033"
+    ],
+    [
+      "openalex:W2032007016",
+      "openalex:W2008359794"
+    ],
+    [
+      "openalex:W2034261125",
+      "openalex:W2107032718"
+    ],
+    [
+      "openalex:W2038533067",
+      "openalex:W2011826874"
+    ],
+    [
+      "openalex:W2038533067",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2038533067",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2038533067",
+      "openalex:W2119577735"
+    ],
+    [
+      "openalex:W2038533067",
+      "openalex:W2153839765"
+    ],
+    [
+      "openalex:W2040253108",
+      "openalex:W1510835000"
+    ],
+    [
+      "openalex:W2040253108",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2040253108",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2040253108",
+      "openalex:W2039934771"
+    ],
+    [
+      "openalex:W2040253108",
+      "openalex:W2073767010"
+    ],
+    [
+      "openalex:W2040253108",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2040253108",
+      "openalex:W2097295641"
+    ],
+    [
+      "openalex:W2040253108",
+      "openalex:W2119577735"
+    ],
+    [
+      "openalex:W2040253108",
+      "openalex:W2133589685"
+    ],
+    [
+      "openalex:W2040253108",
+      "openalex:W2153839765"
+    ],
+    [
+      "openalex:W2040253108",
+      "openalex:W2294182682"
+    ],
+    [
+      "openalex:W2046863527",
+      "openalex:W1993254594"
+    ],
+    [
+      "openalex:W2046863527",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2046863527",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2046863527",
+      "openalex:W2098702446"
+    ],
+    [
+      "openalex:W2046863527",
+      "openalex:W2114876288"
+    ],
+    [
+      "openalex:W2046863527",
+      "openalex:W2138608979"
+    ],
+    [
+      "openalex:W2049579898",
+      "openalex:W1993254594"
+    ],
+    [
+      "openalex:W2049579898",
+      "openalex:W2011826874"
+    ],
+    [
+      "openalex:W2049579898",
+      "openalex:W2019515298"
+    ],
+    [
+      "openalex:W2049579898",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2049579898",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W2049579898",
+      "openalex:W2040253108"
+    ],
+    [
+      "openalex:W2049579898",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2049579898",
+      "openalex:W2091005670"
+    ],
+    [
+      "openalex:W2049579898",
+      "openalex:W2143492062"
+    ],
+    [
+      "openalex:W2049579898",
+      "openalex:W2162095066"
+    ],
+    [
+      "openalex:W2049579898",
+      "openalex:W2916251204"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W1510835000"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W1969258103"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W1985904252"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W1987794317"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W1993254594"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W1999135570"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2000617596"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2008359794"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2010931698"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2011826874"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2016927150"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2019515298"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2022732461"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2034261125"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2039934771"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2040253108"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2042379996"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2046574558"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2046863527"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2049012614"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2049579898"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2053054573"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2055583961"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2062432103"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2070645165"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2073767010"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2082694050"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2091005670"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2097295641"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2098353881"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2098702446"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2100618994"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2102770572"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2105454024"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2107032718"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2107363596"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2110745711"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2114876288"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2115569429"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2116783544"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2117242469"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2119228922"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2119577735"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2120779958"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2121947860"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2121995821"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2125447031"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2126712529"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2127807804"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2130184867"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2133589685"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2135957164"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2136869398"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2136869907"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2138608979"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2139734816"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2141565638"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2143492062"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2143994941"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2144764737"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2145227859"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2146103513"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2147235552"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2151152593"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2152233525"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2153273516"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2153839765"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2154372982"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2154796476"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2156232986"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2161336407"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2162095066"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2162216530"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2164720308"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2165947725"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2170161511"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2170180978"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2170457011"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2212216676"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2240067561"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2285648672"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2294182682"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2341282033"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2398833147"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2579422678"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2591673470"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2617211984"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2734801606"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W2916251204"
+    ],
+    [
+      "openalex:W2054802006",
+      "openalex:W30576533"
+    ],
+    [
+      "openalex:W2055583961",
+      "openalex:W2110745711"
+    ],
+    [
+      "openalex:W2057175746",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W2057175746",
+      "openalex:W2136922672"
+    ],
+    [
+      "openalex:W2070645165",
+      "openalex:W1985904252"
+    ],
+    [
+      "openalex:W2070645165",
+      "openalex:W2019515298"
+    ],
+    [
+      "openalex:W2070645165",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2070645165",
+      "openalex:W2130184867"
+    ],
+    [
+      "openalex:W2070645165",
+      "openalex:W2617211984"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W1533861849"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W1932198206"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W2076063813"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W2097998348"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W2099471712"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W2145287260"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W2145339207"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W2156387975"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W2163922914"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W2180612164"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W2511598956"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W2515462165"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W2533800772"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W2565516711"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W2610332124"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2072128103",
+      "openalex:W2919115771"
+    ],
+    [
+      "openalex:W2073767010",
+      "openalex:W1993254594"
+    ],
+    [
+      "openalex:W2073767010",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2073767010",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2073767010",
+      "openalex:W2119577735"
+    ],
+    [
+      "openalex:W2073767010",
+      "openalex:W2152233525"
+    ],
+    [
+      "openalex:W2073767010",
+      "openalex:W2212216676"
+    ],
+    [
+      "openalex:W2073767010",
+      "openalex:W2591673470"
+    ],
+    [
+      "openalex:W2076063813",
+      "openalex:W2311607323"
+    ],
+    [
+      "openalex:W2076063813",
+      "openalex:W2533800772"
+    ],
+    [
+      "openalex:W2076063813",
+      "openalex:W2565516711"
+    ],
+    [
+      "openalex:W2076063813",
+      "openalex:W2610332124"
+    ],
+    [
+      "openalex:W2076063813",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2076063813",
+      "openalex:W2738724892"
+    ],
+    [
+      "openalex:W2076063813",
+      "openalex:W2962727772"
+    ],
+    [
+      "openalex:W2076063813",
+      "openalex:W2962974924"
+    ],
+    [
+      "openalex:W2081913479",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2081913479",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2081913479",
+      "openalex:W2042379996"
+    ],
+    [
+      "openalex:W2081913479",
+      "openalex:W2591673470"
+    ],
+    [
+      "openalex:W2082694050",
+      "openalex:W2011826874"
+    ],
+    [
+      "openalex:W2082694050",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2082694050",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W2082694050",
+      "openalex:W2091005670"
+    ],
+    [
+      "openalex:W2082694050",
+      "openalex:W2153839765"
+    ],
+    [
+      "openalex:W2091005670",
+      "openalex:W1993254594"
+    ],
+    [
+      "openalex:W2091005670",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2091005670",
+      "openalex:W2039934771"
+    ],
+    [
+      "openalex:W2091005670",
+      "openalex:W2073767010"
+    ],
+    [
+      "openalex:W2091005670",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2091005670",
+      "openalex:W2107032718"
+    ],
+    [
+      "openalex:W2091005670",
+      "openalex:W2120779958"
+    ],
+    [
+      "openalex:W2091005670",
+      "openalex:W2153839765"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W1566289585"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W1586939924"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W1905882502"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2076063813"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2180612164"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2183182206"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2212216676"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2240067561"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2253429366"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2256362396"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2289252105"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2302086703"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2307770531"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2311607323"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2346062110"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2412782625"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2463955103"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2473418344"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2500751094"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2507009361"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2520774990"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2533800772"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2592929672"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2604319603"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2610332124"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2732026016"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2739107216"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2764034829"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2782522152"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2789876780"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2962891704"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2962949934"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2963446712"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2963656855"
+    ],
+    [
+      "openalex:W2097117768",
+      "openalex:W2963954913"
+    ],
+    [
+      "openalex:W2097295641",
+      "openalex:W1993254594"
+    ],
+    [
+      "openalex:W2097295641",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2097295641",
+      "openalex:W2039934771"
+    ],
+    [
+      "openalex:W2097295641",
+      "openalex:W2119577735"
+    ],
+    [
+      "openalex:W2097998348",
+      "openalex:W2106411961"
+    ],
+    [
+      "openalex:W2097998348",
+      "openalex:W2163922914"
+    ],
+    [
+      "openalex:W2097998348",
+      "openalex:W2311607323"
+    ],
+    [
+      "openalex:W2097998348",
+      "openalex:W2592929672"
+    ],
+    [
+      "openalex:W2098702446",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2098702446",
+      "openalex:W2152233525"
+    ],
+    [
+      "openalex:W2099471712",
+      "openalex:W2180612164"
+    ],
+    [
+      "openalex:W2099471712",
+      "openalex:W2311607323"
+    ],
+    [
+      "openalex:W2099471712",
+      "openalex:W2581637843"
+    ],
+    [
+      "openalex:W2099471712",
+      "openalex:W2592929672"
+    ],
+    [
+      "openalex:W2099471712",
+      "openalex:W2593768305"
+    ],
+    [
+      "openalex:W2099471712",
+      "openalex:W2962949934"
+    ],
+    [
+      "openalex:W2100618994",
+      "openalex:W1510835000"
+    ],
+    [
+      "openalex:W2100664567",
+      "openalex:W1663984431"
+    ],
+    [
+      "openalex:W2100664567",
+      "openalex:W1816313093"
+    ],
+    [
+      "openalex:W2100664567",
+      "openalex:W1902237438"
+    ],
+    [
+      "openalex:W2100664567",
+      "openalex:W2531207078"
+    ],
+    [
+      "openalex:W2100664567",
+      "openalex:W2550821151"
+    ],
+    [
+      "openalex:W2100664567",
+      "openalex:W2552839021"
+    ],
+    [
+      "openalex:W2100664567",
+      "openalex:W2594990650"
+    ],
+    [
+      "openalex:W2100664567",
+      "openalex:W2963260202"
+    ],
+    [
+      "openalex:W2100664567",
+      "openalex:W2963463964"
+    ],
+    [
+      "openalex:W2100664567",
+      "openalex:W2963794306"
+    ],
+    [
+      "openalex:W2100664567",
+      "openalex:W2963929190"
+    ],
+    [
+      "openalex:W2100664567",
+      "openalex:W3204406378"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W1905882502"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2016053056"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2076063813"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2097117768"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2161381512"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2183182206"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2194187530"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2256362396"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2289252105"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2412782625"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2473930607"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2500751094"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2604231069"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2604319603"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2962891704"
+    ],
+    [
+      "openalex:W2102605133",
+      "openalex:W2962949934"
+    ],
+    [
+      "openalex:W2102770572",
+      "openalex:W2126712529"
+    ],
+    [
+      "openalex:W2106411961",
+      "openalex:W2163922914"
+    ],
+    [
+      "openalex:W2106411961",
+      "openalex:W2311607323"
+    ],
+    [
+      "openalex:W2107032718",
+      "openalex:W1993254594"
+    ],
+    [
+      "openalex:W2107363596",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2107363596",
+      "openalex:W2105454024"
+    ],
+    [
+      "openalex:W2110745711",
+      "openalex:W2126712529"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W1533861849"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W1731081199"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W1832693441"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W1884191083"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W1885185971"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W1905882502"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W1932198206"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2007339694"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2016053056"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2022508996"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2057175746"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2072128103"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2073767010"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2076063813"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2097117768"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2097998348"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2099471712"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2102605133"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2106411961"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2115733720"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2117130368"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2120615054"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2136922672"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2138621090"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2141125852"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2144499799"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2145287260"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2145339207"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2155968351"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2156163116"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2156387975"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2157364932"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2161381512"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2163922914"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2180612164"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2183182206"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2194187530"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2194321275"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2211192759"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2214802144"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2242218935"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2253429366"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2256362396"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2289252105"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2301358467"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2307770531"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2310992461"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2311132329"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2327501763"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2346062110"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2412782625"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2470673105"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2473418344"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2473930607"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2500751094"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2507009361"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2520774990"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2533800772"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2565516711"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2587809655"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2592929672"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2593768305"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2598457882"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2604319603"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2610332124"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2664267452"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2729101176"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2732026016"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2741137940"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2746553466"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2764034829"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2782522152"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2789876780"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2919115771"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2952230511"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2962727772"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2962891704"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2962949934"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2963446712"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W2963954913"
+    ],
+    [
+      "openalex:W2112796928",
+      "openalex:W54257720"
+    ],
+    [
+      "openalex:W2114876288",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2114876288",
+      "openalex:W2046574558"
+    ],
+    [
+      "openalex:W2114876288",
+      "openalex:W2102770572"
+    ],
+    [
+      "openalex:W2115733720",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2116783544",
+      "openalex:W1993254594"
+    ],
+    [
+      "openalex:W2116783544",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2116783544",
+      "openalex:W2073767010"
+    ],
+    [
+      "openalex:W2116783544",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2116783544",
+      "openalex:W2091005670"
+    ],
+    [
+      "openalex:W2116783544",
+      "openalex:W2114876288"
+    ],
+    [
+      "openalex:W2116783544",
+      "openalex:W2156232986"
+    ],
+    [
+      "openalex:W2116783544",
+      "openalex:W2734801606"
+    ],
+    [
+      "openalex:W2116783544",
+      "openalex:W30576533"
+    ],
+    [
+      "openalex:W2117130368",
+      "openalex:W1533861849"
+    ],
+    [
+      "openalex:W2117130368",
+      "openalex:W2072128103"
+    ],
+    [
+      "openalex:W2117130368",
+      "openalex:W2076063813"
+    ],
+    [
+      "openalex:W2117130368",
+      "openalex:W2120615054"
+    ],
+    [
+      "openalex:W2117130368",
+      "openalex:W2163922914"
+    ],
+    [
+      "openalex:W2117130368",
+      "openalex:W2180612164"
+    ],
+    [
+      "openalex:W2117130368",
+      "openalex:W2533800772"
+    ],
+    [
+      "openalex:W2117130368",
+      "openalex:W2565516711"
+    ],
+    [
+      "openalex:W2117130368",
+      "openalex:W2621075239"
+    ],
+    [
+      "openalex:W2117130368",
+      "openalex:W2962949934"
+    ],
+    [
+      "openalex:W2117130368",
+      "openalex:W2962985038"
+    ],
+    [
+      "openalex:W2117130368",
+      "openalex:W2963338481"
+    ],
+    [
+      "openalex:W2117130368",
+      "openalex:W2963738886"
+    ],
+    [
+      "openalex:W2117242469",
+      "openalex:W2011826874"
+    ],
+    [
+      "openalex:W2117242469",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2117242469",
+      "openalex:W2039934771"
+    ],
+    [
+      "openalex:W2117242469",
+      "openalex:W2042379996"
+    ],
+    [
+      "openalex:W2117242469",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2117242469",
+      "openalex:W2097295641"
+    ],
+    [
+      "openalex:W2117242469",
+      "openalex:W2119577735"
+    ],
+    [
+      "openalex:W2117242469",
+      "openalex:W2121947860"
+    ],
+    [
+      "openalex:W2117242469",
+      "openalex:W2141565638"
+    ],
+    [
+      "openalex:W2117242469",
+      "openalex:W2153839765"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2000617596"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2039934771"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2040253108"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2073767010"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2091005670"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2097295641"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2098702446"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2107032718"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2117242469"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2119577735"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2121947860"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2133589685"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2135957164"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2138608979"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2139734816"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2153839765"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2165947725"
+    ],
+    [
+      "openalex:W2119228922",
+      "openalex:W2212216676"
+    ],
+    [
+      "openalex:W2120615054",
+      "openalex:W1832693441"
+    ],
+    [
+      "openalex:W2120615054",
+      "openalex:W2211192759"
+    ],
+    [
+      "openalex:W2120615054",
+      "openalex:W2267186426"
+    ],
+    [
+      "openalex:W2120615054",
+      "openalex:W2470673105"
+    ],
+    [
+      "openalex:W2120615054",
+      "openalex:W2556605533"
+    ],
+    [
+      "openalex:W2120615054",
+      "openalex:W2963168371"
+    ],
+    [
+      "openalex:W2120615054",
+      "openalex:W2963797754"
+    ],
+    [
+      "openalex:W2120779958",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2120779958",
+      "openalex:W2039934771"
+    ],
+    [
+      "openalex:W2121947860",
+      "openalex:W1993254594"
+    ],
+    [
+      "openalex:W2121947860",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2121947860",
+      "openalex:W2126712529"
+    ],
+    [
+      "openalex:W2121995821",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2121995821",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W2121995821",
+      "openalex:W2143492062"
+    ],
+    [
+      "openalex:W2121995821",
+      "openalex:W2145227859"
+    ],
+    [
+      "openalex:W2121995821",
+      "openalex:W2591673470"
+    ],
+    [
+      "openalex:W2130184867",
+      "openalex:W1985904252"
+    ],
+    [
+      "openalex:W2130184867",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2130184867",
+      "openalex:W2097295641"
+    ],
+    [
+      "openalex:W2130184867",
+      "openalex:W2098702446"
+    ],
+    [
+      "openalex:W2130184867",
+      "openalex:W2127807804"
+    ],
+    [
+      "openalex:W2130184867",
+      "openalex:W2136869398"
+    ],
+    [
+      "openalex:W2130184867",
+      "openalex:W2138608979"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W1566289585"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W1586939924"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W1663984431"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W1895577753"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W1902237438"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2100664567"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2267186426"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2302086703"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2311607323"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2327501763"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2413794162"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2424778531"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2463955103"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2470673105"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2511598956"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2515462165"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2526425061"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2526471240"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2552839021"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2562607067"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2575842049"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2581637843"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2594990650"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2604231069"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2606974598"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2607296803"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2608787653"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2609482285"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2613328025"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2726375170"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2736334449"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2738724892"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2739046565"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2741075451"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2741249238"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2741252866"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2749348810"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2754051771"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2757205734"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2757541972"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2759211898"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2766219058"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2766462585"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2950568498"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2952138241"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2962717047"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2962727772"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2962883855"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2962891704"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2962985038"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2963167310"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2963168371"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2963206148"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2963208801"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2963260202"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2963463964"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2963609956"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2963620441"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2963655793"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2963736842"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2963794306"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2963797754"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2963929190"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2963954913"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2963963856"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2964144561"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2964268978"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W2964352131"
+    ],
+    [
+      "openalex:W2133564696",
+      "openalex:W4240485910"
+    ],
+    [
+      "openalex:W2133589685",
+      "openalex:W1510835000"
+    ],
+    [
+      "openalex:W2133589685",
+      "openalex:W2008359794"
+    ],
+    [
+      "openalex:W2133589685",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2133589685",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2133589685",
+      "openalex:W2152233525"
+    ],
+    [
+      "openalex:W2133589685",
+      "openalex:W2212216676"
+    ],
+    [
+      "openalex:W2133589685",
+      "openalex:W2591673470"
+    ],
+    [
+      "openalex:W2135957164",
+      "openalex:W2008359794"
+    ],
+    [
+      "openalex:W2135957164",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2135957164",
+      "openalex:W2098702446"
+    ],
+    [
+      "openalex:W2135957164",
+      "openalex:W2107363596"
+    ],
+    [
+      "openalex:W2135957164",
+      "openalex:W2133589685"
+    ],
+    [
+      "openalex:W2135957164",
+      "openalex:W2138608979"
+    ],
+    [
+      "openalex:W2135957164",
+      "openalex:W2152233525"
+    ],
+    [
+      "openalex:W2135957164",
+      "openalex:W2153839765"
+    ],
+    [
+      "openalex:W2135957164",
+      "openalex:W2212216676"
+    ],
+    [
+      "openalex:W2135957164",
+      "openalex:W2294182682"
+    ],
+    [
+      "openalex:W2136869398",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W2136869398",
+      "openalex:W2042379996"
+    ],
+    [
+      "openalex:W2136869398",
+      "openalex:W2046863527"
+    ],
+    [
+      "openalex:W2136869398",
+      "openalex:W2055583961"
+    ],
+    [
+      "openalex:W2136869398",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2136869398",
+      "openalex:W2082694050"
+    ],
+    [
+      "openalex:W2136869398",
+      "openalex:W2097295641"
+    ],
+    [
+      "openalex:W2136869398",
+      "openalex:W2117242469"
+    ],
+    [
+      "openalex:W2136869398",
+      "openalex:W2119577735"
+    ],
+    [
+      "openalex:W2136869398",
+      "openalex:W2139734816"
+    ],
+    [
+      "openalex:W2136869398",
+      "openalex:W2165947725"
+    ],
+    [
+      "openalex:W2136869907",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2136869907",
+      "openalex:W2579422678"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W1533861849"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2072128103"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2076063813"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2097998348"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2099471712"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2106411961"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2144499799"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2156387975"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2163922914"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2180612164"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2253429366"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2311607323"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2500751094"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2533800772"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2565516711"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2592929672"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2610332124"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2738724892"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2764034829"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2782522152"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2919115771"
+    ],
+    [
+      "openalex:W2136922672",
+      "openalex:W2964268978"
+    ],
+    [
+      "openalex:W2138608979",
+      "openalex:W2152233525"
+    ],
+    [
+      "openalex:W2138621090",
+      "openalex:W2022508996"
+    ],
+    [
+      "openalex:W2138621090",
+      "openalex:W2072128103"
+    ],
+    [
+      "openalex:W2138621090",
+      "openalex:W2076063813"
+    ],
+    [
+      "openalex:W2138621090",
+      "openalex:W2510940142"
+    ],
+    [
+      "openalex:W2138621090",
+      "openalex:W2520774990"
+    ],
+    [
+      "openalex:W2138621090",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2138621090",
+      "openalex:W2962949934"
+    ],
+    [
+      "openalex:W2139734816",
+      "openalex:W1993254594"
+    ],
+    [
+      "openalex:W2139734816",
+      "openalex:W2039934771"
+    ],
+    [
+      "openalex:W2139734816",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2139734816",
+      "openalex:W2120779958"
+    ],
+    [
+      "openalex:W2141125852",
+      "openalex:W2076063813"
+    ],
+    [
+      "openalex:W2141125852",
+      "openalex:W2163922914"
+    ],
+    [
+      "openalex:W2141125852",
+      "openalex:W2240067561"
+    ],
+    [
+      "openalex:W2141125852",
+      "openalex:W2565516711"
+    ],
+    [
+      "openalex:W2141125852",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2141125852",
+      "openalex:W2962891704"
+    ],
+    [
+      "openalex:W2141565638",
+      "openalex:W2039934771"
+    ],
+    [
+      "openalex:W2143492062",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2143492062",
+      "openalex:W2073767010"
+    ],
+    [
+      "openalex:W2143994941",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W2143994941",
+      "openalex:W2115569429"
+    ],
+    [
+      "openalex:W2143994941",
+      "openalex:W2162095066"
+    ],
+    [
+      "openalex:W2143994941",
+      "openalex:W2579422678"
+    ],
+    [
+      "openalex:W2144499799",
+      "openalex:W2740006839"
+    ],
+    [
+      "openalex:W2144499799",
+      "openalex:W2754051771"
+    ],
+    [
+      "openalex:W2144499799",
+      "openalex:W2766219058"
+    ],
+    [
+      "openalex:W2144499799",
+      "openalex:W2950568498"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W1985904252"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W1993254594"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2010931698"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2011826874"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2019515298"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2022732461"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2049012614"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2053054573"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2070645165"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2082694050"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2098353881"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2102770572"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2107363596"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2117242469"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2119577735"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2121947860"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2127807804"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2130184867"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2133589685"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2136869398"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2138608979"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2143492062"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2146103513"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2152233525"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2153839765"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2156232986"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2165947725"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2212216676"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2240067561"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2341282033"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2617211984"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W2734801606"
+    ],
+    [
+      "openalex:W2144764737",
+      "openalex:W30576533"
+    ],
+    [
+      "openalex:W2145227859",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2145227859",
+      "openalex:W2098702446"
+    ],
+    [
+      "openalex:W2145227859",
+      "openalex:W2143492062"
+    ],
+    [
+      "openalex:W2145287260",
+      "openalex:W1932198206"
+    ],
+    [
+      "openalex:W2145287260",
+      "openalex:W2180612164"
+    ],
+    [
+      "openalex:W2145287260",
+      "openalex:W2520774990"
+    ],
+    [
+      "openalex:W2145287260",
+      "openalex:W2533800772"
+    ],
+    [
+      "openalex:W2145287260",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2145287260",
+      "openalex:W2789876780"
+    ],
+    [
+      "openalex:W2145339207",
+      "openalex:W2155968351"
+    ],
+    [
+      "openalex:W2145339207",
+      "openalex:W2194321275"
+    ],
+    [
+      "openalex:W2145339207",
+      "openalex:W2738724892"
+    ],
+    [
+      "openalex:W2145339207",
+      "openalex:W2746553466"
+    ],
+    [
+      "openalex:W2145339207",
+      "openalex:W2919115771"
+    ],
+    [
+      "openalex:W2146103513",
+      "openalex:W1510835000"
+    ],
+    [
+      "openalex:W2146103513",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2146103513",
+      "openalex:W2098702446"
+    ],
+    [
+      "openalex:W2146103513",
+      "openalex:W2105454024"
+    ],
+    [
+      "openalex:W2146103513",
+      "openalex:W2107363596"
+    ],
+    [
+      "openalex:W2146103513",
+      "openalex:W2152233525"
+    ],
+    [
+      "openalex:W2146103513",
+      "openalex:W2294182682"
+    ],
+    [
+      "openalex:W2153273516",
+      "openalex:W2049012614"
+    ],
+    [
+      "openalex:W2153839765",
+      "openalex:W1510835000"
+    ],
+    [
+      "openalex:W2153839765",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2153839765",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2153839765",
+      "openalex:W2098353881"
+    ],
+    [
+      "openalex:W2154372982",
+      "openalex:W2102770572"
+    ],
+    [
+      "openalex:W2154372982",
+      "openalex:W2121995821"
+    ],
+    [
+      "openalex:W2154372982",
+      "openalex:W2143492062"
+    ],
+    [
+      "openalex:W2154372982",
+      "openalex:W2145227859"
+    ],
+    [
+      "openalex:W2154372982",
+      "openalex:W2591673470"
+    ],
+    [
+      "openalex:W2154372982",
+      "openalex:W2916251204"
+    ],
+    [
+      "openalex:W2154796476",
+      "openalex:W1985904252"
+    ],
+    [
+      "openalex:W2154796476",
+      "openalex:W2011826874"
+    ],
+    [
+      "openalex:W2154796476",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W2156163116",
+      "openalex:W2007339694"
+    ],
+    [
+      "openalex:W2156163116",
+      "openalex:W2022508996"
+    ],
+    [
+      "openalex:W2156163116",
+      "openalex:W2072128103"
+    ],
+    [
+      "openalex:W2156163116",
+      "openalex:W2076063813"
+    ],
+    [
+      "openalex:W2156163116",
+      "openalex:W2136922672"
+    ],
+    [
+      "openalex:W2156163116",
+      "openalex:W2141125852"
+    ],
+    [
+      "openalex:W2156163116",
+      "openalex:W2144499799"
+    ],
+    [
+      "openalex:W2156163116",
+      "openalex:W2161381512"
+    ],
+    [
+      "openalex:W2156163116",
+      "openalex:W2163922914"
+    ],
+    [
+      "openalex:W2156163116",
+      "openalex:W2598457882"
+    ],
+    [
+      "openalex:W2156163116",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2156232986",
+      "openalex:W2110745711"
+    ],
+    [
+      "openalex:W2156387975",
+      "openalex:W2076063813"
+    ],
+    [
+      "openalex:W2156387975",
+      "openalex:W2099471712"
+    ],
+    [
+      "openalex:W2156387975",
+      "openalex:W2163922914"
+    ],
+    [
+      "openalex:W2156387975",
+      "openalex:W2413794162"
+    ],
+    [
+      "openalex:W2156387975",
+      "openalex:W2533800772"
+    ],
+    [
+      "openalex:W2156387975",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2156387975",
+      "openalex:W2740006839"
+    ],
+    [
+      "openalex:W2156387975",
+      "openalex:W2963446712"
+    ],
+    [
+      "openalex:W2157364932",
+      "openalex:W2138621090"
+    ],
+    [
+      "openalex:W2157364932",
+      "openalex:W2145287260"
+    ],
+    [
+      "openalex:W2157364932",
+      "openalex:W2194321275"
+    ],
+    [
+      "openalex:W2157364932",
+      "openalex:W2510940142"
+    ],
+    [
+      "openalex:W2157364932",
+      "openalex:W2520774990"
+    ],
+    [
+      "openalex:W2157364932",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2157364932",
+      "openalex:W2764034829"
+    ],
+    [
+      "openalex:W2157364932",
+      "openalex:W2782522152"
+    ],
+    [
+      "openalex:W2157364932",
+      "openalex:W2962949934"
+    ],
+    [
+      "openalex:W2161381512",
+      "openalex:W1731081199"
+    ],
+    [
+      "openalex:W2161381512",
+      "openalex:W2076063813"
+    ],
+    [
+      "openalex:W2161381512",
+      "openalex:W2253429366"
+    ],
+    [
+      "openalex:W2161381512",
+      "openalex:W2962949934"
+    ],
+    [
+      "openalex:W2162216530",
+      "openalex:W2032007016"
+    ],
+    [
+      "openalex:W2162216530",
+      "openalex:W2098702446"
+    ],
+    [
+      "openalex:W2162216530",
+      "openalex:W2152233525"
+    ],
+    [
+      "openalex:W2163922914",
+      "openalex:W1884191083"
+    ],
+    [
+      "openalex:W2163922914",
+      "openalex:W2076063813"
+    ],
+    [
+      "openalex:W2163922914",
+      "openalex:W2102605133"
+    ],
+    [
+      "openalex:W2163922914",
+      "openalex:W2183182206"
+    ],
+    [
+      "openalex:W2163922914",
+      "openalex:W2310992461"
+    ],
+    [
+      "openalex:W2163922914",
+      "openalex:W2500751094"
+    ],
+    [
+      "openalex:W2163922914",
+      "openalex:W2565516711"
+    ],
+    [
+      "openalex:W2163922914",
+      "openalex:W2592929672"
+    ],
+    [
+      "openalex:W2163922914",
+      "openalex:W2610332124"
+    ],
+    [
+      "openalex:W2163922914",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2163922914",
+      "openalex:W2740656274"
+    ],
+    [
+      "openalex:W2163922914",
+      "openalex:W2919115771"
+    ],
+    [
+      "openalex:W2163922914",
+      "openalex:W2962727772"
+    ],
+    [
+      "openalex:W2164720308",
+      "openalex:W2105454024"
+    ],
+    [
+      "openalex:W2164720308",
+      "openalex:W2152233525"
+    ],
+    [
+      "openalex:W2165947725",
+      "openalex:W2073767010"
+    ],
+    [
+      "openalex:W2165947725",
+      "openalex:W2097295641"
+    ],
+    [
+      "openalex:W2165947725",
+      "openalex:W2152233525"
+    ],
+    [
+      "openalex:W2165947725",
+      "openalex:W2153839765"
+    ],
+    [
+      "openalex:W2170161511",
+      "openalex:W1985904252"
+    ],
+    [
+      "openalex:W2170161511",
+      "openalex:W2046863527"
+    ],
+    [
+      "openalex:W2170161511",
+      "openalex:W2130184867"
+    ],
+    [
+      "openalex:W2170161511",
+      "openalex:W2136869398"
+    ],
+    [
+      "openalex:W2170161511",
+      "openalex:W2143492062"
+    ],
+    [
+      "openalex:W2170161511",
+      "openalex:W2144764737"
+    ],
+    [
+      "openalex:W2170161511",
+      "openalex:W2145227859"
+    ],
+    [
+      "openalex:W2170457011",
+      "openalex:W2162095066"
+    ],
+    [
+      "openalex:W2183182206",
+      "openalex:W2253429366"
+    ],
+    [
+      "openalex:W2183182206",
+      "openalex:W2764034829"
+    ],
+    [
+      "openalex:W2183182206",
+      "openalex:W2782522152"
+    ],
+    [
+      "openalex:W2183182206",
+      "openalex:W4240485910"
+    ],
+    [
+      "openalex:W2194187530",
+      "openalex:W2962949934"
+    ],
+    [
+      "openalex:W2194321275",
+      "openalex:W2738724892"
+    ],
+    [
+      "openalex:W2211192759",
+      "openalex:W2413794162"
+    ],
+    [
+      "openalex:W2211192759",
+      "openalex:W2562607067"
+    ],
+    [
+      "openalex:W2214802144",
+      "openalex:W2741137940"
+    ],
+    [
+      "openalex:W2242218935",
+      "openalex:W2741137940"
+    ],
+    [
+      "openalex:W2253429366",
+      "openalex:W2533800772"
+    ],
+    [
+      "openalex:W2253429366",
+      "openalex:W2592929672"
+    ],
+    [
+      "openalex:W2267186426",
+      "openalex:W2413794162"
+    ],
+    [
+      "openalex:W2267186426",
+      "openalex:W2608787653"
+    ],
+    [
+      "openalex:W2267186426",
+      "openalex:W2963929190"
+    ],
+    [
+      "openalex:W2289252105",
+      "openalex:W2604319603"
+    ],
+    [
+      "openalex:W2296283641",
+      "openalex:W2488984245"
+    ],
+    [
+      "openalex:W2296283641",
+      "openalex:W2556605533"
+    ],
+    [
+      "openalex:W2296283641",
+      "openalex:W2559281960"
+    ],
+    [
+      "openalex:W2296283641",
+      "openalex:W2562607067"
+    ],
+    [
+      "openalex:W2296283641",
+      "openalex:W2587809655"
+    ],
+    [
+      "openalex:W2296283641",
+      "openalex:W2621075239"
+    ],
+    [
+      "openalex:W2296283641",
+      "openalex:W2726375170"
+    ],
+    [
+      "openalex:W2296283641",
+      "openalex:W2729101176"
+    ],
+    [
+      "openalex:W2296283641",
+      "openalex:W2740006839"
+    ],
+    [
+      "openalex:W2296283641",
+      "openalex:W2741075451"
+    ],
+    [
+      "openalex:W2296283641",
+      "openalex:W2759056771"
+    ],
+    [
+      "openalex:W2296283641",
+      "openalex:W2785787385"
+    ],
+    [
+      "openalex:W2296283641",
+      "openalex:W2808142148"
+    ],
+    [
+      "openalex:W2296283641",
+      "openalex:W2962902328"
+    ],
+    [
+      "openalex:W2296283641",
+      "openalex:W2963338481"
+    ],
+    [
+      "openalex:W2301358467",
+      "openalex:W2592929672"
+    ],
+    [
+      "openalex:W2301358467",
+      "openalex:W2664267452"
+    ],
+    [
+      "openalex:W2302086703",
+      "openalex:W2575842049"
+    ],
+    [
+      "openalex:W2302086703",
+      "openalex:W2690721124"
+    ],
+    [
+      "openalex:W2302086703",
+      "openalex:W2739107216"
+    ],
+    [
+      "openalex:W2302086703",
+      "openalex:W2741249238"
+    ],
+    [
+      "openalex:W2310992461",
+      "openalex:W2533800772"
+    ],
+    [
+      "openalex:W2310992461",
+      "openalex:W2592929672"
+    ],
+    [
+      "openalex:W2327501763",
+      "openalex:W2608787653"
+    ],
+    [
+      "openalex:W2327501763",
+      "openalex:W2963609956"
+    ],
+    [
+      "openalex:W2341282033",
+      "openalex:W1993254594"
+    ],
+    [
+      "openalex:W2341282033",
+      "openalex:W2011826874"
+    ],
+    [
+      "openalex:W2341282033",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W2341282033",
+      "openalex:W2073767010"
+    ],
+    [
+      "openalex:W2341282033",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2341282033",
+      "openalex:W2091005670"
+    ],
+    [
+      "openalex:W2341282033",
+      "openalex:W2117242469"
+    ],
+    [
+      "openalex:W2341282033",
+      "openalex:W2119577735"
+    ],
+    [
+      "openalex:W2341282033",
+      "openalex:W2153839765"
+    ],
+    [
+      "openalex:W2341282033",
+      "openalex:W2591673470"
+    ],
+    [
+      "openalex:W2341282033",
+      "openalex:W2734801606"
+    ],
+    [
+      "openalex:W2346062110",
+      "openalex:W2592929672"
+    ],
+    [
+      "openalex:W2398833147",
+      "openalex:W2011826874"
+    ],
+    [
+      "openalex:W2398833147",
+      "openalex:W2038533067"
+    ],
+    [
+      "openalex:W2398833147",
+      "openalex:W2082694050"
+    ],
+    [
+      "openalex:W2398833147",
+      "openalex:W2091005670"
+    ],
+    [
+      "openalex:W2398833147",
+      "openalex:W2153839765"
+    ],
+    [
+      "openalex:W2412782625",
+      "openalex:W2253429366"
+    ],
+    [
+      "openalex:W2413794162",
+      "openalex:W2608787653"
+    ],
+    [
+      "openalex:W2424778531",
+      "openalex:W2607296803"
+    ],
+    [
+      "openalex:W2469314752",
+      "openalex:W2488984245"
+    ],
+    [
+      "openalex:W2469314752",
+      "openalex:W2726375170"
+    ],
+    [
+      "openalex:W2469314752",
+      "openalex:W2729101176"
+    ],
+    [
+      "openalex:W2470673105",
+      "openalex:W2613328025"
+    ],
+    [
+      "openalex:W2470673105",
+      "openalex:W2745673470"
+    ],
+    [
+      "openalex:W2470673105",
+      "openalex:W2749348810"
+    ],
+    [
+      "openalex:W2470673105",
+      "openalex:W2963168371"
+    ],
+    [
+      "openalex:W2473418344",
+      "openalex:W2610332124"
+    ],
+    [
+      "openalex:W2488984245",
+      "openalex:W2729101176"
+    ],
+    [
+      "openalex:W2500751094",
+      "openalex:W2764034829"
+    ],
+    [
+      "openalex:W2500751094",
+      "openalex:W2782522152"
+    ],
+    [
+      "openalex:W2500751094",
+      "openalex:W4240485910"
+    ],
+    [
+      "openalex:W2511598956",
+      "openalex:W2741956709"
+    ],
+    [
+      "openalex:W2511598956",
+      "openalex:W2808142148"
+    ],
+    [
+      "openalex:W2515462165",
+      "openalex:W2604610161"
+    ],
+    [
+      "openalex:W2515462165",
+      "openalex:W2759056771"
+    ],
+    [
+      "openalex:W2516621648",
+      "openalex:W2598569220"
+    ],
+    [
+      "openalex:W2516621648",
+      "openalex:W2962717047"
+    ],
+    [
+      "openalex:W2526425061",
+      "openalex:W2766219058"
+    ],
+    [
+      "openalex:W2526471240",
+      "openalex:W2606974598"
+    ],
+    [
+      "openalex:W2526471240",
+      "openalex:W2962974924"
+    ],
+    [
+      "openalex:W2531207078",
+      "openalex:W2550821151"
+    ],
+    [
+      "openalex:W2531207078",
+      "openalex:W2963609956"
+    ],
+    [
+      "openalex:W2533800772",
+      "openalex:W2592929672"
+    ],
+    [
+      "openalex:W2552839021",
+      "openalex:W2594990650"
+    ],
+    [
+      "openalex:W2561360547",
+      "openalex:W2606974598"
+    ],
+    [
+      "openalex:W2562607067",
+      "openalex:W2757541972"
+    ],
+    [
+      "openalex:W2575842049",
+      "openalex:W2741075451"
+    ],
+    [
+      "openalex:W2581637843",
+      "openalex:W2739046565"
+    ],
+    [
+      "openalex:W2605215742",
+      "openalex:W2567657016"
+    ],
+    [
+      "openalex:W2606974598",
+      "openalex:W2745673470"
+    ],
+    [
+      "openalex:W2606974598",
+      "openalex:W2964144561"
+    ],
+    [
+      "openalex:W2610332124",
+      "openalex:W2726375170"
+    ],
+    [
+      "openalex:W2732026016",
+      "openalex:W2473930607"
+    ],
+    [
+      "openalex:W2736334449",
+      "openalex:W2739179646"
+    ],
+    [
+      "openalex:W2916251204",
+      "openalex:W2033710484"
+    ],
+    [
+      "openalex:W2916251204",
+      "openalex:W2081913479"
+    ],
+    [
+      "openalex:W2916251204",
+      "openalex:W2153839765"
+    ],
+    [
+      "openalex:W2916251204",
+      "openalex:W2591673470"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2194321275"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2289252105"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2310992461"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2311607323"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2346062110"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2533800772"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2565516711"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2592929672"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2598457882"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2604319603"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2610332124"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2664267452"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2738724892"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2740656274"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2962727772"
+    ],
+    [
+      "openalex:W2919115771",
+      "openalex:W2963168371"
+    ],
+    [
+      "openalex:W2952138241",
+      "openalex:W2606974598"
+    ],
+    [
+      "openalex:W2952138241",
+      "openalex:W2962974924"
+    ],
+    [
+      "openalex:W2952138241",
+      "openalex:W2964144561"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W1832693441"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2161381512"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2163922914"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2240067561"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2296283641"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2488984245"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2510940142"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2511598956"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2515462165"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2552839021"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2556605533"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2567657016"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2587809655"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2604319603"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2604610161"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2605215742"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2610332124"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2621075239"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2726375170"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2739046565"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2740006839"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2759211898"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2785787385"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2962902328"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2962949934"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2963208801"
+    ],
+    [
+      "openalex:W2952230511",
+      "openalex:W2963929190"
+    ],
+    [
+      "openalex:W2962809918",
+      "openalex:W2741075451"
+    ],
+    [
+      "openalex:W2962809918",
+      "openalex:W2962717047"
+    ],
+    [
+      "openalex:W2962809918",
+      "openalex:W2962985038"
+    ],
+    [
+      "openalex:W2962883855",
+      "openalex:W2581637843"
+    ],
+    [
+      "openalex:W2962883855",
+      "openalex:W2745673470"
+    ],
+    [
+      "openalex:W2962883855",
+      "openalex:W2963167310"
+    ],
+    [
+      "openalex:W2962883855",
+      "openalex:W2963206148"
+    ],
+    [
+      "openalex:W2962883855",
+      "openalex:W2963620441"
+    ],
+    [
+      "openalex:W2962883855",
+      "openalex:W2963736842"
+    ],
+    [
+      "openalex:W2962883855",
+      "openalex:W2964352131"
+    ],
+    [
+      "openalex:W2962891704",
+      "openalex:W2412782625"
+    ],
+    [
+      "openalex:W2962902328",
+      "openalex:W2559281960"
+    ],
+    [
+      "openalex:W2962902328",
+      "openalex:W2587809655"
+    ],
+    [
+      "openalex:W2962902328",
+      "openalex:W2729101176"
+    ],
+    [
+      "openalex:W2962902328",
+      "openalex:W2741075451"
+    ],
+    [
+      "openalex:W2962902328",
+      "openalex:W2757205734"
+    ],
+    [
+      "openalex:W2962902328",
+      "openalex:W2963338481"
+    ],
+    [
+      "openalex:W2963167310",
+      "openalex:W2581637843"
+    ],
+    [
+      "openalex:W2963168371",
+      "openalex:W2741252866"
+    ],
+    [
+      "openalex:W2963168371",
+      "openalex:W2757541972"
+    ],
+    [
+      "openalex:W2963206148",
+      "openalex:W2581637843"
+    ],
+    [
+      "openalex:W2963206148",
+      "openalex:W2594990650"
+    ],
+    [
+      "openalex:W2963206148",
+      "openalex:W2962883855"
+    ],
+    [
+      "openalex:W2963206148",
+      "openalex:W2963167310"
+    ],
+    [
+      "openalex:W2963206148",
+      "openalex:W2963797754"
+    ],
+    [
+      "openalex:W2963206148",
+      "openalex:W2964352131"
+    ],
+    [
+      "openalex:W2963208801",
+      "openalex:W2296283641"
+    ],
+    [
+      "openalex:W2963208801",
+      "openalex:W2531207078"
+    ],
+    [
+      "openalex:W2963208801",
+      "openalex:W2550821151"
+    ],
+    [
+      "openalex:W2963208801",
+      "openalex:W2963736842"
+    ],
+    [
+      "openalex:W2963260202",
+      "openalex:W2594990650"
+    ],
+    [
+      "openalex:W2963260202",
+      "openalex:W2606974598"
+    ],
+    [
+      "openalex:W2963260202",
+      "openalex:W2963794306"
+    ],
+    [
+      "openalex:W2963338481",
+      "openalex:W2567657016"
+    ],
+    [
+      "openalex:W2963338481",
+      "openalex:W2605215742"
+    ],
+    [
+      "openalex:W2963338481",
+      "openalex:W2962902328"
+    ],
+    [
+      "openalex:W2963446712",
+      "openalex:W2594990650"
+    ],
+    [
+      "openalex:W2963446712",
+      "openalex:W2622826443"
+    ],
+    [
+      "openalex:W2963463964",
+      "openalex:W2581637843"
+    ],
+    [
+      "openalex:W2963463964",
+      "openalex:W2609482285"
+    ],
+    [
+      "openalex:W2963463964",
+      "openalex:W2963260202"
+    ],
+    [
+      "openalex:W2963463964",
+      "openalex:W2963620441"
+    ],
+    [
+      "openalex:W2963463964",
+      "openalex:W2963736842"
+    ],
+    [
+      "openalex:W2963620441",
+      "openalex:W2581637843"
+    ],
+    [
+      "openalex:W2963620441",
+      "openalex:W2759056771"
+    ],
+    [
+      "openalex:W2963655793",
+      "openalex:W2739046565"
+    ],
+    [
+      "openalex:W2963794306",
+      "openalex:W2963655793"
+    ],
+    [
+      "openalex:W2963797754",
+      "openalex:W2581637843"
+    ],
+    [
+      "openalex:W2963797754",
+      "openalex:W2963167310"
+    ],
+    [
+      "openalex:W2963929190",
+      "openalex:W2526471240"
+    ],
+    [
+      "openalex:W2963929190",
+      "openalex:W2561360547"
+    ],
+    [
+      "openalex:W2963929190",
+      "openalex:W2594990650"
+    ],
+    [
+      "openalex:W2963929190",
+      "openalex:W2598569220"
+    ],
+    [
+      "openalex:W2963929190",
+      "openalex:W2606974598"
+    ],
+    [
+      "openalex:W2963929190",
+      "openalex:W2609482285"
+    ],
+    [
+      "openalex:W2963929190",
+      "openalex:W2740656274"
+    ],
+    [
+      "openalex:W2963929190",
+      "openalex:W2745673470"
+    ],
+    [
+      "openalex:W2963929190",
+      "openalex:W2772700764"
+    ],
+    [
+      "openalex:W2963929190",
+      "openalex:W2952138241"
+    ],
+    [
+      "openalex:W2963929190",
+      "openalex:W2962974924"
+    ],
+    [
+      "openalex:W2963929190",
+      "openalex:W2964144561"
+    ],
+    [
+      "openalex:W2963954913",
+      "openalex:W2470673105"
+    ],
+    [
+      "openalex:W2963954913",
+      "openalex:W2575842049"
+    ],
+    [
+      "openalex:W2963954913",
+      "openalex:W2739107216"
+    ],
+    [
+      "openalex:W2963963856",
+      "openalex:W2581637843"
+    ],
+    [
+      "openalex:W2963963856",
+      "openalex:W2594990650"
+    ],
+    [
+      "openalex:W2963963856",
+      "openalex:W2962883855"
+    ],
+    [
+      "openalex:W2963963856",
+      "openalex:W2963167310"
+    ],
+    [
+      "openalex:W2963963856",
+      "openalex:W2963206148"
+    ],
+    [
+      "openalex:W2963963856",
+      "openalex:W2963797754"
+    ],
+    [
+      "openalex:W2963963856",
+      "openalex:W2964352131"
+    ],
+    [
+      "openalex:W2964167098",
+      "openalex:W2511598956"
+    ],
+    [
+      "openalex:W2964167098",
+      "openalex:W2741075451"
+    ],
+    [
+      "openalex:W2964167098",
+      "openalex:W2741956709"
+    ],
+    [
+      "openalex:W2964167098",
+      "openalex:W2759056771"
+    ],
+    [
+      "openalex:W2964167098",
+      "openalex:W2808142148"
+    ],
+    [
+      "openalex:W2964268978",
+      "openalex:W2581637843"
+    ],
+    [
+      "openalex:W2964352131",
+      "openalex:W2581637843"
+    ],
+    [
+      "openalex:W2964352131",
+      "openalex:W2963167310"
+    ],
+    [
+      "openalex:W4240485910",
+      "openalex:W2764034829"
+    ],
+    [
+      "openalex:W4240485910",
+      "openalex:W2782522152"
+    ],
+    [
+      "openalex:W54257720",
+      "openalex:W1885185971"
+    ],
+    [
+      "openalex:W54257720",
+      "openalex:W2242218935"
+    ],
+    [
+      "openalex:W54257720",
+      "openalex:W2256362396"
+    ],
+    [
+      "openalex:W54257720",
+      "openalex:W2741137940"
+    ],
+    [
+      "openalex:W54257720",
+      "openalex:W2782522152"
+    ]
+  ],
+  "counterexample_nodes": [
+    "openalex:W1993254594",
+    "openalex:W2033710484",
+    "openalex:W2039934771",
+    "openalex:W2119577735",
+    "openalex:W2152233525"
+  ]
+}

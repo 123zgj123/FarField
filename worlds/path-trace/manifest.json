@@ -1,0 +1,18 @@
+{
+  "id": "path-trace",
+  "title": "Frozen 8-node path",
+  "source": "FarField test fixture: a path of length 7, frozen so a probe cannot invent the instance",
+  "retrieved_at": "2026-08-18",
+  "domains": [
+    "succinct",
+    "path",
+    "graph"
+  ],
+  "files": [
+    "path.json"
+  ],
+  "role": "test",
+  "schema": "path",
+  "load_hint": "payload = json.loads(Path('data/path.json').read_text(encoding='utf-8')); nodes = payload['nodes']  # consecutive ints along a path",
+  "digest": "4d4dee3b189d8ccfa2557031157e758ebddab80112a9244a884bdee3855cf0bb"
+}

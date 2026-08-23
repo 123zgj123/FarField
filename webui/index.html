@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FarField</title>
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --bg2: #f1eee6;
+    --panel: #ffffff;
+    --panel2: #fdfcf9;
+    --line: #e8e3d7;
+    --line2: #d9d2c1;
+    --ink: #1a2436;
+    --body: #3e4759;
+    --mute: #79808f;
+    --dim: #a8adb9;
+    --navy: #003a70;
+    --navy-deep: #002950;
+    --navy-dim: rgba(0, 58, 112, .08);
+    --gold: #9a7b2e;
+    --gold-bright: #b8933a;
+    --gold-dim: rgba(154, 123, 46, .1);
+    --ok: #1d7a4b;
+    --ok-dim: rgba(29, 122, 75, .1);
+    --bad: #b23a2e;
+    --bad-dim: rgba(178, 58, 46, .08);
+    --warn: #96660a;
+    --warn-dim: rgba(150, 102, 10, .1);
+    --serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
+    --sans: -apple-system, "SF Pro Text", "Segoe UI", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    font-size: 16px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--body);
+    font-family: var(--sans);
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: rgba(0, 58, 112, .14); }
+
+  /* ---------- 背景 ---------- */
+  .backdrop {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(1000px 460px at 50% -140px, rgba(0, 58, 112, .06), transparent 65%),
+      radial-gradient(700px 480px at 92% 10%, rgba(154, 123, 46, .05), transparent 60%);
+  }
+  .backdrop::after {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 41, 80, .04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 41, 80, .04) 1px, transparent 1px);
+    background-size: 46px 46px;
+    -webkit-mask-image: linear-gradient(#000 0%, transparent 38%);
+            mask-image: linear-gradient(#000 0%, transparent 38%);
+  }
+
+  /* ---------- 顶栏 ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 28px;
+    background: rgba(247, 245, 240, .86);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand { display: flex; align-items: baseline; gap: 12px; }
+  .brand .logo {
+    font-family: var(--mono); font-size: .95rem; font-weight: 700;
+    letter-spacing: .22em; color: var(--navy); text-transform: uppercase;
+  }
+  .brand .logo::before {
+    content: "◆"; color: var(--gold); margin-right: 10px; font-size: .8em;
+  }
+  .brand .tag { font-size: .78rem; color: var(--mute); letter-spacing: .04em; }
+  .top-right { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: flex-end; }
+  .nav-links { display: flex; gap: 18px; align-items: center; }
+  .nav-links a {
+    color: var(--mute); text-decoration: none; font-size: .84rem; font-weight: 600;
+  }
+  .nav-links a:hover { color: var(--navy); }
+  .lang {
+    display: inline-flex; border: 1px solid var(--line2); border-radius: 999px;
+    overflow: hidden; background: var(--panel);
+  }
+  .lang button {
+    border: none; background: transparent; color: var(--mute);
+    padding: 5px 12px; font: inherit; font-size: .76rem; font-weight: 600; cursor: pointer;
+  }
+  .lang button.on { background: var(--navy); color: #fff; }
+  .statuspill {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .06em;
+    color: var(--mute); border: 1px solid var(--line2); border-radius: 999px;
+    padding: 5px 14px; background: var(--panel);
+    max-width: 44vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .statuspill .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; background: var(--dim); }
+  .statuspill.ready .dot { background: var(--ok); box-shadow: 0 0 0 3px var(--ok-dim); }
+  .statuspill.ready { color: var(--body); }
+  .statuspill.warn .dot { background: var(--warn); box-shadow: 0 0 0 3px var(--warn-dim); }
+  @media (max-width: 720px) {
+    .topbar { padding: 12px 16px; }
+    .nav-links { display: none; }
+    .brand .tag { display: none; }
+  }
+
+  .wrap { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 28px 120px; }
+
+  /* ---------- 通用分区 ---------- */
+  .eyebrow {
+    font-family: var(--mono); font-size: .7rem; font-weight: 600;
+    letter-spacing: .28em; text-transform: uppercase; color: var(--gold);
+    display: flex; align-items: center; gap: 14px; margin: 0 0 16px;
+  }
+  .eyebrow::after { content: ""; height: 1px; flex: 1; background: linear-gradient(90deg, var(--line2), transparent); }
+  section { margin-top: 76px; }
+  section[hidden] { display: none; }
+
+  /* ---------- Hero ---------- */
+  .hero { padding-top: 88px; margin-top: 0; }
+  .hero h1 {
+    font-family: var(--serif); font-weight: 700; color: var(--navy-deep);
+    font-size: clamp(2rem, 5vw, 3.1rem); line-height: 1.32;
+    letter-spacing: .01em; margin: 0 0 22px; max-width: 21em;
+  }
+  .hero h1 em {
+    font-style: normal; color: var(--gold);
+    border-bottom: 3px solid rgba(154, 123, 46, .3); padding-bottom: 2px;
+  }
+  .hero .lede { max-width: 42em; margin: 0; color: var(--body); font-size: 1.02rem; }
+  .hero .lede b { color: var(--ink); font-weight: 600; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  a.ghost {
+    display: inline-flex; align-items: center;
+    border: 1px solid var(--line2); background: var(--panel); color: var(--navy);
+    border-radius: 10px; padding: 11px 22px; font-weight: 600; text-decoration: none; font-size: .92rem;
+  }
+  a.ghost:hover { border-color: var(--navy); }
+  .how-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+  }
+  @media (max-width: 800px) { .how-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .how-grid { grid-template-columns: 1fr; } }
+  .how-card {
+    border: 1px solid var(--line); border-radius: 14px; background: var(--panel);
+    padding: 18px 18px 16px; min-height: 8.5em;
+  }
+  .how-card .n {
+    font-family: var(--mono); font-size: .7rem; letter-spacing: .14em; color: var(--gold); font-weight: 700;
+  }
+  .how-card h3 { margin: 8px 0 6px; font-size: 1.02rem; color: var(--ink); }
+  .how-card p { margin: 0; font-size: .84rem; color: var(--mute); line-height: 1.55; }
+  .ask {
+    font-family: var(--serif); font-size: 1.35rem; color: var(--navy-deep);
+    margin: 0 0 8px; font-weight: 700;
+  }
+  .guide { margin: 0 0 16px; color: var(--mute); font-size: .9rem; max-width: 46em; }
+  .examples { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 4px; }
+  .exchip {
+    border: 1px solid var(--line2); background: var(--panel2); color: var(--body);
+    border-radius: 999px; padding: 6px 14px; font: inherit; font-size: .8rem; cursor: pointer; text-align: left;
+  }
+  .exchip:hover { border-color: var(--navy); color: var(--navy); }
+  .try-label { font-size: .76rem; color: var(--mute); margin: 12px 0 0; }
+  details.advanced { margin-top: 18px; }
+  details.advanced > summary,
+  details.settings summary {
+    cursor: pointer; list-style: none; font-size: .84rem; color: var(--mute); font-weight: 600;
+  }
+  details.advanced > summary::-webkit-details-marker,
+  details.settings summary::-webkit-details-marker { display: none; }
+  details.advanced > summary::before,
+  details.settings summary::before { content: "+ "; color: var(--gold); }
+  details.advanced[open] > summary::before,
+  details.settings[open] summary::before { content: "− "; }
+
+  .pipeline {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 0;
+    margin-top: 38px; padding: 16px 22px;
+    border: 1px solid var(--line); border-radius: 12px;
+    background: var(--panel);
+    box-shadow: 0 1px 2px rgba(0, 41, 80, .04), 0 8px 24px rgba(0, 41, 80, .04);
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .1em;
+  }
+  .pipeline span { color: var(--mute); white-space: nowrap; }
+  .pipeline span::after { content: "→"; color: var(--line2); margin: 0 12px; }
+  .pipeline span:last-child::after { content: ""; margin: 0; }
+  .pipeline .hot { color: var(--navy); font-weight: 600; }
+
+  /* ---------- 卡片面板通用 ---------- */
+  .panel {
+    border: 1px solid var(--line); border-radius: 14px;
+    background: var(--panel);
+    box-shadow: 0 1px 2px rgba(0, 41, 80, .04), 0 10px 30px rgba(0, 41, 80, .05);
+    padding: 28px 30px;
+  }
+
+  /* ---------- 任务台表单 ---------- */
+  textarea {
+    width: 100%; min-height: 96px; resize: vertical;
+    border: 1px solid var(--line2); background: var(--panel2); color: var(--ink);
+    border-radius: 10px; padding: 14px 16px; font: inherit; font-size: 1.02rem;
+    line-height: 1.7; transition: border-color .15s, box-shadow .15s;
+  }
+  textarea::placeholder { color: var(--dim); }
+  textarea:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px var(--navy-dim); background: #fff; }
+
+  .params { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 32px; margin-top: 24px; }
+  @media (max-width: 720px) { .params { grid-template-columns: 1fr; } }
+  .param-label { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+  .param-label .k {
+    font-family: var(--mono); font-size: .66rem; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--gold);
+  }
+  .param-label .t { font-size: .88rem; color: var(--ink); font-weight: 600; }
+  .seg { display: inline-flex; border: 1px solid var(--line2); border-radius: 9px; overflow: hidden; background: var(--panel2); }
+  .seg button {
+    border: none; background: transparent; color: var(--mute);
+    padding: 7px 15px; font: inherit; font-size: .84rem; cursor: pointer;
+    border-right: 1px solid var(--line); transition: color .12s, background .12s;
+  }
+  .seg button:last-child { border-right: none; }
+  .seg button:hover { color: var(--ink); }
+  .seg button.on { background: var(--navy); color: #fff; font-weight: 600; }
+  .param .hint { margin: 8px 0 0; color: var(--mute); font-size: .78rem; line-height: 1.65; }
+
+  .launch-row { display: flex; align-items: center; gap: 18px; margin-top: 28px; flex-wrap: wrap; }
+  button.go, a.go {
+    display: inline-flex; align-items: center; justify-content: center;
+    text-decoration: none;
+    background: var(--navy); color: #fff; border: none; border-radius: 10px;
+    padding: 12px 36px; font: inherit; font-size: .95rem; font-weight: 700;
+    letter-spacing: .06em; cursor: pointer; transition: background .12s, transform .12s, box-shadow .12s;
+    box-shadow: 0 4px 14px rgba(0, 58, 112, .22);
+  }
+  button.go:hover:not(:disabled), a.go:hover { background: var(--navy-deep); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0, 58, 112, .28); }
+  button.go:disabled { opacity: .45; cursor: wait; box-shadow: none; }
+  .note { color: var(--mute); font-size: .8rem; margin: 0; }
+
+  .past-list { display: flex; flex-direction: column; gap: 10px; }
+  .past-item {
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    flex-wrap: wrap;
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 18px; background: var(--panel2);
+  }
+  .past-item.featured { border-color: rgba(154, 123, 46, .45); background: var(--gold-dim); }
+  .past-item .title { font-weight: 600; color: var(--ink); font-size: .92rem; }
+  .past-item .meta { font-size: .76rem; color: var(--mute); margin-top: 4px; }
+  .past-item button {
+    border: 1px solid var(--navy); background: var(--navy); color: #fff;
+    border-radius: 8px; padding: 8px 16px; font: inherit; font-size: .84rem;
+    font-weight: 600; cursor: pointer;
+  }
+  .past-item button:disabled { opacity: .45; cursor: wait; }
+  .past-item button.ghost {
+    background: transparent; color: var(--navy);
+  }
+  .past-item button.ghost:disabled { color: var(--mute); border-color: var(--line2); }
+
+  details.settings { margin-top: 22px; border-top: 1px dashed var(--line2); padding-top: 16px; }
+  details.settings summary {
+    cursor: pointer; list-style: none; font-family: var(--mono); font-size: .72rem;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--mute);
+  }
+  details.settings summary::-webkit-details-marker { display: none; }
+  details.settings summary::before { content: "+ "; color: var(--gold); }
+  details.settings[open] summary::before { content: "− "; }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+  @media (max-width: 720px) { .fields { grid-template-columns: 1fr; } }
+  .fields label { display: grid; gap: 6px; font-size: .76rem; color: var(--mute); letter-spacing: .03em; }
+  input, select {
+    border: 1px solid var(--line2); background: var(--panel2); color: var(--ink);
+    border-radius: 8px; padding: 9px 12px; font: inherit; font-size: .88rem;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--navy); background: #fff; }
+
+  /* ---------- 运行状态 ---------- */
+  .phases { display: flex; list-style: none; padding: 0; margin: 0 0 24px; }
+  .phases li {
+    flex: 1; position: relative; text-align: center;
+    font-size: .78rem; color: var(--dim); padding-top: 20px; letter-spacing: .02em;
+  }
+  .phases li::before {
+    content: ""; position: absolute; top: 4px; left: 50%; transform: translateX(-50%);
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--panel); border: 2px solid var(--line2); z-index: 1;
+  }
+  .phases li::after {
+    content: ""; position: absolute; top: 9px; left: calc(50% + 9px); right: calc(-50% + 9px);
+    height: 1px; background: var(--line2);
+  }
+  .phases li:last-child::after { display: none; }
+  .phases li.done { color: var(--mute); }
+  .phases li.done::before { background: var(--navy); border-color: var(--navy); }
+  .phases li.now { color: var(--navy); font-weight: 700; }
+  .phases li.now::before {
+    background: var(--gold-bright); border-color: var(--gold-bright);
+    box-shadow: 0 0 0 4px var(--gold-dim); animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 8px rgba(154, 123, 46, .04); } }
+
+  .nowlog {
+    display: grid; gap: 2px; margin: 0 0 18px;
+    padding: 14px 18px; background: var(--panel2); border-radius: 10px;
+    border: 1px solid var(--line);
+  }
+  .nowlog .ln {
+    display: flex; gap: 10px; align-items: baseline;
+    font-size: .84rem; color: var(--dim); line-height: 1.7;
+    transition: color .3s;
+  }
+  .nowlog .ln::before { content: "·"; color: var(--line2); flex: none; }
+  .nowlog .ln.cur { color: var(--ink); font-weight: 500; }
+  .nowlog .ln.cur::before { content: "▸"; color: var(--gold); }
+  .nowlog.busy .ln.cur::after {
+    content: ""; display: inline-block; width: .45em; height: .45em; margin-left: 2px;
+    border-radius: 50%; background: var(--gold-bright); vertical-align: middle;
+    animation: blink 1.1s ease-in-out infinite;
+  }
+  @keyframes blink { 50% { opacity: .15; } }
+
+  .tracks { display: grid; }
+  .track {
+    display: grid; grid-template-columns: 5.5em 7.5em 1fr; gap: 14px; align-items: baseline;
+    font-size: .86rem; padding: 10px 4px; border-top: 1px solid var(--line);
+  }
+  .track .idx { font-family: var(--mono); font-size: .72rem; color: var(--dim); letter-spacing: .08em; }
+  .track .n { font-weight: 600; color: var(--mute); }
+  .track .d { color: var(--body); }
+  .track.keep .n { color: var(--ok); }
+  .track.drop .n { color: var(--bad); }
+  .track.drop .d { color: var(--mute); }
+  .track.work .n { color: var(--navy); }
+
+  .replay-banner {
+    margin: 0 0 18px;
+    padding: 10px 14px;
+    border-radius: 9px;
+    border: 1px solid rgba(154, 123, 46, .4);
+    background: var(--gold-dim);
+    color: var(--ink);
+    font-size: .84rem;
+    font-weight: 600;
+  }
+  .story {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin: 0 0 18px;
+  }
+  .story-col {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px 8px;
+    background: var(--panel2);
+  }
+  .story-head { display: flex; gap: 10px; align-items: baseline; margin-bottom: 6px; }
+  .story-head .idx {
+    font-family: var(--mono); font-size: .7rem; color: var(--gold);
+    letter-spacing: .1em; flex: none;
+  }
+  .story-head .ttl { font-size: .86rem; font-weight: 600; color: var(--ink); }
+  .story-steps { list-style: none; margin: 0; padding: 0; }
+  .story-steps li {
+    position: relative;
+    padding: 7px 0 7px 16px;
+    font-size: .8rem;
+    color: var(--body);
+    line-height: 1.45;
+    border-top: 1px dashed var(--line);
+  }
+  .story-steps li::before {
+    content: "";
+    position: absolute; left: 0; top: 13px;
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--line2);
+  }
+  .story-steps li.work::before { background: var(--navy); }
+  .story-steps li.ok::before { background: var(--ok); }
+  .story-steps li.warn::before { background: var(--gold); }
+  .story-steps li.no::before { background: var(--bad); }
+  .story-steps li.stop::before { background: var(--gold-bright, var(--gold)); }
+
+  /* ---------- 信息列表面板 ---------- */
+  .rows { display: grid; }
+  .row-item {
+    display: flex; gap: 12px; align-items: baseline;
+    padding: 10px 2px; border-top: 1px solid var(--line);
+    font-size: .88rem; color: var(--body);
+  }
+  .row-item:first-child { border-top: none; }
+  .row-item .lab {
+    flex: none; font-family: var(--mono); font-size: .68rem; letter-spacing: .08em;
+    padding: 2px 10px; border-radius: 5px; background: var(--bg2);
+    border: 1px solid var(--line2); color: var(--mute); white-space: nowrap;
+  }
+  .row-item .lab.ok { color: var(--ok); border-color: rgba(29,122,75,.3); background: var(--ok-dim); }
+  .row-item .lab.no { color: var(--bad); border-color: rgba(178,58,46,.3); background: var(--bad-dim); }
+  .row-item .lab.hot { color: var(--navy); border-color: rgba(0,58,112,.25); background: var(--navy-dim); }
+  .row-item a { color: var(--navy); text-decoration: none; }
+  .row-item a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .row-item b { color: var(--ink); font-weight: 600; }
+  .rank-note { color: var(--mute); font-size: .8rem; margin: 0 0 18px; line-height: 1.7; }
+
+  /* ---------- 假设卡 ---------- */
+  .idea {
+    border: 1px solid var(--line); border-radius: 14px;
+    background: var(--panel);
+    box-shadow: 0 1px 2px rgba(0, 41, 80, .04), 0 10px 30px rgba(0, 41, 80, .05);
+    padding: 26px 28px 24px; margin: 0 0 20px;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .idea.open { border-left: 3px solid var(--ok); }
+  .idea.top { border-left: 3px solid var(--gold-bright); box-shadow: 0 2px 4px rgba(0, 41, 80, .05), 0 14px 40px rgba(154, 123, 46, .12); }
+  .idea.shut { background: var(--panel2); box-shadow: none; }
+
+  .idea .pairline { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .idea .pair {
+    font-family: var(--mono); font-size: .78rem; letter-spacing: .04em; color: var(--navy); font-weight: 600;
+  }
+  .idea .pair .x { color: var(--dim); margin: 0 8px; font-weight: 400; }
+  .mark {
+    display: inline-flex; align-items: center;
+    font-family: var(--mono); font-size: .66rem; letter-spacing: .08em;
+    padding: 2px 10px; border-radius: 999px; border: 1px solid var(--line2);
+    color: var(--mute); background: var(--bg2); white-space: nowrap;
+  }
+  .mark.ok { color: var(--ok); border-color: rgba(29,122,75,.35); background: var(--ok-dim); }
+  .mark.no { color: var(--bad); border-color: rgba(178,58,46,.35); background: var(--bad-dim); }
+  .mark.top { color: #fff; background: var(--gold); border-color: var(--gold); font-weight: 700; }
+  .mark.warn { color: var(--warn); border-color: rgba(150,102,10,.35); background: var(--warn-dim); }
+
+  .idea .claim {
+    font-family: var(--serif); font-size: 1.22rem; line-height: 1.65;
+    color: var(--ink); margin: 0 0 18px; font-weight: 600;
+  }
+  .why-rank { font-size: .78rem; color: var(--gold); margin: 0 0 12px; font-family: var(--mono); letter-spacing: .02em; }
+
+  .kv { margin: 0 0 12px; font-size: .9rem; color: var(--body); }
+  .kv .k, .klabel {
+    display: block; font-size: .76rem; letter-spacing: .06em;
+    color: var(--gold); margin-bottom: 2px; font-weight: 600;
+  }
+
+  /* 证据阶梯 */
+  .ladder {
+    display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 8px;
+    padding-top: 16px; border-top: 1px dashed var(--line2);
+  }
+  .step {
+    font-family: var(--mono); font-size: .68rem; letter-spacing: .06em;
+    padding: 3px 11px; border-radius: 6px; border: 1px solid var(--line);
+    color: var(--dim); background: var(--panel2); transition: all .2s;
+  }
+  .step.on { color: var(--navy); border-color: rgba(0,58,112,.35); animation: stepPulse 1.2s ease-in-out infinite; }
+  @keyframes stepPulse { 50% { background: var(--navy-dim); } }
+  .step.ok { color: var(--ok); border-color: rgba(29,122,75,.3); background: var(--ok-dim); }
+  .step.ok::before { content: "✓ "; }
+  .step.no { color: var(--bad); border-color: rgba(178,58,46,.3); background: var(--bad-dim); }
+  .step.no::before { content: "✕ "; }
+  .step.warn { color: var(--warn); border-color: rgba(150,102,10,.3); background: var(--warn-dim); }
+  .step.warn::before { content: "! "; }
+  .step.skip { opacity: .4; text-decoration: line-through; }
+
+  .lit { margin-top: 12px; font-size: .84rem; color: var(--mute); }
+  .lit a { color: var(--navy); }
+  .idea .wait {
+    color: var(--mute); font-size: .86rem; margin-top: 16px;
+    padding: 11px 15px; background: var(--panel2); border-radius: 8px;
+    border-left: 3px solid var(--gold-bright);
+  }
+  .idea h3 {
+    font-family: var(--serif); font-size: 1.26rem; font-weight: 700;
+    color: var(--navy-deep); margin: 24px 0 14px;
+    padding-top: 20px; border-top: 1px solid var(--line);
+  }
+  .idea h3 .mark { vertical-align: 3px; margin-left: 10px; }
+  .idea ol.steps { margin: 6px 0 14px; padding-left: 1.3em; font-size: .9rem; }
+  .idea ol.steps li { margin: 5px 0; }
+
+  /* 审稿维度条 */
+  .scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 24px; margin: 18px 0 14px; }
+  @media (max-width: 640px) { .scores { grid-template-columns: repeat(2, 1fr); } }
+  .score { font-size: .76rem; color: var(--mute); }
+  .score .srow { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .score .sv { font-family: var(--mono); color: var(--ink); font-weight: 600; }
+  .score .bar { display: block; height: 4px; border-radius: 2px; background: var(--bg2); margin-top: 5px; overflow: hidden; }
+  .score .bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--navy), var(--gold-bright)); border-radius: 2px; }
+  .critique { font-size: .88rem; margin: 0 0 10px; color: var(--body); }
+
+  button.again {
+    margin-top: 12px; margin-right: 8px;
+    border: 1px solid var(--line2); background: var(--panel); color: var(--body);
+    border-radius: 8px; padding: 7px 16px; font: inherit; font-size: .8rem; cursor: pointer;
+    font-family: var(--mono); letter-spacing: .04em; transition: all .12s;
+  }
+  button.again:hover:not(:disabled) { border-color: var(--navy); color: var(--navy); }
+  button.again:disabled { opacity: .4; cursor: wait; }
+
+  .papers-mini { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line); }
+  .papers-mini .k {
+    display: block; font-size: .76rem; letter-spacing: .06em;
+    color: var(--gold); margin-bottom: 6px; font-weight: 600;
+  }
+  .paper { font-size: .84rem; color: var(--mute); padding: 3px 0; }
+  .paper a { color: var(--navy); text-decoration: none; }
+  .paper a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .paper b { color: var(--body); font-weight: 600; }
+
+  /* 放下的 */
+  details.shut-item { margin: 0 0 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+  details.shut-item summary {
+    cursor: pointer; list-style: none; padding: 13px 18px;
+    font-size: .86rem; color: var(--mute); display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;
+  }
+  details.shut-item summary::-webkit-details-marker { display: none; }
+  details.shut-item summary .p { font-family: var(--mono); font-size: .76rem; color: var(--navy); font-weight: 600; }
+  details.shut-item[open] summary { border-bottom: 1px solid var(--line); }
+  details.shut-item .idea { border: none; background: transparent; margin: 0; box-shadow: none; }
+
+  /* ---------- 收尾统计 ---------- */
+  #end { margin-top: 68px; }
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0, 41, 80, .04), 0 10px 30px rgba(0, 41, 80, .05);
+  }
+  @media (max-width: 720px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+  .stat { background: var(--panel); padding: 22px 24px; }
+  .stat .v { font-family: var(--serif); font-size: 1.9rem; font-weight: 700; color: var(--ink); line-height: 1.2; }
+  .stat .l { font-size: .76rem; color: var(--mute); letter-spacing: .04em; margin-top: 4px; }
+  .stat.hot .v { color: var(--navy); }
+  .stat.good .v { color: var(--ok); }
+  .end-notes { margin-top: 20px; font-size: .86rem; color: var(--mute); line-height: 2; }
+  .end-notes code { font-family: var(--mono); font-size: .78rem; color: var(--body); background: var(--bg2); padding: 2px 8px; border-radius: 5px; border: 1px solid var(--line); }
+  .err {
+    color: var(--bad); background: var(--bad-dim); border: 1px solid rgba(178,58,46,.25);
+    border-radius: 10px; padding: 14px 18px; font-size: .9rem;
+  }
+
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid var(--line); margin-top: 48px; padding: 26px 28px;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    font-family: var(--mono); font-size: .68rem; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--dim);
+  }
+</style>
+</head>
+<body>
+<div class="backdrop"></div>
+
+<nav class="topbar">
+  <div class="brand">
+    <span class="logo">FarField</span>
+    <span class="tag" data-i18n="tag">A local research loop</span>
+  </div>
+  <div class="top-right">
+    <div class="nav-links">
+      <a href="#how" data-i18n="navHow">How it works</a>
+      <a href="#start" data-i18n="navStart">Start</a>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-en" class="on">EN</button>
+      <button type="button" id="lang-zh">中文</button>
+    </div>
+    <span class="statuspill" id="machine"><span class="dot"></span><span id="machinetxt" data-i18n="machineLoading">Reading local setup…</span></span>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <p class="eyebrow" data-i18n="eyebrow">Open-source research loop</p>
+    <h1><span data-i18n="h1a">Give it a topic.</span><br><em data-i18n="h1b">Get a protocol someone else can run.</em></h1>
+    <p class="lede" data-i18n="lede">FarField searches related work, drafts a testable hypothesis, registers a two-arm experiment before seeing the numbers, and writes RESEARCH_PACKET.md. The model drafts hypotheses and scripts. Graph lookup, text checks, dataset binding, and the arithmetic on the two arms are ordinary Python. A result on made-up data can only weaken a claim. Confirmation needs a frozen dataset that matches the claim, then a rerun of the same experiment on this machine.</p>
+    <div class="hero-cta">
+      <a class="go" href="#start" data-i18n="ctaStart">Start with a topic</a>
+      <a class="ghost" href="#how" data-i18n="ctaHow">See the steps</a>
+    </div>
+    <div class="pipeline">
+      <span data-i18n="pipeTopic">Topic</span><span data-i18n="pipeSearch">Search</span><span data-i18n="pipeHyp">Hypothesis</span><span class="hot" data-i18n="pipeScreen">Screening</span><span class="hot" data-i18n="pipeExp">Experiment</span><span data-i18n="pipeProto">Protocol</span>
+    </div>
+  </section>
+
+  <section id="how">
+    <p class="eyebrow" data-i18n="howEyebrow">How a run works</p>
+    <p class="guide" data-i18n="howTitle" style="margin-bottom:18px">Same loop every time. No extra packages.</p>
+    <div class="how-grid">
+      <article class="how-card"><div class="n">01</div><h3 data-i18n="how1t">Topic</h3><p data-i18n="how1d">You type a research question in your own words.</p></article>
+      <article class="how-card"><div class="n">02</div><h3 data-i18n="how2t">Search</h3><p data-i18n="how2d">The system pulls papers and samples concept pairs that are not already local neighbors.</p></article>
+      <article class="how-card"><div class="n">03</div><h3 data-i18n="how3t">Hypothesis</h3><p data-i18n="how3d">The model writes a claim, a mechanism, and a prediction.</p></article>
+      <article class="how-card"><div class="n">04</div><h3 data-i18n="how4t">Screening</h3><p data-i18n="how4d">Code drops pairs the graph already contains and drafts that fail the text checks.</p></article>
+      <article class="how-card"><div class="n">05</div><h3 data-i18n="how5t">Experiment</h3><p data-i18n="how5d">Both arms call the same metric and differ by one flag, on frozen data when a matching set exists.</p></article>
+      <article class="how-card"><div class="n">06</div><h3 data-i18n="how6t">Protocol</h3><p data-i18n="how6d">What remains is written to RESEARCH_PACKET.md and protocol.json.</p></article>
+    </div>
+  </section>
+
+  <section id="start">
+    <p class="eyebrow" data-i18n="startEyebrow">Start</p>
+    <form id="form" class="panel">
+      <p class="ask" data-i18n="ask">What should we look into?</p>
+      <p class="guide" data-i18n="guide">I’ll search related work, draft a testable hypothesis, register a two-arm experiment before looking at the numbers, and write a protocol a colleague can run. You can edit the topic first.</p>
+      <textarea id="topic" placeholder="A research question, in a sentence or two" data-i18n-placeholder="topicPh"></textarea>
+      <p class="try-label" data-i18n="tryThis">Or try one of these:</p>
+      <div class="examples">
+        <button type="button" class="exchip" data-ex="ex1">compress genomic sequence collections with succinct data structures</button>
+        <button type="button" class="exchip" data-ex="ex2">combining diffusion models with agent-tool authorization security</button>
+        <button type="button" class="exchip" data-ex="ex3">index large graphs with theoretical size guarantees</button>
+      </div>
+      <div class="launch-row">
+        <button class="go" id="go" type="submit" data-i18n="start">Start</button>
+        <p class="note" id="formnote"></p>
+      </div>
+      <details class="advanced" id="advanced">
+        <summary data-i18n="advanced">Advanced options</summary>
+      <div class="params">
+        <div class="param">
+          <div class="param-label"><span class="k">Tries</span><span class="t" data-i18n="tries">How many concept groups</span></div>
+          <div class="seg" id="jumps">
+            <button type="button" data-value="1">1</button>
+            <button type="button" data-value="2">2</button>
+            <button type="button" data-value="4" class="on">4</button>
+          </div>
+          <p class="hint" data-i18n="triesHint">A cap, not a quota. By default we stop once a runnable protocol exists.</p>
+        </div>
+        <div class="param">
+          <div class="param-label"><span class="k">Drafts</span><span class="t" data-i18n="drafts">Drafts per group</span></div>
+          <div class="seg" id="candidates">
+            <button type="button" data-value="1" class="on">1</button>
+            <button type="button" data-value="2" data-i18n="pick1">Keep 1 of 2</button>
+            <button type="button" data-value="3" data-i18n="pick2">Keep 1 of 3</button>
+          </div>
+          <p class="hint" data-i18n="draftsHint">Extra drafts compete; only the best one is kept. This is not a new search.</p>
+        </div>
+        <div class="param">
+          <div class="param-label"><span class="k">Stop</span><span class="t" data-i18n="stop">When to stop</span></div>
+          <div class="seg" id="explore">
+            <button type="button" data-value="auto" class="on" data-i18n="stopAuto">Stop at a protocol</button>
+            <button type="button" data-value="fixed" data-i18n="stopFixed">Use the full budget</button>
+          </div>
+          <p class="hint" data-i18n="stopHint">Stop at a protocol after screening and experiment. Full budget is for comparison runs.</p>
+        </div>
+        <div class="param">
+          <div class="param-label"><span class="k">Assumptions</span><span class="t" data-i18n="assume">Also question usual assumptions</span></div>
+          <div class="seg" id="reframes">
+            <button type="button" data-value="0" data-i18n="no">No</button>
+            <button type="button" data-value="1" class="on" data-i18n="once">Once</button>
+            <button type="button" data-value="2" data-i18n="twice">Twice</button>
+          </div>
+          <p class="hint" data-i18n="assumeHint">This does not mix two fields. It asks whether this field’s usual assumption is wrong. Same screening and experiment still apply.</p>
+        </div>
+        <div class="param">
+          <div class="param-label"><span class="k">Polish</span><span class="t" data-i18n="polish">Polish the write-up</span></div>
+          <div class="seg" id="polish">
+            <button type="button" data-value="-1" data-i18n="polishFollow">Follow the run</button>
+            <button type="button" data-value="0" class="on" data-i18n="polishOff">Off</button>
+            <button type="button" data-value="1" data-i18n="polish1">1 round</button>
+            <button type="button" data-value="2" data-i18n="polish2">2 rounds</button>
+          </div>
+          <p class="hint" data-i18n="polishHint">Off by default. Changes wording only, not the hypothesis or the numbers.</p>
+        </div>
+        <div class="param">
+          <div class="param-label"><span class="k">Experiment</span><span class="t" data-i18n="expFail">If the experiment fails</span></div>
+          <div class="seg" id="experiment">
+            <button type="button" data-value="-1" class="on" data-i18n="expFix">Fix, then stop</button>
+            <button type="button" data-value="0" data-i18n="expOnce">Run once</button>
+            <button type="button" data-value="1" data-i18n="exp1">Retry once</button>
+            <button type="button" data-value="2" data-i18n="exp2">Retry twice</button>
+          </div>
+          <p class="hint" data-i18n="expHint">Rewrite the script if it cannot run. Re-register the experiment if the two arms do not separate. Stop on support or weaken — never rewrite until support appears.</p>
+        </div>
+        <div class="param">
+          <div class="param-label"><span class="k">Rewrite</span><span class="t" data-i18n="rewrite">If screening fails</span></div>
+          <div class="seg" id="idea">
+            <button type="button" data-value="-1" class="on" data-i18n="rewriteSame">Rewrite the same draft</button>
+            <button type="button" data-value="0" data-i18n="rewriteOff">Don’t rewrite</button>
+            <button type="button" data-value="1" data-i18n="rewrite1">One more draft</button>
+            <button type="button" data-value="2" data-i18n="rewrite2">Two more drafts</button>
+          </div>
+          <p class="hint" data-i18n="rewriteHint">Only rewrite the claim after a text-check failure. If the pair is already in the graph, or no matching data exists, wording will not paper over it.</p>
+        </div>
+      </div>
+      <details class="settings" id="settings">
+        <summary data-i18n="model">Model and API</summary>
+        <div class="fields">
+          <label><span data-i18n="labPreset">Provider</span>
+            <select id="preset"></select>
+          </label>
+          <label><span data-i18n="labModel">Model name</span>
+            <input id="model" type="text" placeholder="gpt-4.1 or deepseek-v4-pro" autocomplete="off">
+          </label>
+          <label><span data-i18n="labBase">API base URL</span>
+            <input id="base" type="text" placeholder="https://api.openai.com/v1" autocomplete="off">
+          </label>
+          <label><span data-i18n="labKey">API key (sent with this request only, never written to disk)</span>
+            <input id="key" type="password" data-i18n-placeholder="keyPh" placeholder="Leave empty if this machine is already configured" autocomplete="off">
+          </label>
+          <label><span data-i18n="labWorld">Experiment data (id under worlds/; auto picks frozen data for the topic; none uses made-up data, which can only weaken)</span>
+            <input id="world" type="text" placeholder="auto" value="auto" autocomplete="off">
+          </label>
+        </div>
+        <p class="hint" style="margin-top:12px" data-i18n="modelHint">Changing the model only affects drafting quality. Whether two concepts were already combined is decided by the graph and search, not by the model’s vote.</p>
+      </details>
+      </details>
+    </form>
+  </section>
+
+  <section id="pastbox">
+    <p class="eyebrow" data-i18n="pastEyebrow">Previous runs</p>
+    <div class="panel">
+      <p class="hint" style="margin:0 0 14px" data-i18n="pastHint">Replay only reads the saved record. It does not call the model.</p>
+      <div class="past-list" id="pastlist" data-i18n="pastLoading">Loading previous runs…</div>
+    </div>
+  </section>
+
+  <section id="progress" hidden>
+    <p class="eyebrow" data-i18n="runEyebrow">Run</p>
+    <div class="panel">
+      <ol class="phases">
+        <li data-phase="understand" data-i18n="phUnderstand">Read topic</li>
+        <li data-phase="read" data-i18n="phRead">Read papers</li>
+        <li data-phase="explore" data-i18n="phExplore">Write hypothesis</li>
+        <li data-phase="run" data-i18n="phRun">Run experiment</li>
+        <li data-phase="write" data-i18n="phWrite">Write protocol</li>
+        <li data-phase="polish" data-i18n="phPolish">Polish</li>
+      </ol>
+      <p class="replay-banner" id="replaybanner" hidden></p>
+      <div class="story" id="story" hidden></div>
+      <div class="nowlog" id="nowlog"></div>
+      <div class="tracks" id="tracks"></div>
+    </div>
+  </section>
+
+  <section id="statebox" hidden>
+    <p class="eyebrow" data-i18n="memEyebrow">Notes from earlier runs</p>
+    <div class="panel rows" id="statelist"></div>
+  </section>
+
+  <section id="agendabox" hidden>
+    <p class="eyebrow" data-i18n="agendaEyebrow">What this run will try</p>
+    <div class="panel rows" id="agendalist"></div>
+  </section>
+
+  <section id="papers" hidden>
+    <p class="eyebrow" data-i18n="papersEyebrow">Recent papers this run read</p>
+    <div class="panel rows" id="paperlist"></div>
+  </section>
+
+  <section id="open" hidden>
+    <p class="eyebrow" data-i18n="openEyebrow">Hypotheses we kept</p>
+    <p class="rank-note" id="ranknote" hidden></p>
+    <div id="ideas"></div>
+  </section>
+
+  <section id="closed" hidden>
+    <p class="eyebrow" data-i18n="closedEyebrow">Hypotheses we dropped</p>
+    <div id="closedlist"></div>
+  </section>
+
+  <div id="end"></div>
+</div>
+
+<footer>
+  <span data-i18n="footL">FarField · made-up data can only weaken</span>
+  <span data-i18n="footR">Confirmation needs frozen data and a local rerun</span>
+</footer>
+
+<script src="/i18n.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+let lang = localStorage.getItem("farfield-lang") || (((navigator.language || "").toLowerCase().startsWith("zh")) ? "zh" : "en");
+let lastMachine = { cls: "", model: "" };
+const PHASES = ["understand", "read", "explore", "run", "write", "polish"];
+const MAX_LOG = 5;
+let abort = null;
+let presets = [];
+let topicText = "";
+let storyJump = 0;
+let pastMissions = [];
+const drafts = {};
+
+function t(key, vars) {
+  const pack = (window.FarFieldI18N && (FarFieldI18N[lang] || FarFieldI18N.en)) || {};
+  let s = pack[key];
+  if (s == null && window.FarFieldI18N && FarFieldI18N.en) s = FarFieldI18N.en[key];
+  if (s == null) return key;
+  if (vars) Object.keys(vars).forEach(k => {
+    s = String(s).split("{" + k + "}").join(vars[k] == null ? "" : String(vars[k]));
+  });
+  return s;
+}
+function ops(k) {
+  const pack = (window.FarFieldOps && (FarFieldOps[lang] || FarFieldOps.en)) || {};
+  return pack[k] || k;
+}
+function ladder() {
+  return (window.FarFieldLadder && (FarFieldLadder[lang] || FarFieldLadder.en)) || [];
+}
+function applyLang() {
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    el.textContent = t(el.getAttribute("data-i18n"));
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    el.setAttribute("placeholder", t(el.getAttribute("data-i18n-placeholder")));
+  });
+  document.querySelectorAll("[data-ex]").forEach(el => {
+    el.textContent = t(el.getAttribute("data-ex"));
+  });
+  $("lang-en").classList.toggle("on", lang === "en");
+  $("lang-zh").classList.toggle("on", lang === "zh");
+  if (lastMachine.cls === "ready") machineState("ready", t("machineReady", {model: lastMachine.model}));
+  else if (lastMachine.cls === "warn") machineState("warn", lastMachine.model === "need" ? t("machineWarn") : t("machineFail"));
+  if (lastMachine.note) $("formnote").textContent = t(lastMachine.note);
+  if (typeof renderPast === "function" && pastMissions.length) renderPast(pastMissions);
+}
+
+function esc(text) {
+  return String(text).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+}
+function chipValue(id) {
+  return $(id).querySelector("button.on").dataset.value;
+}
+document.querySelectorAll(".seg").forEach(group => {
+  group.addEventListener("click", e => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    group.querySelectorAll("button").forEach(b => b.classList.remove("on"));
+    btn.classList.add("on");
+  });
+});
+
+/* ---------- 运行状态 ---------- */
+function setPhase(name) {
+  const idx = PHASES.indexOf(name);
+  document.querySelectorAll(".phases li").forEach(li => {
+    const i = PHASES.indexOf(li.dataset.phase);
+    li.classList.toggle("now", i === idx);
+    li.classList.toggle("done", i < idx);
+  });
+}
+function say(text, busy) {
+  const log = $("nowlog");
+  log.classList.toggle("busy", !!busy);
+  if (!text) return;
+  const last = log.lastElementChild;
+  if (last && last.textContent === text) return;
+  if (last) last.classList.remove("cur");
+  const ln = document.createElement("p");
+  ln.className = "ln cur";
+  ln.textContent = text;
+  ln.style.margin = "0";
+  log.appendChild(ln);
+  while (log.children.length > MAX_LOG) log.removeChild(log.firstElementChild);
+}
+function showProgress() {
+  $("progress").hidden = false;
+}
+function track(index, cls, label, detail) {
+  let row = document.getElementById("track-" + index);
+  if (!row) {
+    row = document.createElement("div");
+    row.className = "track";
+    row.id = "track-" + index;
+    row.innerHTML = `<span class="idx">${esc(t("tryN", {n: String(index + 1).padStart(2, "0")}))}</span><span class="n"></span><span class="d"></span>`;
+    $("tracks").appendChild(row);
+  }
+  row.className = "track " + (cls || "");
+  row.querySelector(".n").textContent = label;
+  row.querySelector(".d").textContent = detail || "";
+}
+function pairText(ev) {
+  const pair = Array.isArray(ev.pair) ? ev.pair : [];
+  return pair.filter(Boolean).join(" × ") || "";
+}
+function storyEnsure(index, title) {
+  const box = $("story");
+  box.hidden = false;
+  let col = document.getElementById("story-" + index);
+  if (!col) {
+    col = document.createElement("div");
+    col.className = "story-col";
+    col.id = "story-" + index;
+    col.innerHTML =
+      `<div class="story-head"><span class="idx">${esc(t("tryN", {n: String(index + 1).padStart(2, "0")}))}</span>` +
+      `<span class="ttl">${esc(title || "")}</span></div><ol class="story-steps"></ol>`;
+    box.appendChild(col);
+  } else if (title) {
+    col.querySelector(".ttl").textContent = title;
+  }
+  return col;
+}
+function storyStep(index, text, cls) {
+  if (text == null || text === "") return;
+  const col = storyEnsure(index);
+  const ol = col.querySelector(".story-steps");
+  const last = ol.lastElementChild;
+  if (last && last.textContent === text) return;
+  const li = document.createElement("li");
+  li.className = cls || "";
+  li.textContent = text;
+  ol.appendChild(li);
+}
+function storyFrom(ev) {
+  if (typeof ev.jump === "number") storyJump = ev.jump;
+  if (typeof ev.index === "number") storyJump = ev.index;
+  const pair = pairText(ev);
+  switch (ev.stage) {
+    case "jump": {
+      const far = Array.isArray(ev.far) ? ev.far : [];
+      storyEnsure(storyJump, ops(ev.operator) || ev.operator);
+      storyStep(storyJump, t("storyLand", {where: far.slice(0, 2).join(" · ") || t("newPair")}), "work");
+      break;
+    }
+    case "card":
+      storyStep(storyJump, t(ev.refined ? "storyRewrite" : "storyDraft", {pair: pair || t("storyOne")}), "work");
+      break;
+    case "idea_refining":
+      storyStep(storyJump, t("storyRefine"), "warn");
+      break;
+    case "verdict":
+      if (ev.alive) storyStep(storyJump, t("storyKeep", {pair: pair}), "ok");
+      else storyStep(storyJump, t("storyDrop", {pair: pair || reasonText(ev) || ""}), "no");
+      break;
+    case "world_incompatible":
+      storyStep(storyJump, t("storyNoFrozen"), "warn");
+      break;
+    case "world_constructed":
+    case "world_generated":
+      if (ev.acquisition === "incomplete") storyStep(storyJump, t("storyIncomplete"), "warn");
+      else storyStep(storyJump, ev.adapted ? t("storyAdapt") : t("storyTmp"), "warn");
+      break;
+    case "world_path":
+      storyStep(storyJump, t("storyPath"), "work");
+      break;
+    case "world_scout":
+      storyStep(storyJump, t("storyScout"), "work");
+      break;
+    case "world_forecast":
+      storyStep(storyJump, ev.rewrite ? t("storyForecastInert") : t("storyForecast"), ev.rewrite ? "warn" : "work");
+      break;
+    case "world_surrogate":
+      storyStep(storyJump, t("storySurrogate"), "warn");
+      break;
+    case "world_placebo":
+      storyStep(storyJump, ev.consumed ? t("storyPlaceboYes") : t("storyPlaceboNo"), ev.consumed ? "ok" : "no");
+      break;
+    case "evidence": {
+      const label = {supports: t("storySup"), weakens: t("storyWeak"), uninformative: t("storyUninfo")}[ev.verdict] || t("storyExp", {v: ev.verdict || ""});
+      storyStep(storyJump, label, ev.verdict === "weakens" ? "no" : ev.verdict === "supports" ? "ok" : "warn");
+      break;
+    }
+    case "experiment_decision":
+      if (ev.action === "rewrite_probe") storyStep(storyJump, t("storyRewriteScript"), "warn");
+      else if (ev.action === "rewrite_diagnosis") storyStep(storyJump, t("storyReReg"), "warn");
+      else if (ev.action === "adapt_world") storyStep(storyJump, t("storyAdaptTmp"), "warn");
+      else if (ev.reason === "informative") storyStep(storyJump, t("storyStopExp"), "stop");
+      break;
+    case "explore_decision":
+      if (ev.action === "stop" && (ev.reason === "has_plan" || ev.reason === "live_line")) {
+        storyStep(storyJump, t("storyHasPlan"), "stop");
+      } else if (ev.action === "continue") {
+        storyStep(storyJump, t("storyMore"), "work");
+      }
+      break;
+    case "host_skipped":
+      storyStep(storyJump, t("storyNoHost"), "warn");
+      break;
+    case "host_execute":
+      storyStep(storyJump, ev.ok !== false && ev.status === "ran" ? t("hostOk") : t("hostFail", {why: ev.error || ev.status || ""}), ev.ok !== false && ev.status === "ran" ? "ok" : "warn");
+      break;
+    case "program":
+      if (ev.commit) storyStep(storyJump, t("storyNote"), "ok");
+      break;
+    default:
+      break;
+  }
+}
+
+/* ---------- 配置 ---------- */
+function fillPresets(list, selected) {
+  presets = list || [];
+  const sel = $("preset");
+  sel.innerHTML = "";
+  presets.forEach(p => {
+    const opt = document.createElement("option");
+    opt.value = p.id;
+    opt.textContent = p.label;
+    sel.appendChild(opt);
+  });
+  const match = presets.find(p => p.base_url && p.base_url === selected);
+  sel.value = match ? match.id : (presets[0] && presets[0].id) || "custom";
+  applyPreset();
+}
+function applyPreset() {
+  const p = presets.find(x => x.id === $("preset").value);
+  if (!p) return;
+  if (p.base_url) $("base").value = p.base_url;
+  if (p.id === "custom" && !$("base").value) $("base").placeholder = "https://your-host/v1";
+}
+function machineState(cls, text) {
+  const pill = $("machine");
+  pill.className = "statuspill " + (cls || "");
+  $("machinetxt").textContent = text;
+  lastMachine.cls = cls || "";
+}
+
+fetch("/api/status").then(r => r.json()).then(info => {
+  fillPresets(info.presets || [], info.base_url || "");
+  if (info.ready) {
+    $("model").value = info.model || "";
+    $("base").value = info.base_url || $("base").value;
+    lastMachine.model = info.model || "";
+    lastMachine.note = "noteReady";
+    machineState("ready", t("machineReady", {model: info.model}));
+    $("formnote").textContent = t("noteReady");
+  } else {
+    $("advanced").open = true;
+    $("settings").open = true;
+    lastMachine.model = "need";
+    lastMachine.note = "noteNeedKey";
+    machineState("warn", t("machineWarn"));
+    $("formnote").textContent = t("noteNeedKey");
+  }
+}).catch(() => {
+  $("advanced").open = true;
+  $("settings").open = true;
+  lastMachine.model = "fail";
+  lastMachine.note = "noteNeedSetup";
+  machineState("warn", t("machineFail"));
+  $("formnote").textContent = t("noteNeedSetup");
+});
+$("preset").addEventListener("change", applyPreset);
+
+/* ---------- 筛选原因 ---------- */
+function reasonText(ev) {
+  if (ev.graph_killed_by && ev.graph_killed_by.length) {
+    const why = ev.graph_killed_by.join(t("comboSep"));
+    if (why.includes("already_combined")) return t("graphCombined");
+    if (why.includes("implied")) return t("graphImplied");
+    if (why.includes("hub")) return t("graphHub");
+    return t("graphFail", {why: why});
+  }
+  if (ev.text_kills && ev.text_kills.length) {
+    const x = ev.text_kills.join(t("comboSep"));
+    if (x.includes("measurable") || x.includes("prediction")) return t("textMeas");
+    if (x.includes("falsifiable") || x.includes("claim")) return t("textFals");
+    if (x.includes("mechanism") || x.includes("vague")) return t("textVague");
+    if (x.includes("grounded") || x.includes("elaboration")) return t("textGround");
+    if (x.includes("apply_x_to_y")) return t("textApply");
+    return t("textUnclear", {why: x});
+  }
+  if (!ev.chosen) return t("otherDraft");
+  return "";
+}
+
+/* ---------- 证据阶梯 ---------- */
+function ladderHtml(cardId) {
+  return `<div class="ladder" id="ladder-${esc(cardId)}">` +
+    ladder().map(([key, label]) =>
+      `<span class="step" data-step="${key}">${label}</span>`).join("") +
+    `</div>`;
+}
+function setStep(cardId, key, state) {
+  const box = document.getElementById("ladder-" + cardId);
+  if (!box) return;
+  const el = box.querySelector(`[data-step="${key}"]`);
+  if (!el) return;
+  el.className = "step" + (state ? " " + state : "");
+}
+function skipAfter(cardId, key) {
+  const box = document.getElementById("ladder-" + cardId);
+  if (!box) return;
+  const keys = ladder().map(s => s[0]);
+  keys.slice(keys.indexOf(key) + 1).forEach(k => {
+    const el = box.querySelector(`[data-step="${k}"]`);
+    if (el && !/\b(ok|no|warn)\b/.test(el.className)) el.className = "step skip";
+  });
+}
+
+/* ---------- 假设卡渲染 ---------- */
+function renderIdea(ev) {
+  const open = ev.alive;
+  const box = document.createElement("div");
+  box.className = "idea " + (open ? "open" : "shut");
+  box.id = "idea-" + ev.card_id;
+  const mark = open
+    ? '<span class="mark ok" id="fate-' + esc(ev.card_id) + '">' + esc(t("keptMark")) + '</span>'
+    : `<span class="mark ${ev.chosen ? "no" : ""}">${esc(reasonText(ev) || t("droppedMark"))}</span>`;
+  const trackChip = ev.graph_skipped ? '<span class="mark">' + esc(t("reframeMark")) + '</span>' : "";
+  const pair = Array.isArray(ev.pair) && ev.pair.length >= 2 ? ev.pair : ["?", "?"];
+  box.innerHTML =
+    `<div class="pairline"><span class="pair">${esc(pair[0])}<span class="x">×</span>${esc(pair[1])}</span>${trackChip}${mark}</div>` +
+    `<p class="why-rank" id="why-${esc(ev.card_id)}" hidden></p>` +
+    `<p class="claim">${esc(ev.claim)}</p>` +
+    (ev.dead_end
+      ? `<p class="kv"><span class="k">${esc(t("deadEnd"))}</span>${esc(ev.dead_end)}</p>` +
+        `<p class="kv"><span class="k">${esc(t("whyFailed"))}</span>${esc(ev.why_failed || "")}</p>` +
+        `<p class="kv"><span class="k">${esc(t("reframe"))}</span>${esc(ev.reframe || "")}</p>` +
+        `<p class="kv"><span class="k">${esc(t("objection"))}</span>${esc(ev.objection || "")}</p>`
+      : "") +
+    `<p class="kv"><span class="k">${esc(t("mechanism"))}</span>${esc(ev.mechanism)}</p>` +
+    `<p class="kv"><span class="k">${esc(t("prediction"))}</span>${esc(ev.prediction)}</p>` +
+    `<p class="kv"><span class="k">${esc(t("falsifier"))}</span>${esc(ev.preregistered_falsifier)}</p>` +
+    (open ? ladderHtml(ev.card_id) : "") +
+    `<div class="lit" id="lit-${esc(ev.card_id)}"></div>` +
+    (open ? `<div class="wait" id="wait-${esc(ev.card_id)}">${esc(t("nextWait"))}</div><div class="probe" id="probe-${esc(ev.card_id)}"></div><div id="review-${esc(ev.card_id)}"></div><div id="brief-${esc(ev.card_id)}"></div><div class="note-dl" id="note-${esc(ev.card_id)}"></div><button class="again" id="again-${esc(ev.card_id)}" type="button" hidden>${esc(t("polishAgain"))}</button>` : "");
+  if (open) {
+    drafts[ev.card_id] = {
+      card: {
+        card_id: ev.card_id,
+        claim: ev.claim,
+        mechanism: ev.mechanism,
+        prediction: ev.prediction,
+        pair: ev.pair,
+        falsifier: ev.preregistered_falsifier,
+        operator: ev.operator,
+        alienness: ev.alienness,
+      },
+      brief: null,
+      papers: [],
+    };
+    $("open").hidden = false;
+    $("ideas").appendChild(box);
+    setStep(ev.card_id, "gate", "ok");
+  } else {
+    $("closed").hidden = false;
+    const wrap = document.createElement("details");
+    wrap.className = "shut-item";
+    const sum = document.createElement("summary");
+    sum.innerHTML = `<span class="p">${esc(pair[0])} × ${esc(pair[1])}</span><span>${esc(reasonText(ev))}</span>`;
+    wrap.appendChild(sum);
+    wrap.appendChild(box);
+    $("closedlist").appendChild(wrap);
+  }
+}
+
+function renderBrief(ev) {
+  const wait = document.getElementById("wait-" + ev.card_id);
+  if (wait) wait.remove();
+  const node = document.getElementById("brief-" + ev.card_id);
+  if (!node) return;
+  if (drafts[ev.card_id]) {
+    drafts[ev.card_id].brief = {
+      card_id: ev.card_id,
+      title: ev.title,
+      gap: ev.gap,
+      idea: ev.idea,
+      approach: ev.approach,
+      first_steps: ev.first_steps,
+      baseline: ev.baseline,
+      risks: ev.risks,
+      read_first: ev.read_first,
+    };
+    if (ev.papers) drafts[ev.card_id].papers = ev.papers;
+  }
+  const round = ev.round != null ? t("draftRound", {n: ev.round + 1}) : "";
+  const papers = (ev.papers || []).map(w => {
+    const id = String(w.arxiv_id || w.work_id || "");
+    const href = w.url || (w.arxiv_id ? ("https://arxiv.org/abs/" + String(w.arxiv_id).replace(/v\d+$/, "")) : "");
+    const star = (ev.read_first || []).includes(w.arxiv_id) || (ev.read_first || []).includes(w.work_id) ? t("readFirst") : "";
+    const src = w.source && w.source !== "arxiv" ? ` · ${esc(w.source)}` : "";
+    const title = href
+      ? `<a href="${esc(href)}" target="_blank" rel="noreferrer">${esc(w.title)}</a>`
+      : esc(w.title);
+    return `<div class="paper">${title} · ${esc(w.published || id)}${src}${star}</div>`;
+  }).join("");
+  node.innerHTML =
+    `<h3>${esc(ev.title)}${round ? ` <span class="mark">${esc(round)}</span>` : ""}</h3>` +
+    `<p class="kv"><span class="k">${esc(t("gap"))}</span>${esc(ev.gap)}</p>` +
+    `<p class="kv"><span class="k">${esc(t("coreIdea"))}</span>${esc(ev.idea)}</p>` +
+    `<p class="kv"><span class="k">${esc(t("approach"))}</span>${esc(ev.approach)}</p>` +
+    `<p class="kv"><span class="k">${esc(t("baseline"))}</span>${esc(ev.baseline)}</p>` +
+    `<p class="kv"><span class="k">${esc(t("steps"))}</span></p>` +
+    `<ol class="steps">${(ev.first_steps || []).map(s => `<li>${esc(s)}</li>`).join("")}</ol>` +
+    `<p class="kv"><span class="k">${esc(t("risks"))}</span>${esc(ev.risks)}</p>` +
+    (papers ? `<div class="papers-mini"><span class="k">${esc(t("papersThis"))}</span>${papers}</div>` : "");
+  const again = document.getElementById("again-" + ev.card_id);
+  if (again) {
+    again.hidden = false;
+    again.disabled = false;
+    again.onclick = () => polishOne(ev.card_id);
+  }
+}
+
+function renderReview(ev) {
+  const node = document.getElementById("review-" + ev.card_id);
+  if (!node) return;
+  const dims = [
+    ["dimN", ev.novelty], ["dimI", ev.importance], ["dimG", ev.information_gain],
+    ["dimT", ev.transfer_potential], ["dimC", ev.clarity], ["dimF", ev.feasibility],
+  ];
+  node.innerHTML =
+    `<div class="scores">` +
+    dims.map(([key, v]) =>
+      `<div class="score"><span class="srow">${esc(t(key))}<span class="sv">${esc(v)}/5</span></span><span class="bar"><i style="width:${Math.max(0, Math.min(5, Number(v) || 0)) * 20}%"></i></span></div>`
+    ).join("") +
+    `</div>` +
+      `<p class="critique" style="color:var(--mute);font-size:.78rem">${esc(t("reviewNote"))}</p>` +
+    `<p class="critique"><span class="klabel">${esc(t("noveltyWhy"))}</span>${esc(ev.novelty_note)}</p>` +
+    `<p class="critique"><span class="klabel">${esc(t("critique"))}</span>${esc(ev.critique)}</p>`;
+}
+
+function waitText(cardId, text) {
+  const node = document.getElementById("wait-" + cardId);
+  if (node) node.textContent = text;
+}
+
+function litLine(ev) {
+  const node = document.getElementById("lit-" + ev.card_id);
+  if (!node) return;
+  if (ev.blocked) {
+    node.textContent = t("litBlocked");
+    return;
+  }
+  if (ev.combined) {
+    const titles = (ev.evidence || []).slice(0, 2).map(w => w.title).join(t("comboSep"));
+    node.innerHTML = esc(t("litHit", {titles: titles}));
+  } else {
+    node.textContent = t("litMiss");
+  }
+}
+
+function applyRanking(list) {
+  const note = $("ranknote");
+  note.hidden = false;
+  note.textContent = t("rankNote");
+  list.forEach(row => {
+    const box = document.getElementById("idea-" + row.card_id);
+    if (!box) return;
+    const pairline = box.querySelector(".pairline");
+    const old = pairline.querySelector(".mark.top, .mark.rank");
+    if (old) old.remove();
+    const badge = document.createElement("span");
+    badge.className = "mark " + (row.recommended ? "top" : "rank");
+    badge.textContent = row.recommended ? t("readFirstBadge") : t("readNext");
+    pairline.appendChild(badge);
+    const why = document.getElementById("why-" + row.card_id);
+    if (why) {
+      why.hidden = false;
+      why.textContent = row.why.join(" · ");
+    }
+    box.classList.toggle("top", !!row.recommended);
+    $("ideas").appendChild(box);
+  });
+}
+
+/* ---------- 收尾统计 ---------- */
+function renderDone(ev) {
+  const stats = [
+    ["hot", ev.cards, t("statDrafts")],
+    ["good", ev.survivors, t("statKept")],
+    ["", ev.briefs != null ? ev.briefs : "—", t("statProtocols")],
+    ["good", ev.corroborated || 0, t("statConfirmed")],
+  ];
+  let html = `<section><p class="eyebrow">${esc(t("doneEyebrow"))}</p><div class="stats">` +
+    stats.map(([cls, v, l]) => `<div class="stat ${cls}"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div></div>`).join("") +
+    `</div>`;
+  const notes = [];
+  if (ev.questions) {
+    const q = ev.questions;
+    const qbits = [];
+    if (q.closed_by_prior) qbits.push(t("qClosed", {n: q.closed_by_prior}));
+    if (q.world_incompatible) qbits.push(t("qWorld", {n: q.world_incompatible}));
+    if (q.weakened) qbits.push(t("qWeak", {n: q.weakened}));
+    if (q.still_open) qbits.push(t("qOpen", {n: q.still_open}));
+    if (qbits.length) notes.push(qbits.join(t("comboSep")) + ".");
+  }
+  if (ev.lessons_banked) notes.push(t("lessons", {n: ev.lessons_banked}));
+  if (ev.spent) notes.push(t("spent", {n: ev.spent.api_calls}));
+  if (ev.knowledge_until) notes.push(t("until", {until: ev.knowledge_until}));
+  if (ev.workspace) notes.push(t("workspace", {path: "<code>" + esc(ev.workspace) + "</code>"}));
+  if (ev.program && ev.program.commit) {
+    notes.push(t("programNote", {commit: esc(ev.program.commit)}));
+  }
+  if (ev.funnel && ev.funnel.rates) {
+    notes.push(t("funnel", {
+      g: ev.funnel.generated ?? "—",
+      t: ev.funnel.text_pass ?? "—",
+      w: ev.funnel.world_valid ?? "—",
+      p: ev.funnel.probe_supports ?? "—",
+      c: ev.funnel.corroborated ?? "—",
+    }));
+  }
+  if (notes.length) html += `<p class="end-notes">${notes.join(" ")}</p>`;
+  html += `<p class="end-notes">${esc(t("nextHint"))}</p>`;
+  if (ev.packet_markdown) {
+    html += `<p class="kv" style="margin-top:12px"><span class="k">${esc(t("packet"))}</span>` +
+      `<button type="button" class="again" id="dl-packet">↓ RESEARCH_PACKET.md</button></p>` +
+      `<p class="end-notes">${esc(t("packetNote"))}</p>`;
+  }
+  html += `</section>`;
+  $("end").innerHTML = html;
+  const dl = document.getElementById("dl-packet");
+  if (dl && ev.packet_markdown) {
+    dl.onclick = () => {
+      const blob = new Blob([ev.packet_markdown], {type: "text/plain;charset=utf-8"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "RESEARCH_PACKET.md";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    };
+  }
+}
+
+/* ---------- 事件分发 ---------- */
+function handle(ev) {
+  if (ev.replay) {
+    $("replaybanner").hidden = false;
+    $("replaybanner").textContent = topicText
+      ? t("replayTopic", {topic: topicText})
+      : t("replayPlain");
+  }
+  storyFrom(ev);
+  switch (ev.stage) {
+    case "corpus":
+      showProgress();
+      setPhase("understand");
+      say(t("corpus", {
+        model: ev.model || t("currentModel"),
+        until: ev.knowledge_until,
+        data: ev.world ? t("frozenYes", {id: ev.world.id}) : t("frozenNo")
+      }), true);
+      break;
+    case "anchor":
+      setPhase("understand");
+      say(t("near", {names: ev.anchors.slice(0, 3).map(a => a.concept).join(t("comboSep"))}), true);
+      break;
+    case "skills":
+      {
+        const n = (ev.loaded || []).length;
+        const hooks = (ev.plugins || []).filter(p => p.executable);
+        const dsh = ev.dsh && ev.dsh.available
+          ? t("dshOn", {bin: esc(ev.dsh.binary)})
+          : t("dshOff");
+        const hookN = hooks.length;
+        say(n ? t("skillsYes", {n: n, hooks: hookN, dsh: dsh}) : t("skillsNo", {hooks: hookN, dsh: dsh}), true);
+      }
+      break;
+    case "skill_distilled":
+      say(t("distilled", {name: ev.name}), true);
+      break;
+    case "state":
+      {
+        const bits = [];
+        if ((ev.known || []).length) bits.push(t("known", {n: ev.known.length}));
+        if ((ev.unknowns || []).length) bits.push(t("unknowns", {n: ev.unknowns.length}));
+        if ((ev.contradictions || []).length) bits.push(t("cons", {n: ev.contradictions.length}));
+        if ((ev.rejected || []).length) bits.push(t("rejected", {n: ev.rejected.length}));
+        if (ev.program && ev.program.commit) bits.push(t("priorProgram"));
+        say(t("stateLoad", {bits: bits.join(t("comboSep")) || t("noneYet")}), true);
+        const rows = [];
+        const statusLabel = {verified: t("verified"), corroborated: t("corroborated")};
+        (ev.known || []).forEach(k => rows.push(
+          `<div class="row-item"><span class="lab ok">${esc(statusLabel[k.status] || k.status)}</span><span>${esc(k.claim)}</span></div>`
+        ));
+        (ev.unknowns || []).forEach(u => rows.push(`<div class="row-item"><span class="lab hot">${esc(t("unsolved"))}</span><span>${esc(u)}</span></div>`));
+        (ev.contradictions || []).forEach(c => rows.push(`<div class="row-item"><span class="lab">${esc(t("contrad"))}</span><span>${esc(c)}</span></div>`));
+        (ev.rejected || []).forEach(r => rows.push(`<div class="row-item"><span class="lab no">${esc(t("rejectedLab"))}</span><span>${esc(r)}</span></div>`));
+        if (ev.program && ev.program.commit) {
+          rows.unshift(`<div class="row-item"><span class="lab ok">${esc(t("lastApproach"))}</span><span>${esc(ev.program.commit)}</span></div>`);
+        }
+        if (rows.length) {
+          $("statebox").hidden = false;
+          $("statelist").innerHTML = rows.join("");
+        }
+      }
+      break;
+    case "agenda":
+      {
+        const slots = ev.slots || [];
+        const targeted = slots.filter(s => s.target).length;
+        const n = ev.explore_jumps != null ? ev.explore_jumps : (ev.explore === "auto" ? slots.length : slots.length);
+        const nDeep = ev.explore_jumps != null ? ev.explore_jumps : 1;
+        let line;
+        if (ev.explore === "auto") {
+          line = ev.deepen ? t("deepenAuto", {n: nDeep}) : t("exploreAuto", {n: n});
+        } else {
+          line = ev.deepen ? t("deepenFixed", {n: nDeep}) : t("exploreFixed", {n: slots.length});
+        }
+        if (targeted) line += t("targeted", {n: targeted});
+        say(line, true);
+        if (slots.length) {
+          $("agendabox").hidden = false;
+          $("agendalist").innerHTML = slots.map((s, i) =>
+            `<div class="row-item"><span class="lab${s.track === "reframe" ? "" : " hot"}">${String(i + 1).padStart(2, "0")} · ${esc(s.track === "reframe" ? t("askAssume") : t("findPair"))}</span>` +
+            `<span>${esc(ops(s.operator) || s.operator)}` +
+            (s.target ? ` <b>→ ${esc(t("aim", {t: s.target}))}</b>` : "") + `</span></div>`
+          ).join("");
+        }
+      }
+      break;
+    case "policy":
+      say(ev.committed ? t("policyYes") : t("policyNo"), true);
+      break;
+    case "shadow_judge":
+      say(ev.admitted
+        ? t("shadowYes", {name: esc(ev.name), n: ev.flagged_failures})
+        : t("shadowNo", {reason: esc(ev.reason || t("noLocalScreen"))}), true);
+      break;
+    case "verifier":
+      {
+        const won = (ev.promoted || []).length;
+        const lost = (ev.rejected || []).length;
+        say(won
+          ? t("verYes", {names: ev.promoted.join(t("comboSep"))})
+          : t("verNo", {n: lost}), true);
+      }
+      break;
+    case "baseline":
+      say(t("baselineSay", {a: ev.arm.passed, an: ev.arm.n, c: ev.control.passed, cn: ev.control.n}), true);
+      break;
+    case "promotion":
+      {
+        const label = {verified: t("stVerified"), corroborated: t("stConfirmed"), weakened: t("stWeak"), speculative: t("stSpec"), closed_by_prior: t("stPrior")}[ev.status] || ev.status;
+        const box = document.getElementById("idea-" + ev.card_id);
+        if (box && ev.status) {
+          const pairline = box.querySelector(".pairline");
+          if (pairline && !pairline.querySelector(".mark.ladder")) {
+            const badge = document.createElement("span");
+            badge.className = "mark ladder " + (ev.status === "corroborated" || ev.status === "verified" ? "ok" : "");
+            badge.textContent = label;
+            pairline.appendChild(badge);
+          }
+        }
+      }
+      break;
+    case "fresh":
+      setPhase("read");
+      if (ev.blocked) {
+        say(t("freshBlocked"), true);
+      } else {
+        $("papers").hidden = false;
+        const works = ev.works || [];
+        $("paperlist").innerHTML = works.map(w =>
+          `<div class="row-item"><span class="lab">${esc(w.published)}</span><span><b>${esc(w.title)}</b></span></div>`
+        ).join("");
+        say(t("freshOk", {n: works.length}), true);
+      }
+      break;
+    case "jump":
+      setPhase("explore");
+      {
+        const far = Array.isArray(ev.far) ? ev.far : [];
+        const where = far.slice(0, 4).join(t("comboSep")) || (ev.track === "reframe" ? t("reframeWhere") : t("newPair"));
+        track(ev.index, "work", ops(ev.operator) || ev.operator, far.slice(0, 3).join(t("comboSep")));
+        say((ops(ev.operator) || ev.operator) + (lang === "zh" ? "：" : ": ") + where, true);
+      }
+      break;
+    case "explore_decision":
+      setPhase("explore");
+      if (ev.action === "stop" && (ev.reason === "has_plan" || ev.reason === "live_line")) {
+        say(t("stopPlan", {opened: ev.opened, cap: ev.cap}), true);
+      } else if (ev.action === "stop") {
+        say(t("stopCap", {cap: ev.cap}), true);
+      } else {
+        say(t("continueTry", {opened: ev.opened, cap: ev.cap}), true);
+      }
+      break;
+    case "generating":
+      setPhase("explore");
+      track(ev.jump, "work", t("writing"), t("draftN", {n: ev.candidate + 1}));
+      say(t("writingDir", {n: ev.jump + 1, d: ev.candidate + 1}), true);
+      break;
+    case "card":
+      {
+        const pair = Array.isArray(ev.pair) ? ev.pair : ["?", "?"];
+        track(ev.jump, "work", ev.refined ? t("rewritten") : t("drafted"), `${pair[0]} × ${pair[1]}`);
+        say(t("cardOk", {n: ev.jump + 1, rw: ev.refined ? t("rwMark") : "", a: pair[0], b: pair[1]}), true);
+      }
+      break;
+    case "refused":
+      say(t("refused"), true);
+      break;
+    case "verdict":
+      if (ev.alive) track(ev.jump, "keep", t("keep"), pairText(ev));
+      else if (ev.chosen) track(ev.jump, "drop", t("drop"), reasonText(ev));
+      else track(ev.jump, "drop", t("notChosen"), reasonText(ev));
+      renderIdea(ev);
+      break;
+    case "fresh_check":
+      setStep(ev.card_id, "fresh", ev.blocked ? "warn" : "ok");
+      litLine(ev);
+      break;
+    case "world_incompatible":
+      setPhase("run");
+      setStep(ev.card_id, "world", "warn");
+      {
+        const req = (ev.requirement && ev.requirement.object_type) || "";
+        const why = ev.reason || t("storyNoFrozen");
+        const node = document.getElementById("probe-" + ev.card_id);
+        if (node) {
+          node.innerHTML =
+            `<p class="kv"><span class="k">${esc(t("noFrozenTitle"))}</span>` +
+            esc(t("noFrozenBody", {req: req || t("unknownType"), why: why})) + `</p>`;
+        }
+        const wait = document.getElementById("wait-" + ev.card_id);
+        if (wait) wait.textContent = t("noFrozenWait");
+        const fate = document.getElementById("fate-" + ev.card_id);
+        if (fate) {
+          fate.className = "mark warn";
+          fate.textContent = t("noMatchData");
+        }
+        say(t("noFrozenSay", {req: req || t("unknownType")}), true);
+      }
+      break;
+    case "world_generated":
+    case "world_constructed":
+      setPhase("run");
+      setStep(ev.card_id, "world", "warn");
+      {
+        const node = document.getElementById("probe-" + ev.card_id);
+        if (ev.acquisition === "incomplete") {
+          if (node) {
+            node.innerHTML +=
+              `<p class="kv"><span class="k">${esc(t("incompleteTitle"))}</span>` +
+              esc(t("incompleteBody")) + `</p>`;
+          }
+          const wait = document.getElementById("wait-" + ev.card_id);
+          if (wait) wait.textContent = t("incompleteWait");
+          const fate = document.getElementById("fate-" + ev.card_id);
+          if (fate) {
+            fate.className = "mark warn";
+            fate.textContent = t("incompleteMark");
+          }
+          say(t("incompleteTitle"), true);
+        } else {
+          if (node) {
+            node.innerHTML +=
+              `<p class="kv"><span class="k">${esc(ev.adapted ? t("tmpAdapted") : t("tmpMade"))}</span>` +
+              esc(t("tmpBody")) + `</p>`;
+          }
+          say(ev.adapted ? t("tmpSayAdapt") : t("tmpSayNew"), true);
+        }
+      }
+      break;
+    case "world_path":
+      setPhase("run");
+      {
+        const named = ev.named_instance || ev.schema || "";
+        say(t("pathSay", {named: named || t("unknownType")}), true);
+        const node = document.getElementById("probe-" + ev.card_id);
+        if (node && named) {
+          node.innerHTML += `<p class="kv"><span class="k">${esc(t("pathK"))}</span>${esc(named)}</p>`;
+        }
+      }
+      break;
+    case "world_scout":
+      setPhase("run");
+      {
+        const levers = (ev.levers || []).join(t("comboSep"));
+        const inert = (ev.inert || []).join(t("comboSep"));
+        say(t("scoutSay", {levers: levers || t("noneYet"), inert: inert || t("noneYet")}), true);
+        const node = document.getElementById("probe-" + ev.card_id);
+        if (node) {
+          node.innerHTML +=
+            `<p class="kv"><span class="k">${esc(t("scoutK"))}</span>` +
+            esc(t("scoutBody", {levers: levers || t("noneYet"), inert: inert || t("noneYet")})) + `</p>`;
+        }
+      }
+      break;
+    case "world_forecast":
+      setPhase("run");
+      {
+        const dirText = d => d === "treatment_lower" ? t("treatLow") : d === "treatment_higher" ? t("treatHigh") : (d || "");
+        if (ev.rewrite) say(t("forecastInert"), true);
+        else say(t("forecastSay", {lever: ev.lever || "", dir: dirText(ev.simulated_direction), reg: dirText(ev.registered_direction)}), true);
+      }
+      break;
+    case "world_surrogate":
+      setPhase("run");
+      setStep(ev.card_id, "world", "warn");
+      {
+        say(t("surrogateSay", {reason: ev.reason || t("storySurrogate")}), true);
+        const node = document.getElementById("probe-" + ev.card_id);
+        if (node) {
+          node.innerHTML +=
+            `<p class="kv"><span class="k">${esc(t("storySurrogate"))}</span>${esc(ev.reason || "")}</p>`;
+        }
+        const fate = document.getElementById("fate-" + ev.card_id);
+        if (fate) {
+          fate.className = "mark warn";
+          fate.textContent = t("storySurrogate");
+        }
+      }
+      break;
+    case "world_placebo":
+      setPhase("run");
+      {
+        const ok = !!ev.consumed;
+        say(ok ? t("placeboYes") : t("placeboNo"), true);
+        const node = document.getElementById("probe-" + ev.card_id);
+        if (node) {
+          const color = ok ? "var(--ok)" : "var(--bad)";
+          node.innerHTML +=
+            `<p class="kv"><span class="k">${esc(ok ? t("storyPlaceboYes") : t("storyPlaceboNo"))}</span>` +
+            `<b style="color:${color}">${esc(ok ? t("placeboYes") : t("placeboNo"))}</b></p>`;
+        }
+        if (!ok) {
+          setStep(ev.card_id, "verdict", "warn");
+          const fate = document.getElementById("fate-" + ev.card_id);
+          if (fate) {
+            fate.className = "mark warn";
+            fate.textContent = t("storyPlaceboNo");
+          }
+        }
+      }
+      break;
+    case "idea_refining":
+      setPhase("explore");
+      say(t("refining", {n: (ev.attempt || 0) + 1, why: (ev.killed_by || []).join(t("comboSep")) || t("textFail")}), true);
+      break;
+    case "idea_decision":
+      setPhase("explore");
+      if (ev.action === "refine_idea") say(t("refineIdea"), true);
+      else if (ev.reason === "entered") say(t("entered"), true);
+      else if (ev.reason === "graph_pair") say(t("graphPair"), true);
+      else say(t("rewriteCap"), true);
+      break;
+    case "surveying":
+      setPhase("read");
+      setStep(ev.card_id, "survey", "on");
+      waitText(ev.card_id, t("surveying"));
+      {
+        const pair = Array.isArray(ev.pair) ? ev.pair : [t("thisPair"), ""];
+        say(t("surveySay", {a: pair[0], andb: pair[1] ? t("and") + pair[1] : ""}), true);
+      }
+      break;
+    case "survey":
+      setPhase("read");
+      if (ev.blocked) {
+        setStep(ev.card_id, "survey", "warn");
+        say(t("surveyBlocked"), true);
+      } else {
+        setStep(ev.card_id, "survey", "ok");
+        const works = ev.works || [];
+        if (drafts[ev.card_id]) drafts[ev.card_id].papers = works;
+        say(t("surveyOk", {n: works.length}), true);
+      }
+      break;
+    case "prior":
+      setPhase("read");
+      if (ev.kills) {
+        setStep(ev.card_id, "prior", "no");
+        skipAfter(ev.card_id, "prior");
+        const wait = document.getElementById("wait-" + ev.card_id);
+        if (wait) wait.remove();
+        say(t("priorKill", {title: ev.title}), true);
+        const fate = document.getElementById("fate-" + ev.card_id);
+        if (fate) {
+          fate.className = "mark no";
+          fate.textContent = t("priorSeen");
+        }
+      } else {
+        setStep(ev.card_id, "prior", "ok");
+        say(t("priorOverlap", {title: ev.title}), true);
+      }
+      break;
+    case "briefing":
+      setPhase("write");
+      setStep(ev.card_id, "brief", "on");
+      waitText(ev.card_id, t("briefingWait"));
+      say(t("briefing"), true);
+      break;
+    case "brief_refused":
+      setStep(ev.card_id, "brief", "warn");
+      say(t("briefRefused"), true);
+      break;
+    case "brief":
+      setStep(ev.card_id, "brief", "ok");
+      renderBrief(ev);
+      say(t("briefOk", {round: ev.round ? t("roundParen", {n: ev.round + 1}) : "", title: ev.title}), true);
+      break;
+    case "reviewing":
+      setPhase("polish");
+      setStep(ev.card_id, "review", "on");
+      say(t("reviewing", {n: ev.round}), true);
+      break;
+    case "review":
+      setPhase("polish");
+      setStep(ev.card_id, "review", "ok");
+      renderReview(ev);
+      say(t("reviewOk", {n: ev.novelty}), true);
+      break;
+    case "refining":
+      setPhase("polish");
+      say(t("refiningWrite", {n: ev.round}), true);
+      break;
+    case "polish_stop":
+      say((ev.reason || "").includes("writing budget") ? t("polishBudget") : t("polishEnough"), true);
+      break;
+    case "review_refused":
+    case "refine_refused":
+      say(t("polishFail"), true);
+      break;
+    case "diagnosing":
+      setPhase("run");
+      setStep(ev.card_id, "diag", "on");
+      waitText(ev.card_id, ev.attempt ? t("diagRetryWait", {n: ev.attempt + 1}) : t("diagWait"));
+      say(ev.attempt ? t("diagRetry", {n: ev.attempt + 1}) : t("diagFirst"), true);
+      break;
+    case "diagnosis":
+      setPhase("run");
+      setStep(ev.card_id, "diag", "ok");
+      {
+        const node = document.getElementById("probe-" + ev.card_id);
+        if (node) {
+          const dirText = d => d === "treatment_lower" ? t("treatLow") : t("treatHigh");
+          node.innerHTML =
+            `<p class="kv"><span class="k">${esc(t("alt"))}</span>${esc(ev.alternative)}</p>` +
+            `<p class="kv"><span class="k">${esc(t("twoArm"))}</span>${esc(ev.experiment)} ${esc(t("ifMech", {dir: dirText(ev.expected_direction), alt: ev.alternative_direction ? dirText(ev.alternative_direction) : t("unregistered")}))}</p>` +
+            (ev.world_lever
+              ? `<p class="kv"><span class="k">${esc(t("leverK"))}</span>${esc(ev.world_lever)}${ev.world_observable ? " · " + esc(t("observableK")) + " " + esc(ev.world_observable) : ""}</p>`
+              : "") +
+            `<p class="kv"><span class="k">${esc(t("margin", {n: Math.round(ev.margin * 100)}))}</span>${esc(ev.margin_reason || "")}</p>`;
+        }
+        say(t("diagDone"), true);
+      }
+      break;
+    case "probing":
+      setPhase("run");
+      setStep(ev.card_id, "probe", "on");
+      waitText(ev.card_id, ev.attempt ? t("probeRetryWait", {n: ev.attempt + 1}) : t("probeWait"));
+      say(ev.attempt ? t("probeRetry", {n: ev.attempt + 1}) : t("probeFirst"), true);
+      break;
+    case "probe":
+      setPhase("run");
+      if (ev.status !== "ran") {
+        setStep(ev.card_id, "probe", "warn");
+        const node = document.getElementById("probe-" + ev.card_id);
+        if (node) node.innerHTML += `<p class="kv"><span class="k">${esc(t("probeFail"))}</span>${esc(ev.status)}${ev.error ? ": " + esc(ev.error) : ""}</p>`;
+        say(t("probeFailSay"), true);
+      } else {
+        setStep(ev.card_id, "probe", "ok");
+      }
+      break;
+    case "evidence":
+      setPhase("run");
+      {
+        const node = document.getElementById("probe-" + ev.card_id);
+        const label = {supports: t("supports"), weakens: t("weakens"), uninformative: t("uninfo")}[ev.verdict] || ev.verdict;
+        setStep(ev.card_id, "verdict", ev.verdict === "supports" ? "ok" : ev.verdict === "weakens" ? "no" : "warn");
+        if (node) {
+          const color = ev.verdict === "supports" ? "var(--ok)" : ev.verdict === "weakens" ? "var(--bad)" : "var(--warn)";
+          node.innerHTML +=
+            `<p class="kv"><span class="k">${esc(t("evidenceK"))}</span>${esc(t("evidenceBody", {t: ev.treatment, c: ev.control, label: label})).replace(esc(label), `<b style="color:${color}">${esc(label)}</b>`)}</p>`;
+        }
+        if (ev.verdict === "weakens") {
+          skipAfter(ev.card_id, "verdict");
+          const wait = document.getElementById("wait-" + ev.card_id);
+          if (wait) wait.textContent = t("weakWait");
+        }
+        say(t("evidenceSay", {label: label}), true);
+      }
+      break;
+    case "heavy_probing":
+      setPhase("run");
+      waitText(ev.card_id, t("heavyWait"));
+      say(t("heavySay"), true);
+      break;
+    case "heavy_probe":
+      setPhase("run");
+      if (ev.status !== "ran") {
+        const node = document.getElementById("probe-" + ev.card_id);
+        if (node) node.innerHTML += `<p class="kv"><span class="k">${esc(t("heavyFail"))}</span>${esc(t("heavyFailBody", {status: ev.status, err: ev.error ? ": " + ev.error : ""}))}</p>`;
+        say(t("heavyFailSay"), true);
+      }
+      break;
+    case "heavy_evidence":
+      setPhase("run");
+      {
+        const node = document.getElementById("probe-" + ev.card_id);
+        const ok = ev.verdict === "supports";
+        if (node) {
+          const color = ok ? "var(--ok)" : "var(--warn)";
+          node.innerHTML +=
+            `<p class="kv"><span class="k">${esc(t("heavyK"))}</span>${esc(ev.treatment)} / ${esc(ev.control)} → <b style="color:${color}">${esc(ok ? t("heavyOk") : t("heavyNo"))}</b>.</p>`;
+        }
+        say(ok ? t("heavyYesSay") : t("heavyNoSay"), true);
+      }
+      break;
+    case "heavy_probe_refused":
+      setPhase("run");
+      {
+        const node = document.getElementById("probe-" + ev.card_id);
+        if (node) node.innerHTML += `<p class="kv"><span class="k">${esc(t("heavyRefuse"))}</span>${esc(t("heavyRefuseBody", {why: ev.unlock_condition || ""}))}</p>`;
+        say(t("heavyRefuseSay"), true);
+      }
+      break;
+    case "experiment_decision":
+      setPhase("run");
+      if (ev.action === "rewrite_probe") say(t("rewriteScript"), true);
+      else if (ev.action === "rewrite_diagnosis") say(t("rewriteExp"), true);
+      else if (ev.action === "adapt_world") say(t("adaptData"), true);
+      else if (ev.reason === "informative") say(t("informative"), true);
+      else say(t("expCap"), true);
+      break;
+    case "host_skipped":
+      say(t("hostSkip"), true);
+      break;
+    case "host_execute":
+      setPhase("run");
+      {
+        const ok = ev.ok !== false && ev.status === "ran";
+        say(ok ? t("hostOk") : t("hostFail", {why: ev.error || ev.status || ev.honesty || ""}), true);
+        const node = document.getElementById("probe-" + ev.card_id);
+        if (node) {
+          node.innerHTML +=
+            `<p class="kv"><span class="k">${esc(ok ? t("hostOk") : t("hostFail", {why: ev.error || ev.status || ""}))}</span></p>`;
+        }
+      }
+      break;
+    case "world_wishlist":
+      say(t("wishlist", {n: ev.unmatched, path: ev.path}), true);
+      break;
+    case "probe_refused":
+    case "diagnosis_refused":
+      setPhase("run");
+      setStep(ev.card_id, ev.stage === "probe_refused" ? "probe" : "diag", "warn");
+      {
+        const node = document.getElementById("probe-" + ev.card_id);
+        const what = ev.stage === "probe_refused" ? t("probeRefuse") : t("diagRefuse");
+        if (node) {
+          node.innerHTML +=
+            `<p class="kv"><span class="k">${esc(what)}</span>` +
+            esc(t("refuseBody", {why: ev.unlock_condition || ""})) + `</p>`;
+        }
+        say(t("refuseSay", {what: what}), true);
+      }
+      break;
+    case "note":
+      setPhase("write");
+      setStep(ev.card_id, "note", "ok");
+      {
+        const node = document.getElementById("note-" + ev.card_id);
+        if (node && (ev.latex || ev.protocol)) {
+          const slug = (ev.title || "note").replace(/[^\w\u4e00-\u9fff-]+/g, "-");
+          node.innerHTML =
+            `<p class="kv" style="margin-top:14px"><span class="k">${esc(t("files"))}</span>` +
+            (ev.protocol ? `<button type="button" class="again" data-kind="protocol">↓ protocol.md</button>` : "") +
+            `<button type="button" class="again" data-kind="md">↓ Markdown</button>` +
+            (ev.latex ? `<button type="button" class="again" data-kind="tex">↓ LaTeX</button>` : "") +
+            `</p>`;
+          node.querySelectorAll("button").forEach(btn => {
+            btn.onclick = () => {
+              const kind = btn.dataset.kind;
+              const body = kind === "tex" ? ev.latex : kind === "protocol" ? ev.protocol : ev.markdown;
+              const blob = new Blob([body], {type: "text/plain;charset=utf-8"});
+              const a = document.createElement("a");
+              a.href = URL.createObjectURL(blob);
+              a.download = slug + (kind === "tex" ? ".tex" : kind === "protocol" ? "-protocol.md" : ".md");
+              a.click();
+              URL.revokeObjectURL(a.href);
+            };
+          });
+        }
+        say(t("noteSay", {title: ev.title}), true);
+      }
+      break;
+    case "ranked":
+      applyRanking(ev.ideas || []);
+      break;
+    case "program":
+      say(ev.commit ? t("programYes", {commit: ev.commit}) : t("programNo"), true);
+      break;
+    case "blocked":
+      say("");
+      $("nowlog").classList.remove("busy");
+      $("end").innerHTML = `<p class="err">${esc(ev.unlock_condition)}</p>`;
+      finish();
+      break;
+    case "done": {
+      document.querySelectorAll(".phases li").forEach(li => {
+        li.classList.add("done");
+        li.classList.remove("now");
+      });
+      say(t("done"));
+      renderDone(ev);
+      finish();
+      break;
+    }
+  }
+}
+
+function finish() {
+  abort = null;
+  $("go").disabled = false;
+  $("nowlog").classList.remove("busy");
+  document.querySelectorAll(".past-item button").forEach(btn => { btn.disabled = false; });
+}
+
+function resetBoard() {
+  $("papers").hidden = true;
+  $("paperlist").innerHTML = "";
+  $("statebox").hidden = true;
+  $("statelist").innerHTML = "";
+  $("agendabox").hidden = true;
+  $("agendalist").innerHTML = "";
+  $("open").hidden = true;
+  $("closed").hidden = true;
+  $("ideas").innerHTML = "";
+  $("closedlist").innerHTML = "";
+  $("ranknote").hidden = true;
+  $("end").innerHTML = "";
+  $("tracks").innerHTML = "";
+  $("nowlog").innerHTML = "";
+  $("story").hidden = true;
+  $("story").innerHTML = "";
+  $("replaybanner").hidden = true;
+  storyJump = 0;
+  Object.keys(drafts).forEach(k => delete drafts[k]);
+}
+
+async function replayMission(missionId) {
+  if (!missionId) return;
+  if (abort) abort.abort();
+  abort = new AbortController();
+  $("go").disabled = true;
+  document.querySelectorAll(".past-item button").forEach(btn => { btn.disabled = true; });
+  resetBoard();
+  const row = pastMissions.find(m => m.id === missionId);
+  topicText = (row && row.topic) || "";
+  if (topicText && $("topic") && !$("topic").value.trim()) $("topic").value = topicText;
+  showProgress();
+  setPhase("understand");
+  say(t("replayStart"), true);
+  $("progress").scrollIntoView({behavior: "smooth", block: "start"});
+  try {
+    const res = await fetch("/api/replay?id=" + encodeURIComponent(missionId) + "&pace=140", {
+      signal: abort.signal,
+    });
+    if (!res.ok) throw new Error(t("replayFail"));
+    await readStream(res);
+  } catch (err) {
+    if (err.name === "AbortError") return;
+    $("end").innerHTML = `<p class="err">${esc(err.message)}</p>`;
+    finish();
+  }
+}
+
+function renderPast(missions) {
+  const box = $("pastlist");
+  pastMissions = missions || [];
+  const rows = pastMissions.slice();
+  if (!rows.length) {
+    box.innerHTML = `<p class="hint" style="margin:0">${esc(t("pastEmpty"))}</p>`;
+    return;
+  }
+  box.innerHTML = rows.map(row => {
+    const bits = [];
+    if (row.jumps_opened != null) bits.push(t("triesN", {n: row.jumps_opened}));
+    if (row.cards != null) bits.push(t("draftsN", {n: row.cards}));
+    if (row.entered != null) bits.push(t("keptN", {n: row.entered}));
+    if (row.briefs != null) bits.push(t("protoN", {n: row.briefs}));
+    bits.push(row.corroborated ? t("confN", {n: row.corroborated}) : t("conf0"));
+    const can = row.replayable;
+    return `<div class="past-item" data-id="${esc(row.id)}">
+      <div>
+        <div class="title">${esc(row.topic)}</div>
+        <div class="meta">${esc(row.id)} · ${bits.join(" · ")}${row.has_packet ? t("hasPacket") : ""}</div>
+      </div>
+      <button type="button" class="${can ? "" : "ghost"}" data-replay="${esc(row.id)}" ${can ? "" : "disabled"}>${can ? t("replayBtn") : t("noStream")}</button>
+    </div>`;
+  }).join("");
+  box.querySelectorAll("[data-replay]").forEach(btn => {
+    btn.addEventListener("click", () => replayMission(btn.dataset.replay));
+  });
+}
+
+fetch("/api/missions").then(r => r.json()).then(info => {
+  renderPast(info.missions || []);
+  const want = new URLSearchParams(location.search).get("replay");
+  if (want === "0") return;
+  if (want) {
+    replayMission(want);
+    return;
+  }
+}).catch(() => {
+  $("pastlist").innerHTML = `<p class="hint" style="margin:0">${esc(t("pastFail"))}</p>`;
+});
+
+$("form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const topic = $("topic").value.trim();
+  if (!topic) { $("topic").focus(); return; }
+  if (abort) abort.abort();
+  abort = new AbortController();
+  $("go").disabled = true;
+  document.querySelectorAll(".past-item button").forEach(btn => { btn.disabled = true; });
+  resetBoard();
+  topicText = topic;
+  showProgress();
+  setPhase("understand");
+  say(t("accepted"), true);
+  $("progress").scrollIntoView({behavior: "smooth", block: "start"});
+  try {
+    const res = await fetch("/api/mission", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      signal: abort.signal,
+      body: JSON.stringify({
+        topic,
+        jumps: Number(chipValue("jumps")),
+        candidates: Number(chipValue("candidates")),
+        polish_rounds: Number(chipValue("polish")),
+        explore: chipValue("explore"),
+        experiment_rounds: Number(chipValue("experiment")),
+        idea_rounds: Number(chipValue("idea")),
+        reframes: Number(chipValue("reframes")),
+        model: $("model").value.trim(),
+        base_url: $("base").value.trim(),
+        api_key: $("key").value.trim(),
+        world: ($("world") && $("world").value.trim()) || "",
+      }),
+    });
+    if (!res.ok) throw new Error(t("startFail"));
+    await readStream(res);
+  } catch (err) {
+    if (err.name === "AbortError") return;
+    $("end").innerHTML = `<p class="err">${esc(err.message)}</p>`;
+    finish();
+  }
+});
+
+async function readStream(res) {
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buf = "";
+  while (true) {
+    const {value, done} = await reader.read();
+    if (done) break;
+    buf += decoder.decode(value, {stream: true});
+    const parts = buf.split("\n\n");
+    buf = parts.pop();
+    for (const part of parts) {
+      const line = part.split("\n").find(l => l.startsWith("data: "));
+      if (!line) continue;
+      handle(JSON.parse(line.slice(6)));
+    }
+  }
+}
+
+async function polishOne(cardId) {
+  const draft = drafts[cardId];
+  if (!draft || !draft.brief) return;
+  const btn = document.getElementById("again-" + cardId);
+  if (btn) btn.disabled = true;
+  setPhase("polish");
+  say(t("polishStart"), true);
+  try {
+    const res = await fetch("/api/polish", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        topic: topicText || $("topic").value.trim(),
+        rounds: 1,
+        model: $("model").value.trim(),
+        base_url: $("base").value.trim(),
+        api_key: $("key").value.trim(),
+        card: draft.card,
+        brief: draft.brief,
+        papers: draft.papers,
+      }),
+    });
+    if (!res.ok) throw new Error(t("polishHttp"));
+    await readStream(res);
+  } catch (err) {
+    $("end").innerHTML = `<p class="err">${esc(err.message)}</p>`;
+  }
+  if (btn) btn.disabled = false;
+  $("nowlog").classList.remove("busy");
+}
+
+$("lang-en").addEventListener("click", () => {
+  lang = "en";
+  localStorage.setItem("farfield-lang", "en");
+  applyLang();
+});
+$("lang-zh").addEventListener("click", () => {
+  lang = "zh";
+  localStorage.setItem("farfield-lang", "zh");
+  applyLang();
+});
+document.querySelectorAll("[data-ex]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    $("topic").value = t(btn.getAttribute("data-ex"));
+    $("topic").focus();
+  });
+});
+applyLang();
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "id": "phage-lambda",
+  "title": "Enterobacteria phage lambda NC_001416.1, first 50000 bases",
+  "source": "NCBI Nucleotide NC_001416.1 (Enterobacteria phage lambda complete genome). Host-retrieved 2026-08-18; slice is the official FASTA's first 50000 bases (the genome is 48502 bp so this is the whole sequence).",
+  "source_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_001416.1&rettype=fasta&retmode=text",
+  "source_digest": "78a78913d3585570fa28b7cec05e4fcf067c1aaa3740d37a377f2babda70618c",
+  "retrieved_at": "2026-08-18",
+  "domains": [
+    "sequence",
+    "genomic",
+    "dna",
+    "fasta",
+    "phage"
+  ],
+  "files": [
+    "meta.json",
+    "origin.json",
+    "sequence.fasta"
+  ],
+  "role": "world",
+  "schema": "fasta",
+  "load_hint": "seq = ''.join(line.strip() for line in Path('data/sequence.fasta').read_text(encoding='utf-8').splitlines() if not line.startswith('>'))",
+  "slice_rule": {
+    "kind": "first_bases",
+    "n": 50000
+  },
+  "digest": "92834900a67cbc560615fb17ee172830398ea003682439f85d1bcb06645a4ecf"
+}

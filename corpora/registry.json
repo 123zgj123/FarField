@@ -1,0 +1,85 @@
+{
+  "T": 2017,
+  "snapshots": [
+    {
+      "snapshot_id": "attn-2017-p2",
+      "graph": "corpora/attn-2017-p2/G_le_T.json",
+      "full_graph": "corpora/attn-2017-p2/G_full.json",
+      "heldout": "corpora/attn-2017-p2/heldout_post_T.json",
+      "post_t_placement": "real: post-T edges are wherever the literature put them, and confirmed is the top decile of post-T citation counts (floor 2782)",
+      "seeds": [
+        "Effective Approaches to Attention-based Neural Machine Translation",
+        "Neural Machine Translation by Jointly Learning to Align and Translate",
+        "Gradient-based learning applied to document recognition",
+        "Bidirectional LSTM-CRF Models for Sequence Tagging",
+        "A saliency-based search mechanism for overt and covert shifts of visual attention",
+        "Abstractive Text Summarization using Sequence-to-sequence RNNs and Beyond"
+      ],
+      "seed_nodes": [
+        "openalex:W1902237438",
+        "openalex:W2133564696",
+        "openalex:W2112796928",
+        "openalex:W1940872118",
+        "openalex:W2054802006",
+        "openalex:W2963929190"
+      ]
+    },
+    {
+      "snapshot_id": "cacheob-2017-p2",
+      "graph": "corpora/cacheob-2017-p2/G_le_T.json",
+      "full_graph": "corpora/cacheob-2017-p2/G_full.json",
+      "heldout": "corpora/cacheob-2017-p2/heldout_post_T.json",
+      "post_t_placement": "real: post-T edges are wherever the literature put them, and confirmed is the top decile of post-T citation counts (floor 20)",
+      "seeds": [
+        "Cache oblivious stencil computations",
+        "Low depth cache-oblivious algorithms",
+        "Cache-Oblivious Algorithms and Data Structures",
+        "Cache-oblivious priority queue and graph algorithm applications",
+        "Cache-oblivious mesh layouts",
+        "An experimental comparison of cache-oblivious and cache-conscious programs"
+      ],
+      "seed_nodes": [
+        "openalex:W1968013322",
+        "openalex:W2089064856",
+        "openalex:W3528745",
+        "openalex:W2022117185",
+        "openalex:W2067062659",
+        "openalex:W2039787998"
+      ]
+    },
+    {
+      "snapshot_id": "sparse-2017-p2",
+      "graph": "corpora/sparse-2017-p2/G_le_T.json",
+      "full_graph": "corpora/sparse-2017-p2/G_full.json",
+      "heldout": "corpora/sparse-2017-p2/heldout_post_T.json",
+      "post_t_placement": "real: post-T edges are wherever the literature put them, and confirmed is the top decile of post-T citation counts (floor 950)",
+      "seeds": [
+        "Finding Structure with Randomness: Probabilistic Algorithms for Constructing Approximate Matrix Decompositions",
+        "An Algorithm for Least-Squares Estimation of Nonlinear Parameters",
+        "LSQR: An Algorithm for Sparse Linear Equations and Sparse Least Squares",
+        "Exact Matrix Completion via Convex Optimization",
+        "A penalized matrix decomposition, with applications to sparse principal components and canonical correlation analysis",
+        "Factorization strategies for third-order tensors"
+      ],
+      "seed_nodes": [
+        "openalex:W2117756735",
+        "openalex:W2087070363",
+        "openalex:W2097897435",
+        "openalex:W2611328865",
+        "openalex:W2098290597",
+        "openalex:W2043571470"
+      ]
+    }
+  ],
+  "envelope": {
+    "wall_clock_minutes": 30,
+    "literature_fetches": 3,
+    "token_cost": 20000,
+    "accelerator_hours": 0,
+    "api_calls": 8,
+    "human_rating_minutes": 0
+  },
+  "T_star_campaign_ids": [],
+  "e2_status": "N/A here: F1 does propose on the frozen T* (see experiments/s4_report.json), but tau_F is measured on the held-out corpora in that experiment, not by this audit. Its anchor sign test is not significant, so no tau_F is claimed either way",
+  "provenance": "built by experiments/build_real_corpora.py from api.openalex.org; raw pages and digests are under each corpus manifest"
+}

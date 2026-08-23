@@ -1,0 +1,60 @@
+{
+  "snapshot_id": "citefix-c0-le-2017",
+  "k": 2,
+  "T": 2017,
+  "derived_from": "citefix-c0-full",
+  "nodes": [
+    {
+      "id": "arxiv:1901.00001",
+      "title": "Seed paper",
+      "year": 2015
+    },
+    {
+      "id": "n_b",
+      "title": "Neighborhood paper B",
+      "year": 2015
+    },
+    {
+      "id": "n_c",
+      "title": "Neighborhood paper C",
+      "year": 2016
+    },
+    {
+      "id": "n_d",
+      "title": "Distant paper D",
+      "year": 2016
+    },
+    {
+      "id": "n_e",
+      "title": "Distant leaf paper E",
+      "year": 2016
+    },
+    {
+      "id": "n_f",
+      "title": "Counterexample paper F",
+      "year": 2016
+    }
+  ],
+  "edges": [
+    [
+      "arxiv:1901.00001",
+      "n_b"
+    ],
+    [
+      "n_b",
+      "n_c"
+    ],
+    [
+      "n_c",
+      "n_d"
+    ],
+    [
+      "n_c",
+      "n_e"
+    ],
+    [
+      "n_d",
+      "n_f"
+    ]
+  ]
+}

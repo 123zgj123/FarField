@@ -1,0 +1,516 @@
+{
+  "spec": {
+    "kind": "concept_cooccurrence",
+    "topic": "computation and language",
+    "corpus_id": "cl-arxiv-concepts",
+    "T": 2020,
+    "pre_works": 10000,
+    "post_works": 10000,
+    "generic_df": 0.15,
+    "min_df": 10,
+    "stale_years": 3,
+    "stale_decline_quantile": 0.15,
+    "stale_decline_ceiling": 0.5,
+    "stale_quantile": 0.75,
+    "confirmed_quantile": 0.9,
+    "confirmed_min_df": 10,
+    "max_vocabulary": 20000,
+    "max_labels_per_work": 16,
+    "vocabulary_rule": "a label carried by at least 10 pre-2020 works and by no more than 15% of them: frequent enough to pair, specific enough for the pairing to mean something; at most 20000 survive, the rarest first, and a work contributes at most 16 of them",
+    "edge_rule": "two vocabulary concepts share an edge when some work carries both labels; the walker graph counts only pre-2020 works, so an edge there means the combination had already been made",
+    "confirmed_rule": "a concept absent from every pre-2020 work, carried by at least 10 post-2020 works, and in the top 10% of post-2020 document frequency: a direction that did not exist at T and then became one",
+    "counterexample_rule": "a vocabulary concept used by at least 10 works up to 2017, whose per-work usage rate over the last 3 years before T fell into the steepest-declining 15% of such concepts and to no more than 50% of its earlier rate, with a pre-2020 degree in the top 25% of those: it was well connected and then the field moved off it. Read entirely from pre-2020 data, so the walker could see it too",
+    "seed_rule": "the most connected concepts whose pre-2020 document frequency sits between the 40th and 80th percentile of the vocabulary: above that band a concept is generic residue with no topic, below it there is too little structure to walk"
+  },
+  "source": {
+    "catalogue": "arxiv-oai-pmh",
+    "endpoint": "http://export.arxiv.org/oai2",
+    "set_spec": "cs:cs:CL",
+    "since": "2015-06-24",
+    "until_year": null,
+    "metadata_prefix": "oai_dc",
+    "min_gram": 2,
+    "max_gram": 3,
+    "use_abstract": true,
+    "selection_rule": "every work in OAI set cs:cs:CL submitted on or after 2015-06-24; no relevance ranking and no expansion from roots, so the slice is the whole subject over that period and a combination made anywhere in it is observable",
+    "window_rule": "open-ended: every submission since the opening date",
+    "completeness_rule": "a datestamp is never earlier than the submission it belongs to, so a datestamp harvest from 2015-06-24 contains every work submitted since; works submitted earlier also come back when they were revised since, and are dropped, because they are a sample of long-lived old papers rather than of old papers",
+    "label_rule": "lowercased 2..3-grams of the title and abstract, cut at stopwords, numbers and punctuation, with hyphens read as spaces and trailing plurals folded; every label is a phrase some recorded abstract contains"
+  },
+  "corpus_uid": "cl-arxiv-concepts-bdb2a2998436",
+  "content_digest": "bdb2a2998436af6799caa528b64ea07983c71d8f412f16cbd51fb7d0c2c84080",
+  "fetched_at": "2026-08-15T07:59:22Z",
+  "pages": [
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&set=cs%3Acs%3ACL&metadataPrefix=oai_dc&from=2015-06-24",
+      "digest": "95c1c04c30a319e8c21b144be31b71d7fe11d3a9cc3a56835c8107e6b2b15a6a",
+      "file": "95c1c04c30a319e8.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2015-06-24%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D1",
+      "digest": "10c1ade72569728782d337a0dd705c4da7ac22f2690ab9a388bae3a017f38270",
+      "file": "10c1ade725697287.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2016-08-30%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D15",
+      "digest": "d65606d9ac08559d77ddf158a328661c17ec845a7d3191ea92288f7476acc116",
+      "file": "d65606d9ac08559d.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2017-04-26%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D7",
+      "digest": "fa14961c51ee8915a6dea16663e1ad5f2a94c83d1672e0454854488b79fcbd2a",
+      "file": "fa14961c51ee8915.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2017-11-07%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D5",
+      "digest": "ee26b2ae267114b2abc5139bcce05e294715358874bfab5b12cedacde24e8af4",
+      "file": "ee26b2ae267114b2.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2018-05-15%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D14",
+      "digest": "c111ea2db6d8bb4b4006f099e98a932480e92964467fbb5a75795af9e66f4bc9",
+      "file": "c111ea2db6d8bb4b.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2018-09-06%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D9",
+      "digest": "0690f1467e7e1ad1a8efccdd7968dca8425baec8b6d12d7799280164c3682bec",
+      "file": "0690f1467e7e1ad1.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2019-01-28%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D5",
+      "digest": "5ea398dde3a7d3bd5ea8af0115fdbdeb13a9df9fc69ab0a483d2e040b9c813b3",
+      "file": "5ea398dde3a7d3bd.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2019-06-04%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D11",
+      "digest": "e16bcea59673556b1f7ea116487b8b91c755a5f075416509016471bc543b132f",
+      "file": "e16bcea59673556b.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2019-08-27%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D8",
+      "digest": "d920d714a3b8121e3808fe6a0bea7e7a7a8e8ba32d5e8a485fa2ff290f20496b",
+      "file": "d920d714a3b8121e.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2019-11-04%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D17",
+      "digest": "de3742b1318d89124e85f3b08bfed1bca40a7717ffaacc3ce9d4e52c48cc9200",
+      "file": "de3742b1318d8912.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2020-02-17%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D12",
+      "digest": "2771f844f40d65a4c51b8c7af8b828dcec8e18ddc4d254aca93835e64525446f",
+      "file": "2771f844f40d65a4.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2020-05-06%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D8",
+      "digest": "7a4b401f223435cfc0a4c3856b9780f51ee272e94cca7ddc3a5b16fe67dcc42b",
+      "file": "7a4b401f223435cf.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2020-07-20%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D10",
+      "digest": "4419f704e974200c3536d6700d463ef79fa5ca488fe8704757963e0fbe18cbf4",
+      "file": "4419f704e974200c.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2020-10-07%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D70",
+      "digest": "503dec432191d64f9b2c221ce272acb6484b74e8fbaef38e2f5ce1ff0dd58a61",
+      "file": "503dec432191d64f.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2020-11-10%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D52",
+      "digest": "a33fe4e358bec9589e13c6164ccfe06bf0c50dcfca9c3659b88cf79bb2ff107e",
+      "file": "a33fe4e358bec958.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2021-01-28%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D30",
+      "digest": "72c5b15fafd6ba112e8ca08fe3fca4422e05010e1e8ab6f5acda78f9e600ce5b",
+      "file": "72c5b15fafd6ba11.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2021-04-13%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D19",
+      "digest": "94dd51f5c7cd572048be7f5737e6f5e5cde2f78e0add385cbdd2b2047fb29cc7",
+      "file": "94dd51f5c7cd5720.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2021-06-03%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D46",
+      "digest": "c36e7d5ea79180617a6541d5749ef7737f025cf0599ba60b0ced9d15327bbad7",
+      "file": "c36e7d5ea7918061.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2021-07-27%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D19",
+      "digest": "187ee36a8079f5d9739c391a2a03e3060cad95e2d4a5447bbdddb06fff17bcb7",
+      "file": "187ee36a8079f5d9.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2021-09-20%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D14",
+      "digest": "5125eba62b47a917a5ac38e356d2b1de0355feadaf0c8d236bf7eb328e048319",
+      "file": "5125eba62b47a917.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2021-11-09%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D9",
+      "digest": "a70f5a3395d5cf9ae08b59a2931a82fdaae229acdbeee4d1e3b8f583a8969b6d",
+      "file": "a70f5a3395d5cf9a.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2022-02-01%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D0",
+      "digest": "d66adf61bc8532cbfe5b7d2c9c4a8e64d8dc8ab1962ca65c71fc613e3539169a",
+      "file": "d66adf61bc8532cb.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2022-04-01%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D13",
+      "digest": "6a60f925b198ec94c62c3eea5fd04c0e717671f7ac830ce2ffe67d9745a40b13",
+      "file": "6a60f925b198ec94.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2022-05-12%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D27",
+      "digest": "d4926ff8f18136212cb8d073e81d6fdccd6465a82d389961d9182e8770aefd92",
+      "file": "d4926ff8f1813621.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2022-07-08%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D4",
+      "digest": "cb00abef1941e5007bcc1029df3047e49809f723322c7751f557f2a4cb6f8b6e",
+      "file": "cb00abef1941e500.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2022-09-27%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D21",
+      "digest": "11679c7c6750e21fd79c597800e2002c7da063ea2ec18d7b5e0222fe8f11f9a7",
+      "file": "11679c7c6750e21f.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2022-10-28%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D5",
+      "digest": "b8268fb65db68a6102d4301a7f4c9d1905eaee30444ff9adddc30850c5de1e29",
+      "file": "b8268fb65db68a61.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2022-12-08%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D21",
+      "digest": "eaaa8bd5191b2d39e919dad51e43fcaec58b56ad102b11ed84a6959fdaa98883",
+      "file": "eaaa8bd5191b2d39.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2023-02-14%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D67",
+      "digest": "72e3eb9977af9c488ef49e350cb2cc4f74f1ec7ca2493ace215abf4e34f32f26",
+      "file": "72e3eb9977af9c48.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2023-04-14%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D2",
+      "digest": "2e76e45c1a47ad41425ec698c4034e4324807f67dc8e488dec83c9ba39107afc",
+      "file": "2e76e45c1a47ad41.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2023-05-23%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D127",
+      "digest": "982b75a85d3d1a1c6f5cb7eaccc3ea0d34cb02c9aee1f90fa996723060c373a3",
+      "file": "982b75a85d3d1a1c.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2023-06-09%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D54",
+      "digest": "f71b19dfe46e4507f998688c2d93b3d2220bbf6cc68971688c1ca23bb9725517",
+      "file": "f71b19dfe46e4507.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2023-07-24%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D4",
+      "digest": "a2be4fdbdbd2fb9b37b864add75bad2c745849edbe0e23b90128ed2e32c4f942",
+      "file": "a2be4fdbdbd2fb9b.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2023-09-12%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D55",
+      "digest": "93e64ad05bcf38ad049533ba6e6d45788e7c9810e4bc6b3fece4927066fd1b06",
+      "file": "93e64ad05bcf38ad.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2023-10-17%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D94",
+      "digest": "2e5fc9918a66c9f34976f606c46532c0d65506606f6bb092f3e0e9fcfa139ce4",
+      "file": "2e5fc9918a66c9f3.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2023-11-01%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D64",
+      "digest": "9acac3b73b1b07431c79c4fae33022bf26c380a87d016da69a7f9688b1e0e795",
+      "file": "9acac3b73b1b0743.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2023-12-05%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D28",
+      "digest": "01ac3cb220e4c61ed7cdc8327ed3c1814de946cd1f1e39bb7eea8f7c6ce43767",
+      "file": "01ac3cb220e4c61e.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-01-17%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D23",
+      "digest": "0ab0556730f0fd5473d0a2a6ea082ef9e9779495353b594065ccfd4e4ad80c54",
+      "file": "0ab0556730f0fd54.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-02-19%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D32",
+      "digest": "9f1502bf91fbc9b61c4d40c2ee1d2f622e99badad6fff81a2bc9c7282bce38b0",
+      "file": "9f1502bf91fbc9b6.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-03-18%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D4",
+      "digest": "0599b03a0e9c12c846ff9f6d576a49303aba4864d91f06d66dba9210f73244c0",
+      "file": "0599b03a0e9c12c8.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-04-05%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D64",
+      "digest": "9ff87f45bfdc162c3ede818bbd6031e979db01898d269737492f940c980cb03a",
+      "file": "9ff87f45bfdc162c.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-05-06%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D40",
+      "digest": "86316efa988260664af1113862238f74dda2833c58f2a980f999f12bdd15cd43",
+      "file": "86316efa98826066.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-06-04%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D13",
+      "digest": "561f55eed65dbc26414f3d4a46f37c84286509a7ab87228991510a57825b1395",
+      "file": "561f55eed65dbc26.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-06-18%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D131",
+      "digest": "c2fa2c66decd626161c5a96422f4c01338f76970576fe08caf8a495909632161",
+      "file": "c2fa2c66decd6261.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-07-09%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D41",
+      "digest": "d460de81f43d118b93e56b5819e70da05a8118ea1a2549e39515a19e1498f27d",
+      "file": "d460de81f43d118b.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-08-06%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D50",
+      "digest": "3817d733d108433f937478d68b61375f39d7fcdc8614f75665bc39286bb505ea",
+      "file": "3817d733d108433f.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-09-05%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D28",
+      "digest": "6c687228a2b48527c8a5be59885461a5c548ef07a3f70bfa830a15bb340a4fed",
+      "file": "6c687228a2b48527.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-10-03%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D42",
+      "digest": "d1ed4629c059e8950095d2618d2ddfe032d7bfe49969ce50124ec129eaf336a6",
+      "file": "d1ed4629c059e895.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-10-16%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D95",
+      "digest": "9235c139e42ff969cdb9aa1c65c6062a64db249a933bd0e476b9123bb3cf1746",
+      "file": "9235c139e42ff969.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-11-01%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D95",
+      "digest": "f917fb1a05f9aea6a917e718af9275ac8ce251a7d11dc31df0208053d38ae547",
+      "file": "f917fb1a05f9aea6.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-12-02%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D8",
+      "digest": "d8db6c4eab331e760f2ddb5e2f393903cadc458fb2926c6e9fabaa0b75365698",
+      "file": "d8db6c4eab331e76.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-12-23%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D60",
+      "digest": "eafdf23025d37224df0f6d8cada8fc2cb0503646aa53e36863306205639ce3c3",
+      "file": "eafdf23025d37224.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-01-24%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D27",
+      "digest": "7ce072eebe6f5e7db526ba3fe210953614563b13abacb0958290ae3ab4ce2769",
+      "file": "7ce072eebe6f5e7d.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-02-18%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D32",
+      "digest": "8bbe3b28c4df26ca0505b437a91a123e68828c6e31bcabcf38bd0d87bda871b7",
+      "file": "8bbe3b28c4df26ca.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-03-04%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D146",
+      "digest": "22c2c449561e16c845357cc6655646638d9369fbcbfbc7a4564f97c265f50e27",
+      "file": "22c2c449561e16c8.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-03-25%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D83",
+      "digest": "6df847ff261180957796ca164e6d730dc835ad694dee0fc246e6103fdda80da8",
+      "file": "6df847ff26118095.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-04-18%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D76",
+      "digest": "c204e0252961cabfc749aca997fdd7dc8af629ec223804ef10670be2e57b5600",
+      "file": "c204e0252961cabf.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-05-19%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D67",
+      "digest": "55dbafcfb41192fb6815f44580c2ef99f532cd114ac0e3572c79acadb837ea46",
+      "file": "55dbafcfb41192fb.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-05-29%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D18",
+      "digest": "6923a94914af992de8462bc1d0ef95824b28f55f5f9f6ccf13bf69933478aab8",
+      "file": "6923a94914af992d.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-06-06%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D68",
+      "digest": "26040d090a1bb2a74b0b8242a1576c18903c70dbb4f20b5e1d3513b97941fa42",
+      "file": "26040d090a1bb2a7.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-06-23%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D88",
+      "digest": "7cdfb95c5b5a65ddbf740aa54d7ef51d6fa2c9f90b83b8a1ef1bdd6a40632f6c",
+      "file": "7cdfb95c5b5a65dd.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-07-15%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D24",
+      "digest": "0765f628a0c08c9f0b72ce31a71c78af2f3131d79d0d1669e99fae3bc5bdcd0c",
+      "file": "0765f628a0c08c9f.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-08-06%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D54",
+      "digest": "1c33990e79f6db0f161fadfd490dc4801cc14d04644f4e142f228dbde1439b6a",
+      "file": "1c33990e79f6db0f.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-08-26%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D154",
+      "digest": "9351f7c3b252eca4f82550f8d1fba17179e1e89d9bffd985e30ec6ece46de3ab",
+      "file": "9351f7c3b252eca4.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-09-17%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D42",
+      "digest": "2909f50e47e0290deea70022ec6916b41fd956a56fc56ff8cbe2cd2c69b9b153",
+      "file": "2909f50e47e0290d.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-09-30%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D240",
+      "digest": "35cd47e371e23a68931e4d94f4dc51feb372eb977607d627e982ff04f4921116",
+      "file": "35cd47e371e23a68.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-10-14%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D108",
+      "digest": "b39f61a7d5c7f064095482676bc0a9d34897fb2cd47e514fd0744fd5509136f9",
+      "file": "b39f61a7d5c7f064.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-10-28%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D170",
+      "digest": "9469e422aa6c3651e07ceff758ee7b9111afbed96be41d5b95cc8be58b883fc7",
+      "file": "9469e422aa6c3651.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-11-14%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D13",
+      "digest": "da17697331fe6a64929bd3435e7239da5729f58ec8306924e3e82a203427a4cc",
+      "file": "da17697331fe6a64.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-12-04%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D21",
+      "digest": "94a8d74bf958237fecec19e8fcebcd9faee6b34537c6b62da86a2c9a42476231",
+      "file": "94a8d74bf958237f.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-01-05%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D4",
+      "digest": "e33d13ac735102fc288afb817cb6bd4974331e8b47af35e2058b13af629dc9f3",
+      "file": "e33d13ac735102fc.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-01-21%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D125",
+      "digest": "e9d6a659863f550f7d3fbac3b1196a148aaa8046490ae674797b9c77d514b4f9",
+      "file": "e9d6a659863f550f.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-02-04%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D12",
+      "digest": "4113f1879126d2d356e657c9691382ae3585b82c9603aab8bbc1f9d3f8929a02",
+      "file": "4113f1879126d2d3.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-02-20%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D28",
+      "digest": "69f8308d7c902b4089a9cd6ecae017e7a2095cb78bad4323b4c76fc960ae4904",
+      "file": "69f8308d7c902b40.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-03-09%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D98",
+      "digest": "a45533acac80ccb9e35fc7c2d06dfbbd8fcc0138e61892455c28bcf41062eea8",
+      "file": "a45533acac80ccb9.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-03-24%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D144",
+      "digest": "521e55afcab0b7d8fa74860aa6ccbb50b27cb79554be9c4181f466236a08ff30",
+      "file": "521e55afcab0b7d8.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-04-09%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D76",
+      "digest": "b3bc3dbbba88e83e58051c206937525b37c45a93ae1141e7f6c63d8e06ba7feb",
+      "file": "b3bc3dbbba88e83e.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-04-21%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D195",
+      "digest": "a648c87b1e39de8bad4b2a32cc88be82be1c6c1d03f34fe509ff114fcdbb15c6",
+      "file": "a648c87b1e39de8b.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-05-01%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D49",
+      "digest": "773eceba1ab34c3b3fcd1a6fb6f4467ec23269c10ed1b58577b575d6558df49a",
+      "file": "773eceba1ab34c3b.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-05-13%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D96",
+      "digest": "20c0e47b9959042311b2c4ded578a4ea4264dc804f56ecec5bfb15763cbbf0cc",
+      "file": "20c0e47b99590423.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-05-25%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D107",
+      "digest": "40d5a40909f49916f913147a254c74d39c4d29f22d7f143700dd402d904fa19f",
+      "file": "40d5a40909f49916.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-06-02%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D25",
+      "digest": "80bf8759400947e8d23339d2f21b49a5f28f52e988ea1d60e49e61329ff0befc",
+      "file": "80bf8759400947e8.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-06-09%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D248",
+      "digest": "ff2a927ac5fd74979e4d483f4838177a995eaaa44551ad1676fea4d271b596ad",
+      "file": "ff2a927ac5fd7497.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-06-23%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D45",
+      "digest": "8530b182013b42b8f573a36e93d74198fac966c814e65a9de98c525a7db261e0",
+      "file": "8530b182013b42b8.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-07-03%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D30",
+      "digest": "cea3d611c166b8318bc28bf5e696d7ea30c7edbe453ca54e5386ab3a3d737bce",
+      "file": "cea3d611c166b831.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-07-21%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D48",
+      "digest": "d728144c38fa27465f078ea028c140f0784173c10f453f7ebbb5ffe7b728a3a7",
+      "file": "d728144c38fa2746.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-08-04%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D95",
+      "digest": "2a6b1786baacf549da6c3b337f69f9315f4b45258bb28deb46e9245c5f3cdcfc",
+      "file": "2a6b1786baacf549.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-08-13%2526set%253Dcs%25253Acs%25253ACL%2526skip%253D48",
+      "digest": "4cb1e0eea130aaebbe8174f3243a5358ed8cf4f408c37f235ae85ebd67b6b22b",
+      "file": "4cb1e0eea130aaeb.xml"
+    }
+  ],
+  "seed_nodes": [
+    "concept:inference-model",
+    "concept:english-sentence",
+    "concept:sentence-containing",
+    "concept:least-one",
+    "concept:model-typically",
+    "concept:automatically-extracted"
+  ],
+  "counts": {
+    "pre_works": 21171,
+    "post_works": 92161,
+    "vocabulary": 9974,
+    "nodes_full": 12126,
+    "nodes_walker": 9974,
+    "pre_t_pairs": 1082903,
+    "post_t_new_pairs": 2166253,
+    "confirmed": 2152,
+    "confirmed_df_floor": 37,
+    "counterexample_nodes": 52
+  },
+  "digests": {
+    "G_full": "63fdb12003b8e1e268510823dd33efe35801f89e4c033202c14a285e10ae1180",
+    "G_le_T": "50a0d4dd48c07871271d01693129ee1f2a108d40da6100dbede2572649f78dff",
+    "heldout": "034fcaa4816427eb6d7db88b14b4736066b04bb9286caba28402858e681df374"
+  },
+  "known_limitation": "the vocabulary is arxiv-oai-pmh's labelling of this slice, so a combination the labels do not distinguish is invisible here; both arms are scored against the same labelling"
+}

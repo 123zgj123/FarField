@@ -1,0 +1,10 @@
+{
+  "id": "phage-lambda",
+  "header": "NC_001416.1 Enterobacteria phage lambda, complete genome",
+  "parent_bp": 48502,
+  "bp": 48502,
+  "slice_rule": {
+    "kind": "first_bases",
+    "n": 50000
+  }
+}

@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "farfield-runtime"
+version = "0.1.0"
+description = "A local research loop: far-field search, registered two-arm experiments, and a same-object evidence contract"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+farfield = "farfield.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

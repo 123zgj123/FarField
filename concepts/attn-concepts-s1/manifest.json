@@ -1,0 +1,100 @@
+{
+  "spec": {
+    "kind": "concept_cooccurrence",
+    "topic": "sparse attention transformer long context",
+    "corpus_id": "attn-concepts-s1",
+    "T": 2017,
+    "pre_works": 1200,
+    "post_works": 1200,
+    "generic_df": 0.15,
+    "min_df": 2,
+    "stale_years": 3,
+    "stale_quantile": 0.75,
+    "confirmed_quantile": 0.9,
+    "confirmed_min_df": 5,
+    "vocabulary_rule": "an OpenAlex keyword or topic label carried by at least 2 pre-2017 works and by no more than 15% of them: frequent enough to pair, specific enough for the pairing to mean something",
+    "edge_rule": "two vocabulary concepts share an edge when some work carries both labels; the walker graph counts only pre-2017 works, so an edge there means the combination had already been made",
+    "confirmed_rule": "a concept absent from every pre-2017 work, carried by at least 5 post-2017 works, and in the top 10% of post-2017 document frequency: a direction that did not exist at T and then became one",
+    "counterexample_rule": "a vocabulary concept last seen on or before 2014 whose pre-2017 degree is in the top 25% of such stale concepts: it was well connected and then the field stopped using it",
+    "seed_rule": "the most connected concepts whose pre-2017 document frequency sits between the 40th and 80th percentile of the vocabulary: above that band a concept is generic residue with no topic, below it there is too little structure to walk"
+  },
+  "corpus_uid": "attn-concepts-s1-6145b56a3678",
+  "content_digest": "6145b56a3678c0c8fa1d3e97c4faba2cd1cd0c63e60c50954dd42ab77c4dd39b",
+  "fetched_at": "2026-08-14T05:47:07Z",
+  "pages": [
+    {
+      "url": "https://api.openalex.org/works?search=sparse+attention+transformer+long+context&filter=publication_year%3A%3C2018&per-page=200&cursor=%2A&select=id%2Ctitle%2Cpublication_year%2Ckeywords%2Ctopics&mailto=dev%40example.com",
+      "digest": "ea423774472642133e8f8b8ee430d81b1d30fce9717163621b21a149a2d13a95"
+    },
+    {
+      "url": "https://api.openalex.org/works?search=sparse+attention+transformer+long+context&filter=publication_year%3A%3C2018&per-page=200&cursor=Ils2LjgxNjI2MjIsIDEwMDcxNjQ4MDAwMDAsICdodHRwczovL29wZW5hbGV4Lm9yZy9XMjYxNTE2NjY0NiddIg%3D%3D&select=id%2Ctitle%2Cpublication_year%2Ckeywords%2Ctopics&mailto=dev%40example.com",
+      "digest": "458c38c63866d949c9d3c93037b9a312fa618171fb8290ecc1bbe5a17c57e5ce"
+    },
+    {
+      "url": "https://api.openalex.org/works?search=sparse+attention+transformer+long+context&filter=publication_year%3A%3C2018&per-page=200&cursor=IlszLjYyNjk2OTYsIDEzODg1MzQ0MDAwMDAsICdodHRwczovL29wZW5hbGV4Lm9yZy9XODM1NzQ4OTAnXSI%3D&select=id%2Ctitle%2Cpublication_year%2Ckeywords%2Ctopics&mailto=dev%40example.com",
+      "digest": "2603c3165892aa432197241a6955fed19d688243fc143ce921af4d621d3467b6"
+    },
+    {
+      "url": "https://api.openalex.org/works?search=sparse+attention+transformer+long+context&filter=publication_year%3A%3C2018&per-page=200&cursor=IlsyLjI4NDE3OCwgMTUxMjYwNDgwMDAwMCwgJ2h0dHBzOi8vb3BlbmFsZXgub3JnL1cyNzk5NzE3Mzk0J10i&select=id%2Ctitle%2Cpublication_year%2Ckeywords%2Ctopics&mailto=dev%40example.com",
+      "digest": "a0068573338eaaf0c0eeb6f8f262b0278d5adfd2b68ce7b7db0378761d7e1635"
+    },
+    {
+      "url": "https://api.openalex.org/works?search=sparse+attention+transformer+long+context&filter=publication_year%3A%3C2018&per-page=200&cursor=IlswLjkxMTk4ODE0LCAxMDYzOTI5NjAwMDAwLCAnaHR0cHM6Ly9vcGVuYWxleC5vcmcvVzM4MzM5NjA3J10i&select=id%2Ctitle%2Cpublication_year%2Ckeywords%2Ctopics&mailto=dev%40example.com",
+      "digest": "c21c0a9279f09a16f4e9b2f6d7f621f7afba571ea382e57813f621bef5937711"
+    },
+    {
+      "url": "https://api.openalex.org/works?search=sparse+attention+transformer+long+context&filter=publication_year%3A%3C2018&per-page=200&cursor=IlswLjU3NzUxNzQsIDE0NTE2MDY0MDAwMDAsICdodHRwczovL29wZW5hbGV4Lm9yZy9XMjUxNTgzNjAwMSddIg%3D%3D&select=id%2Ctitle%2Cpublication_year%2Ckeywords%2Ctopics&mailto=dev%40example.com",
+      "digest": "8dfc3f4d503d80de1b7e879d0bbb63d3ca122f64290abb741ded7c2a8d8b1ae8"
+    },
+    {
+      "url": "https://api.openalex.org/works?search=sparse+attention+transformer+long+context&filter=publication_year%3A%3E2017&per-page=200&cursor=%2A&select=id%2Ctitle%2Cpublication_year%2Ckeywords%2Ctopics&mailto=dev%40example.com",
+      "digest": "9449c91303dca6bf1c8cef91a361d30ef8cc2cec62e3224189f16ba8ad64aa47"
+    },
+    {
+      "url": "https://api.openalex.org/works?search=sparse+attention+transformer+long+context&filter=publication_year%3A%3E2017&per-page=200&cursor=IlsxNDMuMDc5NzQsIDE2NzY0MTkyMDAwMDAsICdodHRwczovL29wZW5hbGV4Lm9yZy9XNDMyMDkxMzAwMyddIg%3D%3D&select=id%2Ctitle%2Cpublication_year%2Ckeywords%2Ctopics&mailto=dev%40example.com",
+      "digest": "b0aaebfbd73ec786b92c706a78be425d1d7558d9532cb8929856f8f4361ba6db"
+    },
+    {
+      "url": "https://api.openalex.org/works?search=sparse+attention+transformer+long+context&filter=publication_year%3A%3E2017&per-page=200&cursor=IlsxMDcuMjU4NjEsIDE2Mjk4NDk2MDAwMDAsICdodHRwczovL29wZW5hbGV4Lm9yZy9XMzE5NzM3OTUzOCddIg%3D%3D&select=id%2Ctitle%2Cpublication_year%2Ckeywords%2Ctopics&mailto=dev%40example.com",
+      "digest": "600d11940bff3a739593be83616437c886e2f68196bd1c038e5fe8ee3c044abe"
+    },
+    {
+      "url": "https://api.openalex.org/works?search=sparse+attention+transformer+long+context&filter=publication_year%3A%3E2017&per-page=200&cursor=Ils4OS4zMzk5OSwgMTY3NjUwNTYwMDAwMCwgJ2h0dHBzOi8vb3BlbmFsZXgub3JnL1c0MzIxMDk0MTgyJ10i&select=id%2Ctitle%2Cpublication_year%2Ckeywords%2Ctopics&mailto=dev%40example.com",
+      "digest": "f7c6b3eafe6adea068939317a57e191f6db71fc69766ff8e628d82eddb885252"
+    },
+    {
+      "url": "https://api.openalex.org/works?search=sparse+attention+transformer+long+context&filter=publication_year%3A%3E2017&per-page=200&cursor=Ils3OC40OTIyOCwgMTY4NTU3NzYwMDAwMCwgJ2h0dHBzOi8vb3BlbmFsZXgub3JnL1c0MzgyNDAwMzY2J10i&select=id%2Ctitle%2Cpublication_year%2Ckeywords%2Ctopics&mailto=dev%40example.com",
+      "digest": "7755f41bb0d59710acfc82d008ff78602bf8c835077160d6d0c4b85411963bb1"
+    },
+    {
+      "url": "https://api.openalex.org/works?search=sparse+attention+transformer+long+context&filter=publication_year%3A%3E2017&per-page=200&cursor=Ils2OS45OTMxMSwgMTczNTY4OTYwMDAwMCwgJ2h0dHBzOi8vb3BlbmFsZXgub3JnL1c0NDA3MTgwNDY4J10i&select=id%2Ctitle%2Cpublication_year%2Ckeywords%2Ctopics&mailto=dev%40example.com",
+      "digest": "4595993dc4e3bdafc3fd455a85ce7510a9e55129e8eb0d68a15f35defb06f45b"
+    }
+  ],
+  "seed_nodes": [
+    "concept:overhead-engineering",
+    "concept:consumption-sociology",
+    "concept:the-internet",
+    "concept:construct-python-library",
+    "concept:salient",
+    "concept:embedding"
+  ],
+  "counts": {
+    "pre_works": 1200,
+    "post_works": 1200,
+    "vocabulary": 1574,
+    "nodes_full": 1654,
+    "nodes_walker": 1574,
+    "pre_t_pairs": 30890,
+    "post_t_new_pairs": 8586,
+    "confirmed": 80,
+    "confirmed_df_floor": 5,
+    "counterexample_nodes": 119
+  },
+  "digests": {
+    "G_full": "a9ec5269fa8d478a11dc30c67330303f9899c16d3975cbd51d36ca4e24904eb7",
+    "G_le_T": "d3e5ce22217f84b41981db4ebad72ee2f6eb8206e9a20ccb50172d78eaed47e5",
+    "heldout": "acb4eb7052d374d6583ffba727d5a538e1729a975ee760e067ed3e354fa494b1"
+  },
+  "known_limitation": "the vocabulary is OpenAlex's labelling of this topic slice, so a combination the labels do not distinguish is invisible here; both arms are scored against the same labelling"
+}

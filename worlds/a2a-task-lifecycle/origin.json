@@ -1,0 +1,19 @@
+{
+  "url": "https://raw.githubusercontent.com/a2aproject/A2A/main/specification/a2a.proto",
+  "retrieved_at": "2026-08-21",
+  "source_digest": "b4de599979421cf8ed9e807b17259da35ee82a04fb74a87b403089da4b738b11",
+  "text_digest": "b4de599979421cf8ed9e807b17259da35ee82a04fb74a87b403089da4b738b11",
+  "slice_rule": {
+    "kind": "all"
+  },
+  "parent": {
+    "n": 8,
+    "m": 14,
+    "initial": "SUBMITTED",
+    "format": "dot_labeled_digraph"
+  },
+  "slice": {
+    "n": 8,
+    "m": 14
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "zachary-karate",
+  "title": "Zachary karate club (1977)",
+  "source": "W. W. Zachary, An information flow model for conflict and fission in small groups, Journal of Anthropological Research 33:452-473 (1977). Canonical 34-node, 78-edge undirected graph.",
+  "retrieved_at": "2026-08-18",
+    "domains": [
+    "graph",
+    "network",
+    "community",
+    "social"
+  ],
+  "files": [
+    "graph.json"
+  ],
+  "role": "world",
+  "schema": "undirected_graph",
+  "load_hint": "payload = json.loads(Path('data/graph.json').read_text(encoding='utf-8')); nodes = payload['nodes']; edges = payload['edges']  # undirected int pairs",
+  "digest": "4cde8c631b111e2dcd361cf13bfdb695de0bb96435c30725c639445973b1db47"
+}

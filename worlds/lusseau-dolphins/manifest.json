@@ -1,0 +1,21 @@
+{
+  "id": "lusseau-dolphins",
+  "title": "Lusseau bottlenose dolphin social network",
+  "source": "D. Lusseau et al., The bottlenose dolphin community of Doubtful Sound features a large proportion of long-lasting associations, Behavioral Ecology and Sociobiology 54:396-405 (2003). GML via M. E. J. Newman network data archive, retrieved 2026-08-18.",
+  "retrieved_at": "2026-08-18",
+  "domains": [
+    "graph",
+    "network",
+    "community",
+    "connectivity",
+    "social"
+  ],
+  "files": [
+    "graph.json",
+    "source.txt"
+  ],
+  "role": "world",
+  "schema": "undirected_graph",
+  "load_hint": "payload = json.loads(Path('data/graph.json').read_text(encoding='utf-8')); nodes = payload['nodes']; edges = payload['edges']; labels = payload['labels']",
+  "digest": "c092e543b8e08f85be9c622048ad76cabee9de872ce4c873753102fb99da5ba7"
+}

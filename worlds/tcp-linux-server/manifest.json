@@ -1,0 +1,28 @@
+{
+  "id": "tcp-linux-server",
+  "title": "TCP Linux server state machine (learned model, Automata Wiki)",
+  "source": "Fiterau-Brostean, Janssen & Vaandrager, Combining Model Learning and Model Checking to Analyze TCP Implementations (CAV 2016); Automata Wiki TCP benchmark, mirrored at github.com/damascenodiego/automata_wiki",
+  "source_url": "https://raw.githubusercontent.com/damascenodiego/automata_wiki/master/benchmarks/TCP/TCP_Linux_Server.dot",
+  "source_digest": "247820f5846f3a16281321eb6adc1a01cefe005bbcf5a1338d638d482fe43389",
+  "retrieved_at": "2026-08-21",
+  "domains": [
+    "formal",
+    "verification",
+    "automaton",
+    "protocol",
+    "tcp",
+    "linux",
+    "handshake"
+  ],
+  "files": [
+    "origin.json",
+    "world.json"
+  ],
+  "role": "world",
+  "schema": "symbolic_trace",
+  "load_hint": "payload = json.loads(Path('data/world.json').read_text(encoding='utf-8')); states = payload['states']; transitions = payload['transitions']  # attested learned automaton; do not fetch",
+  "slice_rule": {
+    "kind": "all"
+  },
+  "digest": "a0d75443f9c1b3ff40f4e7ea918a8a27c851cbceadc50c20761e957058e04d58"
+}

@@ -1,0 +1,20 @@
+{
+  "url": "https://www.gutenberg.org/files/1342/1342-0.txt",
+  "retrieved_at": "2026-08-18",
+  "source_digest": "a5666f87abf2cbfdaa27ea8c73bd284da9649b9a2ab27b4e6c8f6aeab1bd1c88",
+  "text_digest": "a5666f87abf2cbfdaa27ea8c73bd284da9649b9a2ab27b4e6c8f6aeab1bd1c88",
+  "slice_rule": {
+    "kind": "first_tokens",
+    "n": 50000
+  },
+  "parent": {
+    "chars": 728846,
+    "tokens": 127377,
+    "format": "utf8_text"
+  },
+  "slice": {
+    "chars": 283263,
+    "tokens": 50000,
+    "keys": 8498
+  }
+}

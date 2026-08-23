@@ -1,0 +1,18 @@
+# DeepSeek Harness overlay for FarField.
+#
+# Official skill-filesystem already scans <git-root>/.agents/skills (rank 200)
+# and <git-root>/.dsh/skills (rank 100). This overlay also mounts the durable
+# catalog missions write under var/skills.
+#
+# Load with:
+#   dsh --config .dsh/cordis.yml --profile headless "<instruction>"
+#
+# FarField does not vendor Cordis. The product plugin runtime is Python
+# PluginHost in farfield.extras.plugins. When `dsh` is on PATH, that host
+# launches this overlay as the DeepSeek Harness plugin.
+
+plugins:
+  "@deepseek-ai/dsh-skill-filesystem":
+    customSkillDirs:
+      - .agents/skills
+      - var/skills

@@ -1,0 +1,20 @@
+{
+  "id": "les-miserables",
+  "title": "Les Misérables character co-appearance (Knuth)",
+  "source": "D. E. Knuth, The Stanford GraphBase (1993). Character co-appearance graph via vega-datasets miserables.json, frozen 2026-08-18.",
+  "retrieved_at": "2026-08-18",
+  "domains": [
+    "graph",
+    "network",
+    "coappearance",
+    "hugo",
+    "novel"
+  ],
+  "files": [
+    "graph.json"
+  ],
+  "role": "world",
+  "schema": "undirected_named_graph",
+  "load_hint": "payload = json.loads(Path('data/graph.json').read_text(encoding='utf-8')); nodes = payload['nodes']; edges = payload['edges']  # character name pairs",
+  "digest": "9c748da661f983bd219cfadc30bca205cfe212943c5bd42d5c0fc85af4d634ee"
+}

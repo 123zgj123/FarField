@@ -1,0 +1,60 @@
+{
+  "T": 2017,
+  "snapshots": [
+    {
+      "snapshot_id": "citefix-c0",
+      "graph": "tests/fixtures/G_le_T.json",
+      "full_graph": "tests/fixtures/G_full.json",
+      "heldout": "tests/fixtures/heldout_post_T.json",
+      "post_t_placement": "confirmed successors hang under far endpoints (n_d, n_f)",
+      "seeds": [
+        "beat a frozen mean baseline on synthetic linear holdout MSE",
+        "Neighborhood paper B as an alternative seed"
+      ],
+      "seed_nodes": [
+        "arxiv:1901.00001",
+        "n_b"
+      ]
+    },
+    {
+      "snapshot_id": "citefix-d0",
+      "graph": "tests/fixtures/G_le_T_near.json",
+      "full_graph": "tests/fixtures/G_full_near.json",
+      "heldout": "tests/fixtures/heldout_post_T_near.json",
+      "post_t_placement": "confirmed successors hang under near endpoints (nn_b, nn_c)",
+      "seeds": [
+        "the same seed task on a corpus whose post-T edges favour the bibliography",
+        "neighborhood B as an alternative seed"
+      ],
+      "seed_nodes": [
+        "nn_s",
+        "nn_b"
+      ]
+    },
+    {
+      "snapshot_id": "citefix-e0",
+      "graph": "tests/fixtures/G_le_T_mixed.json",
+      "full_graph": "tests/fixtures/G_full_mixed.json",
+      "heldout": "tests/fixtures/heldout_post_T_mixed.json",
+      "post_t_placement": "one confirmed successor under a far endpoint (mm_d), one under a near endpoint (mm_c)",
+      "seeds": [
+        "the same seed task on a corpus with mixed post-T placement",
+        "neighborhood B as an alternative seed"
+      ],
+      "seed_nodes": [
+        "mm_s",
+        "mm_b"
+      ]
+    }
+  ],
+  "envelope": {
+    "wall_clock_minutes": 10,
+    "token_cost": 0,
+    "accelerator_hours": 0,
+    "api_calls": 0,
+    "literature_fetches": 3,
+    "human_rating_minutes": 0
+  },
+  "e2_status": "N/A here: tau_F is measured by experiments/s4_meta_loop.py on held-out real corpora, not by an audit over these fixtures; see experiments/s4_report.json",
+  "T_star_campaign_ids": []
+}

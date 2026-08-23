@@ -1,0 +1,79 @@
+{
+  "snapshot_id": "citefix-e0-full",
+  "k": 2,
+  "nodes": [
+    {
+      "id": "mm_s",
+      "title": "mm seed paper",
+      "year": 2015
+    },
+    {
+      "id": "mm_b",
+      "title": "mm neighborhood B",
+      "year": 2015
+    },
+    {
+      "id": "mm_c",
+      "title": "mm neighborhood C",
+      "year": 2016
+    },
+    {
+      "id": "mm_d",
+      "title": "mm distant D",
+      "year": 2016
+    },
+    {
+      "id": "mm_e",
+      "title": "mm distant leaf E",
+      "year": 2016
+    },
+    {
+      "id": "mm_f",
+      "title": "mm counterexample F",
+      "year": 2016
+    },
+    {
+      "id": "mm_post_a",
+      "title": "mm post-T confirmed A",
+      "year": 2018
+    },
+    {
+      "id": "mm_post_b",
+      "title": "mm post-T confirmed B",
+      "year": 2018
+    }
+  ],
+  "edges": [
+    [
+      "mm_s",
+      "mm_b"
+    ],
+    [
+      "mm_b",
+      "mm_c"
+    ],
+    [
+      "mm_c",
+      "mm_d"
+    ],
+    [
+      "mm_c",
+      "mm_e"
+    ],
+    [
+      "mm_d",
+      "mm_f"
+    ],
+    [
+      "mm_d",
+      "mm_post_a"
+    ],
+    [
+      "mm_c",
+      "mm_post_b"
+    ]
+  ],
+  "counterexample_nodes": [
+    "mm_f"
+  ]
+}

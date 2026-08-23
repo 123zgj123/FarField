@@ -1,0 +1,26 @@
+{
+  "id": "uci-letters",
+  "title": "UCI Letter Recognition, first 10000 official rows",
+  "source": "D. J. Slate / UCI Letter Recognition (1991). 20000 rows of 16 numeric features plus a class letter. Host-retrieved 2026-08-18; slice is the official file's first 10000 rows.",
+  "source_url": "https://archive.ics.uci.edu/ml/machine-learning-databases/letter-recognition/letter-recognition.data",
+  "source_digest": "2b89f3602cf768d3c8355267d2f13f2417809e101fc2b5ceee10db19a60de6e2",
+  "retrieved_at": "2026-08-18",
+  "domains": [
+    "letter",
+    "handwriting",
+    "table",
+    "numeric"
+  ],
+  "files": [
+    "origin.json",
+    "table.json"
+  ],
+  "role": "world",
+  "schema": "numeric_table",
+  "load_hint": "table = json.loads(Path('data/table.json').read_text(encoding='utf-8')); rows = table['rows']; columns = table['columns']",
+  "slice_rule": {
+    "kind": "first_rows",
+    "n": 10000
+  },
+  "digest": "dd8ada4af7586ad712298bfb8480dcf50175c71ebf6fa58809be88777446dec0"
+}

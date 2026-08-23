@@ -1,0 +1,19 @@
+{
+  "url": "https://archive.ics.uci.edu/ml/machine-learning-databases/letter-recognition/letter-recognition.data",
+  "retrieved_at": "2026-08-18",
+  "source_digest": "2b89f3602cf768d3c8355267d2f13f2417809e101fc2b5ceee10db19a60de6e2",
+  "text_digest": "2b89f3602cf768d3c8355267d2f13f2417809e101fc2b5ceee10db19a60de6e2",
+  "slice_rule": {
+    "kind": "first_rows",
+    "n": 10000
+  },
+  "parent": {
+    "n": 20000,
+    "d": 16,
+    "format": "csv"
+  },
+  "slice": {
+    "n": 10000,
+    "d": 16
+  }
+}

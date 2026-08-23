@@ -1,0 +1,18 @@
+{
+  "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=NC_001416.1&rettype=fasta&retmode=text",
+  "retrieved_at": "2026-08-18",
+  "source_digest": "78a78913d3585570fa28b7cec05e4fcf067c1aaa3740d37a377f2babda70618c",
+  "text_digest": "78a78913d3585570fa28b7cec05e4fcf067c1aaa3740d37a377f2babda70618c",
+  "slice_rule": {
+    "kind": "first_bases",
+    "n": 50000
+  },
+  "parent": {
+    "bp": 48502,
+    "header": "NC_001416.1 Enterobacteria phage lambda, complete genome",
+    "format": "fasta"
+  },
+  "slice": {
+    "bp": 48502
+  }
+}

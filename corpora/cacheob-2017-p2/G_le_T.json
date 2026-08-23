@@ -1,0 +1,8791 @@
+{
+  "snapshot_id": "cacheob-2017-p2-883c6f7a01ce-le-2017",
+  "k": 2,
+  "T": 2017,
+  "derived_from": "cacheob-2017-p2-883c6f7a01ce",
+  "nodes": [
+    {
+      "id": "openalex:W1013549386",
+      "title": "SkvG: Cache-Optimal Parallel Solution of PDEs on High Performance Computers Using Space-Trees and Space-Filling Curves",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W1027972153",
+      "title": "Algorithm Engineering for Large Data Sets",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W1153030042",
+      "title": "Efficient Mesh Management in Firedrake Using PETSc DMPlex",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W122851984",
+      "title": "On the Computer Generation of Adaptive Numerical Libraries",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W123924977",
+      "title": "Algorithms and Data Structures: Efficient and Cache-Oblivious",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W124383974",
+      "title": "Factoring Sparse Bivariate Polynomials Using the Priority Queue",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W1420243053",
+      "title": "Toward a Theory of Algorithm-Architecture Co-design",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W1482435370",
+      "title": "An Empirical Study of Cache-Oblivious Priority Queues and their Application to the Shortest Path Problem",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W148484292",
+      "title": "Intelligent-based latency reduction in 3D walkthrough",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W1487258612",
+      "title": "Algorithms for Memory Hierarchies",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W1488399669",
+      "title": "Priority Queues Resilient to Memory Faults",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W149399617",
+      "title": "Space-Filling Curves in 3D",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W1498393600",
+      "title": "Smashing: Folding Space to Tile through Time",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W1504320321",
+      "title": "A Multilevel Parallelization Framework for High-Order Stencil Computations",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W1504467601",
+      "title": "Cache-Oblivious Sorting",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1506424797",
+      "title": "Multicore-Optimized Wavefront Diamond Blocking for Optimizing Stencil Updates",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1506955979",
+      "title": "Cache Oblivious Matrix Transposition: Simulation and Experiment",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W1509582226",
+      "title": "Crafting Data Structures: A Study of Reference Locality in Refinement-Based Pathfinding",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W1512347326",
+      "title": "An Optimized Sparse Approximate Matrix Multiply",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W151246516",
+      "title": "Auto-tuning performance on multicore computers",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W151439197",
+      "title": "Clustering and reconstructing large data sets",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W1524061576",
+      "title": "Cache-Optimal Data-Structures for Hierarchical Methods on Adaptively Refined Space-Partitioning Grids",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W1528439592",
+      "title": "A Performance Model of Dense Matrix Operations on Many-Core Architectures",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W1532213207",
+      "title": "Adaptive Granularity Control in Task Parallel Programs Using Multiversioning",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W1534421253",
+      "title": "Exploiting locality and parallelism with hierarchically tiled arrays",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W1537424319",
+      "title": "Avoiding Communication in Dense Linear Algebra",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W1538459416",
+      "title": "Spacetime Meshing for Discontinuous Galerkin Methods",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W1541188639",
+      "title": "Fast Sorting on a Distributed-Memory Architecture",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W154322363",
+      "title": "Further Applications of Space-Filling Curves: References and Readings",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W1562540771",
+      "title": "Efficient String Sorting Algorithms: Cache-aware and Cache-Oblivious",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W1567274303",
+      "title": "A Cache-Aware Algorithm for PDEs on Hierarchical Data Structures",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W1567824690",
+      "title": "Parallel sorting and Star-P data movement and tree flattening",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W1569078565",
+      "title": "A low memory, highly concurrent multigrid algorithm",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W1570377291",
+      "title": "Design and Engineering of External Memory Traversal Algorithms for General Graphs",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W15708769",
+      "title": "Two Motivating Examples: Sequential Orders on Quadtrees and Multidimensional Data Structures",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W1573954828",
+      "title": "Cache-Oblivious Comparison-Based Algorithms on Multisets",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W1574726470",
+      "title": "Techniques for Designing Efficient Parallel Graph Algorithms for SMPs and Multicore Processors",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W1576855227",
+      "title": "Modeling the Appearance and Behavior of Urban Spaces",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W1577196593",
+      "title": "HAT-trie: a cache-conscious trie-based data structure for strings",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W1582397847",
+      "title": "Multicore triangle computations without tuning",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1583793915",
+      "title": "Cache-Aware and Cache-Oblivious Adaptive Sorting",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W1592580490",
+      "title": "Funnel Heap-A Cache Oblivious Priority Queue",
+      "year": 2002
+    },
+    {
+      "id": "openalex:W1593732971",
+      "title": "Cache Oblivious Algorithms",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W1595776161",
+      "title": "Traversing large graphs in realistic settings",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W1601617962",
+      "title": "External String Sorting: Faster and Cache-Oblivious",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W1602768168",
+      "title": "Bounds on the Geometric Mean of Arc Lengths for Bounded-Degree Planar Graphs",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W1604557386",
+      "title": "Massive model visualization: An investigation into spatial partitioning",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W1605023936",
+      "title": "Fast and compact hash tables for integer keys",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W1607456165",
+      "title": "Subquadratic Algorithms for 3SUM",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W162174704",
+      "title": "How to Construct Space-Filling Curves",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W1639292813",
+      "title": "Chapter 5. Realistic Computer Models",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W1669591663",
+      "title": "Static Data Structure for Discrete Advance Bandwidth Reservations on the Internet",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W169080399",
+      "title": "Spanning Tree, Minimum Weight",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W1731124780",
+      "title": "Cache‐oblivious matrix algorithms in the age of multicores and many cores",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W173366111",
+      "title": "Arithmetic Representation of Space-Filling Curves",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W1745592534",
+      "title": "Efficient Resource Oblivious Algorithms for Multicores",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W1778234905",
+      "title": "Generating Raster DEM from Mass Points Via TIN Streaming",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W1795008753",
+      "title": "Introducing the Semi-stencil Algorithm",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W1825532946",
+      "title": "Improving the arithmetic intensity of multigrid with the help of polynomial smoothers",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W1836678964",
+      "title": "Solving Geometric Problems in Space-Conscious Models",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W1857323784",
+      "title": "Efficient Tree Layout in a Multilevel Memory Hierarchy",
+      "year": 2002
+    },
+    {
+      "id": "openalex:W1883792959",
+      "title": "Refinement Trees and Space-Filling Curves",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W1890530603",
+      "title": "High-Performance Energy-Efficient Recursive Dynamic Programming with Matrix-Multiplication-Like Flexible Kernels",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1910851252",
+      "title": "Resource Oblivious Sorting on Multicores",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W1918193513",
+      "title": "Algorithms and data structures for cache-efficient computation: theory and experimental evaluation",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W1940144584",
+      "title": "Flexible, Scalable Mesh and Data Management using PETSc DMPlex",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1944226055",
+      "title": "Cache-Oblivious Model",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W1964543049",
+      "title": "The Cost of Cache-Oblivious Searching",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W1965081941",
+      "title": "The Cache Complexity of Multithreaded Cache Oblivious Algorithms",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W1966454460",
+      "title": "Single-strips for fast interactive rendering",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W1967020723",
+      "title": "Portable parallel performance from sequential, productive, embedded domain-specific languages",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W1968013322",
+      "title": "Cache oblivious stencil computations",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W1969885937",
+      "title": "Parallel implementation of Newton’s method for solving large-scale linear programs",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W1972200437",
+      "title": "Scheduling irregular parallel computations on hierarchical caches",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W1972447202",
+      "title": "Improving Parallelism of Recursive Stencil Computations without Sacrificing Cache Performance",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W1973271197",
+      "title": "Cache oblivious parallelograms in iterative stencil computations",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W1975686297",
+      "title": "Interactive 3D virtual environments for industrial operation training and maintenance",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W1975755183",
+      "title": "Practical Massively Parallel Sorting",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1976888542",
+      "title": "Cache-oblivious wavefront: improving parallelism of recursive dynamic programming algorithms without losing cache-efficiency",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W1977184607",
+      "title": "Segment-based tetrahedral meshing and rendering",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W1978960961",
+      "title": "Thin heaps, thick heaps",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W1979201594",
+      "title": "Internally deterministic parallel algorithms can be fast",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W1979457157",
+      "title": "The pochoir stencil compiler",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W1980208272",
+      "title": "Darkroom",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W1980322368",
+      "title": "A Synergetic Approach to Throughput Computing on x86-Based Multicore Desktops",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W1980489563",
+      "title": "Cache-oblivious hashing",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W1981002423",
+      "title": "Cache-independent algorithms",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W1983503576",
+      "title": "Proximity Mergesort: optimal in-place sorting in the cache-oblivious model",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W1983616264",
+      "title": "Level-3 Cholesky Factorization Routines Improve Performance of Many Cholesky Algorithms",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W1983997639",
+      "title": "Paging for multi-core shared caches",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W1985751298",
+      "title": "Tuning a Finite Difference Computation for Parallel Vector Processors",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W1987588924",
+      "title": "Performance modeling and automatic ghost zone optimization for iterative stencil loops on GPUs",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W1988431663",
+      "title": "Modelling the Appearance and Behaviour of Urban Spaces",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W1991111959",
+      "title": "On the limits of cache-oblivious rational permutations",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W1995561720",
+      "title": "Mesh-to-Mesh Collision Detection by Ray Tracing for Medical Simulation with Deformable Bodies",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W1996466054",
+      "title": "Cache-oblivious databases",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W1997597015",
+      "title": "A Performance Study for Iterative Stencil Loops on GPUs with Ghost Zone Optimizations",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W1999806580",
+      "title": "A performance study of data layout techniques for improving data locality in refinement-based pathfinding",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2000041758",
+      "title": "Ligra",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2000531453",
+      "title": "Real-Time Massive Model Rendering",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2000909774",
+      "title": "Performance comparison of different parallel lattice Boltzmann implementations on multi-core multi-socket systems",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2000998233",
+      "title": "Advection-Based Sparse Data Management for Visualizing Unsteady Flow",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2001125165",
+      "title": "Parallel triangle counting in massive streaming graphs",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2001324285",
+      "title": "Miss rate analysis of cache oblivious matrix multiplication using sequential access recursive algorithm and normal multiplication algorithm",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2002209075",
+      "title": "Effectively sharing a cache among threads",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2002322113",
+      "title": "In-place 2-d nearest neighbor search",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2004414525",
+      "title": "Impact of Data Structure Layout on Performance",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2005397752",
+      "title": "Cache Oblivious Algorithms for the RMQ and the RMSQ Problems",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2006706309",
+      "title": "Cache-oblivious R-trees",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W2006724429",
+      "title": "T-ReX: Interactive Global Illumination of Massive Models on Heterogeneous Computing Resources",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2006785118",
+      "title": "Parallel circuit simulation using the direct method on a heterogeneous cloud",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2006835125",
+      "title": "Measurement of the latency parameters of the Multi-BSP model: a multicore benchmarking approach",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2007134090",
+      "title": "Cache oblivious sparse polynomial factoring using the funnel heap",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2007290376",
+      "title": "Error diffusion on meshes",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2008005532",
+      "title": "Algorithm 942",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2008137555",
+      "title": "Brief announcement",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2010629071",
+      "title": "Fast recursive matrix multiplication for multi-core architectures",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2010953531",
+      "title": "On the bit-complexity of sparse polynomial and series multiplication",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2013480322",
+      "title": "A computational study of external-memory BFS algorithms",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2013938784",
+      "title": "Three layer cake for shared-memory programming",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2014866763",
+      "title": "Cache-oblivious shortest paths in graphs using buffer heap",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2016358047",
+      "title": "Supermatrix out-of-order scheduling of matrix operations for SMP and multi-core architectures",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2017137072",
+      "title": "GPU Based Compression and Rendering of Massive Aircraft CAD Models",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2017799838",
+      "title": "A locality-preserving cache-oblivious dynamic dictionary",
+      "year": 2002
+    },
+    {
+      "id": "openalex:W2022117185",
+      "title": "Cache-oblivious priority queue and graph algorithm applications",
+      "year": 2002
+    },
+    {
+      "id": "openalex:W2022140469",
+      "title": "Cache-oblivious polygon indecomposability testing",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2024197950",
+      "title": "Data-oblivious graph algorithms for secure computation and outsourcing",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2024633610",
+      "title": "External-memory exact and approximate all-pairs shortest-paths in undirected graphs",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W2025442915",
+      "title": "Cache-oblivious ray reordering",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2028637981",
+      "title": "Oblivious algorithms for multicores and networks of processors",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2028763350",
+      "title": "A Cache‐Aware Algorithm for PDEs on Hierarchical Data Structures Based on Space‐Filling Curves",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2029057477",
+      "title": "A novel page-based data structure for interactive walkthroughs",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2029108714",
+      "title": "Hierarchical Diagonal Blocking and Precision Reduction Applied to Combinatorial Multigrid",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2030816052",
+      "title": "Augmented Reality Prototype for Visualising Large Sensors’ Datasets",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2032495263",
+      "title": "Performance engineering to achieve real-time high dynamic range imaging",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2033361497",
+      "title": "Optimal hierarchical layouts for cache-oblivious search trees",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2034413563",
+      "title": "On the limits of cache-obliviousness",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W2034972469",
+      "title": "Efficient Reduction of Access Latency through Object Correlations in Virtual Environments",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2035303986",
+      "title": "ReduceM: Interactive and Memory Efficient Ray Tracing of Large Models",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2035701183",
+      "title": "The memory behavior of cache oblivious stencil computations",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2035937417",
+      "title": "Cache-optimal algorithms for option pricing",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2037593097",
+      "title": "Brief announcement",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2038371276",
+      "title": "Redesigning the string hash table, burst trie, and BST to exploit cache",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2039120387",
+      "title": "Adaptive voxels: interactive rendering of massive 3D models",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2039787998",
+      "title": "An experimental comparison of cache-oblivious and cache-conscious programs",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2040992920",
+      "title": "Simple and Efficient Mesh Layout with Space-Filling Curves",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2041089549",
+      "title": "Performance analysis of Cooley-Tukey FFT algorithms for a many-core architecture",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2041994075",
+      "title": "Computational geometry in the parallel external memory model",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2044360242",
+      "title": "Hierarchical approach to optimization of parallel matrix multiplication on large-scale platforms",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2044371773",
+      "title": "A flow-guided file layout for out-of-core streamline computation",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2044633855",
+      "title": "Optimal in-place and cache-oblivious algorithms for 3-d convex hulls and 2-d segment intersection",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2044990032",
+      "title": "Cache‐Efficient Layouts of Bounding Volume Hierarchies",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2046772626",
+      "title": "Data management for SSDs for large-scale interactive graphics applications",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2048064086",
+      "title": "Cache-Oblivious Hashing",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2048207885",
+      "title": "A Bridging Model for Branch-and-Bound Algorithms on Multi-core Architectures",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2049080955",
+      "title": "Noise-Tolerant Explicit Stencil Computations for Nonuniform Process Execution Rates",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2049647076",
+      "title": "Subquadratic Algorithms for 3SUM",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2052193348",
+      "title": "I/O efficient QR and QZ algorithms",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2052196304",
+      "title": "Cache-Oblivious Algorithms",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2054052779",
+      "title": "A locality-preserving cache-oblivious dynamic dictionary",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2054515912",
+      "title": "ISP: An Optimal Out-of-Core Image-Set Processing Streaming Architecture for Parallel Heterogeneous Systems",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2055312318",
+      "title": "Halide",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2058294003",
+      "title": "New method in information processing for maintaining an efficient dynamic ordered set",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2059273139",
+      "title": "Regularities and dynamics in bisimulation reductions of big graphs",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2059565836",
+      "title": "Technical strategies for massive model visualization",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2059710204",
+      "title": "Optimization of a lattice Boltzmann computation on state-of-the-art multicore platforms",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2060645111",
+      "title": "Massive-Model Rendering Techniques: A Tutorial",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2062959712",
+      "title": "A parallel buffer tree",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2063354603",
+      "title": "An Optimal Cache‐Oblivious Priority Queue and Its Application to Graph Algorithms",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2064270040",
+      "title": "Program-centric cost models for locality",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2064910003",
+      "title": "On approximating the ideal random access machine by physical machines",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2065208758",
+      "title": "Computing betweenness centrality in external memory",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2065457989",
+      "title": "Sorting with Asymmetric Read and Write Costs",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2067062659",
+      "title": "Cache-oblivious mesh layouts",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W2067089961",
+      "title": "Cache-Efficient Aggregation",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2068182735",
+      "title": "Brief announcement",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2069559626",
+      "title": "Adaptive Cache Aware Bitier Work-Stealing in Multisocket Multicore Architectures",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2070122234",
+      "title": "Static reuse distances for locality-based optimizations in MATLAB",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2070961300",
+      "title": "Tiling stencil computations to maximize parallelism",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2071225564",
+      "title": "Engineering scalable, cache and space efficient tries for strings",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2074326206",
+      "title": "Recursive storage cache memory for matrix multiplication",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2074326248",
+      "title": "An evaluation of the potential of flash SSD as large and slow memory for stencil computations",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2076089605",
+      "title": "Optimal in-place algorithms for 3-D convex hulls and 2-D segment intersection",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2079558731",
+      "title": "Geometry engine optimization",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2081422781",
+      "title": "The cache complexity of multithreaded cache oblivious algorithms",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2082591084",
+      "title": "Multiprocessor System-on-Chip designs with active memory processors for higher memory efficiency",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2082940000",
+      "title": "Brief announcement",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2084002994",
+      "title": "Cache-oblivious dynamic programming",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2084297766",
+      "title": "A faster cache-oblivious shortest-path algorithm for undirected graphs with bounded edge lengths",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2085251186",
+      "title": "From the future Si technology perspective: Challenges and opportunities",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2086337948",
+      "title": "Parallel and I/O efficient set covering algorithms",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2087050046",
+      "title": "Data‐Parallel Decompression of Triangle Mesh Topology",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2089064856",
+      "title": "Low depth cache-oblivious algorithms",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2089384111",
+      "title": "The limits of buffering",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2090947057",
+      "title": "Optimal Cache-Oblivious Mesh Layouts",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2091307407",
+      "title": "Cache-oblivious string dictionaries",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2091558427",
+      "title": "Something different &amp;#x2014; Caching applied to calculation of impedance matrix elements",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2092720654",
+      "title": "A Top-Down Parallel Semisort",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2093269509",
+      "title": "Performance of Thorup's Shortest Path Algorithm for Large-Scale Network Simulation",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2093357625",
+      "title": "Experimental analysis of space-bounded schedulers",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2096898433",
+      "title": "CATS",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2097572763",
+      "title": "Can traditional programming bridge the Ninja performance gap for parallel computing applications?",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2097757554",
+      "title": "Cache Accurate Time Skewing in Iterative Stencil Computations",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2097909406",
+      "title": "Exploiting inter-thread temporal locality for chip multithreading",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2099611016",
+      "title": "Communication lower bounds and optimal algorithms for numerical linear algebra",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2100346382",
+      "title": "Cache-Oblivious Scanline Algorithm Design",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2100580246",
+      "title": "Time skewing made simple",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2100632417",
+      "title": "Mesh Layouts for Block-Based Caches",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2100809848",
+      "title": "Interactive Collision Detection for Deformable Models Using Streaming AABBs",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2101062586",
+      "title": "POINTERLESS IMPLEMENTATION OF HIERARCHICAL SIMPLICIAL MESHES AND EFFICIENT NEIGHBOR FINDING IN ARBITRARY DIMENSIONS",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2101863832",
+      "title": "Cache-Efficient Parallel Isosurface Extraction for Shared Cache Multicores",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2102467006",
+      "title": "Scanning and Traversing: Maintaining Data for Traversals in a Memory Hierarchy",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2102826167",
+      "title": "Maximizing the performance of irregular applications on multithreaded, NUMA systems",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2102873416",
+      "title": "Predictive Lazy Amplification: Synthesis and Rendering of Massive Procedural Scenes in Real Time",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2102902087",
+      "title": "Collision-free spatial hash functions for structural analysis of billion-vertex chemical bond networks",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2103518095",
+      "title": "Trends in high-performance computing for engineering calculations",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2104321672",
+      "title": "Video game pathfinding and improvements to discrete search on grid-based maps",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2104342377",
+      "title": "The Cilkview scalability analyzer",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2104507648",
+      "title": "Parallel approximation algorithms for facility-location problems",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2104512032",
+      "title": "PATUS: A Code Generation and Autotuning Framework for Parallel Iterative Stencil Computations on Modern Microarchitectures",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2105156747",
+      "title": "Cache Oblivious Distribution Sweeping",
+      "year": 2002
+    },
+    {
+      "id": "openalex:W2107410315",
+      "title": "Parallel Two-Sided Matrix Reduction to Band Bidiagonal Form on Multicore Architectures",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2108080367",
+      "title": "Fast triangle reordering for vertex locality and reduced overdraw",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2108157916",
+      "title": "A Survey of General‐Purpose Computation on Graphics Hardware",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2110971776",
+      "title": "Streaming Simplification of Tetrahedral Meshes",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2111461592",
+      "title": "Lists Revisited: Cache Conscious STL Lists",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2112885227",
+      "title": "Cache oblivious algorithms for nonserial polyadic programming",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2113277707",
+      "title": "A dependency-aware task-based programming environment for multi-core architectures",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2113372580",
+      "title": "Improving cache global consistency and hit ratio in dependency objects with semantic spatial locality correlations",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2113615072",
+      "title": "SQuad: Compact Representation for Triangle Meshes",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2113682966",
+      "title": "Compiler multiversioning for automatic task granularity control",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2115140794",
+      "title": "Hierarchical parallelization and optimization of high-order stencil computations on multicore clusters",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2115550033",
+      "title": "Cache-Oblivious Searching and Sorting in Multisets",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2116904467",
+      "title": "Optimizing Large-scale Graph Analysis on Multithreaded, Multicore Platforms",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2116941322",
+      "title": "Diagnosis, Tuning, and Redesign for Multicore Performance: A Case Study of the Fast Multipole Method",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2117098610",
+      "title": "Cache-oblivious streaming B-trees",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2118235465",
+      "title": "Enhancing Locality in Java based Irregular Applications",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2118746782",
+      "title": "Productive high performance parallel programming with auto-tuned domain-specific embedded languages",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2121820647",
+      "title": "I/O-Optimal Distribution Sweeping on Private-Cache Chip Multiprocessors",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2122001721",
+      "title": "The cache-oblivious gaussian elimination paradigm",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2123268668",
+      "title": "Cache-oblivious query processing",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2124920620",
+      "title": "Cache-oblivious planar orthogonal range searching and counting",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W2125548905",
+      "title": "A Unified Approach to Adaptive Code Selection for Modern Systems",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2125867579",
+      "title": "Streaming computation of Delaunay triangulations",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2126136185",
+      "title": "Dynamic programming in faulty memory hierarchies (cache-obliviously)",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2127295009",
+      "title": "Random-Accessible Compressed Triangle Meshes",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2127483723",
+      "title": "On the Limits of Cache-Oblivious Matrix Transposition",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2127902590",
+      "title": "Engineering a cache-oblivious sorting algorithm",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2128544095",
+      "title": "Domain-Specific Optimization of Two Jacobi Smoother Kernels and Their Evaluation in the ECM Performance Model",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2128653745",
+      "title": "Medusa: Simplified Graph Processing on GPUs",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2129050115",
+      "title": "Multicore-aware parallel temporal blocking of stencil codes for shared and distributed memory",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2129102442",
+      "title": "An Experimental Study of Self-Optimizing Dense Linear Algebra Software",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2129829929",
+      "title": "NUMA Aware Iterative Stencil Computations on Many-Core Systems",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2130664790",
+      "title": "Engineering burstsort",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2131264486",
+      "title": "Oblivious algorithms for multicores and network of processors",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2132108235",
+      "title": "Cache-Oblivious Data Structures and Algorithms for Undirected Breadth-First Search and Shortest Paths",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2132416440",
+      "title": "Cache-conscious graph collaborative filtering on multi-socket multicore systems",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2132468911",
+      "title": "A Theoretical Framework for Algorithm-Architecture Co-design",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2133914707",
+      "title": "The cost of cache-oblivious searching",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2136066447",
+      "title": "Efficient Resource Oblivious Algorithms for Multicores with False Sharing",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2136453484",
+      "title": "Basic network creation games",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2136825063",
+      "title": "Speculative parallel asynchronous contact mechanics",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2136836784",
+      "title": "Defying the Memory Bottleneck in Hardware Accelerated Collision Detection",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2138090156",
+      "title": "Making TifaMMy fit for tomorrow: Towards future shared memory systems and beyond",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2140026235",
+      "title": "Designing reliable algorithms in unreliable memories",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2140029414",
+      "title": "Lists revisited",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2140591634",
+      "title": "Cache-Oblivious Planar Shortest Paths",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W2141488439",
+      "title": "Optimizing redundant-data clustering for interactive walkthrough applications",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2141672427",
+      "title": "Streaming‐Enabled Parallel Dataflow Architecture for Multicore Systems",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2144031643",
+      "title": "Cache-Oblivious Dynamic Programming for Bioinformatics",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2144714514",
+      "title": "Patterns for cache optimizations on multi-processor machines",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2145304484",
+      "title": "Random Accessible Mesh Compression Using Mesh Chartification",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2146529252",
+      "title": "Cache-Oblivious R-Trees",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2147828044",
+      "title": "Ray-Strips: A Compact Mesh Representation for Interactive Ray Tracing",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2148795536",
+      "title": "Simple and semi-dynamic structures for cache-oblivious planar orthogonal range searching",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2149211280",
+      "title": "Binary Mesh Partitioning for Cache-Efficient Visualization",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2149710423",
+      "title": "ULCC",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2150486346",
+      "title": "Cache oblivious matrix multiplication using an element ordering based on a Peano curve",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2155342760",
+      "title": "Automatically Tuned Dynamic Programming with an Algorithm-by-Blocks",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2155912474",
+      "title": "Two dimensional Range Minimum/Maximum Query revisited",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2156300652",
+      "title": "Automatic code generation and tuning for stencil kernels on modern shared memory architectures",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2157685422",
+      "title": "Parallel data-locality aware stencil computations on modern micro-architectures",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2159870643",
+      "title": "Evaluating Multicore Algorithms on the Unified Memory Model",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2159947164",
+      "title": "Equivalence between Priority Queues and Sorting in External Memory",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2160422146",
+      "title": "Engineering Burstsort: Towards Fast In-Place String Sorting",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2162920780",
+      "title": "An Intelligent Clustering Algorithm for 3D Objects Layouts in Storage Systems",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2163255197",
+      "title": "Dynamic external hashing",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2167729645",
+      "title": "Interactive Ray Tracing of Large Models Using Voxel Hierarchies",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2167868137",
+      "title": "Automatic performance tuning of sparse matrix kernels",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W2168748809",
+      "title": "Communication-Optimal Parallel Recursive Rectangular Matrix Multiplication",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2168938467",
+      "title": "Fast generation of multiple resolution instances of raster data sets",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2169205860",
+      "title": "Large Scale Terrain Compression and Real-Time Rendering Based on Wavelet Transform",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2169325838",
+      "title": "An efficient multi-tier tablet server storage architecture",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2169672547",
+      "title": "Towards Perceptual Simplification of Models with Arbitrary Materials",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2171038510",
+      "title": "Cache-oblivious data structures for orthogonal range searching",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W2182091416",
+      "title": "Cache-Oblivious Searching and Sorting",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W2182817605",
+      "title": "HARDWARE ACCELERATION OF SIMILARITY QUERIES USING GRAPHIC PROCESSOR UNITS",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2182827928",
+      "title": "Spectral Methods for Mesh Processing and Analysis",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2183491405",
+      "title": "Engineering Cache-Oblivious Sorting Algorithms",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W2183511781",
+      "title": "Performance Driven Redundancy Optimization of Data Layouts for Walkthrough Applications",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2183919453",
+      "title": "An Experimental Study of Self-Optimizing Dense Linear Algebra Software Analytical models of the memory hierarchy are used to explain the performance of self-optimizing software.",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2184696288",
+      "title": "CACHE-AWARE AND CACHE-OBLIVIOUS ALGORITHMS",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2184948564",
+      "title": "DIPLOMOV A PR ACE",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2185118258",
+      "title": "Cache-Oblivious Data Structures",
+      "year": 2001
+    },
+    {
+      "id": "openalex:W2186744555",
+      "title": "Classic and new data structure problems in external memory",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2188494356",
+      "title": "IBM Research Report High-Performance Sorting Algorithms on AIX",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W2194895351",
+      "title": "Parallelisation with Space-Filling Curves",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2199084870",
+      "title": "Multidimensional Intratile Parallelization for Memory-Starved Stencil Computations",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2203012675",
+      "title": "Cache Oblivious B-tree and Sorting Using Sequential Accessing",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W220724191",
+      "title": "DiamondTorre Algorithm for High-Performance Wave Modeling",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W22104068",
+      "title": "Explicit memory management for mesh traversal",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2213768512",
+      "title": "Case Study: Numerical Simulation on Spacetree Grids Using Space-Filling Curves",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2221279259",
+      "title": "On How to Accelerate Iterative Stencil Loops",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2222823054",
+      "title": "Efficient, scalable, and versatile application and system transaction management for direct storage layers",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2226133766",
+      "title": "Case Study: Cache Efficient Algorithms for Matrix Operations",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2234212075",
+      "title": "Optimal Temporal Blocking for Stencil Computation",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2253769547",
+      "title": "Cache-adaptive algorithms",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2260451409",
+      "title": "Optimally Redundant, Seek-Time Minimizing Data Layout for Interactive Rendering",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2273040603",
+      "title": "Out-of-Core Proximity Computation for Particle-based Fluid Simulations",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2273221897",
+      "title": "A Few Lessons I’ve Learned",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2274935188",
+      "title": "Analysis of recursive cache-adaptive algorithms",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2275977038",
+      "title": "Balance principles for algorithm-architecture co-design",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2276454361",
+      "title": "Extending the Nested Parallel Model to the Nested Dataflow Model with Provably Efficient Schedulers",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2282989799",
+      "title": "Write-Avoiding Algorithms",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2283409396",
+      "title": "Practical Concurrent Unrolled Linked Lists Using Lazy Synchronization",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2288916024",
+      "title": "A suite of greedy methods for set cover computation",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2291714504",
+      "title": "Using Symmetry to Schedule Classical Matrix Multiplication",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2294163059",
+      "title": "Streaming meshes",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W2295585735",
+      "title": "Study and evaluation of an Irregular Graph Algorithm on Multicore and GPU Processor Architectures",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2296715499",
+      "title": "Acceleration methods for ray tracing based global illumination",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2314666169",
+      "title": "Network-Oblivious Algorithms",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2320907252",
+      "title": "Computing with Chunks",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2331706524",
+      "title": "Application of Statistical Models to Select Tile Size Minimizing the Execution Time of Parallelized Tiled Loop Nests",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2336157664",
+      "title": "A numbering algorithm for finite elements on extruded meshes which avoids the unstructured mesh penalty",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2338027756",
+      "title": "Using static program analysis to compile fast cache simulators",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2397628599",
+      "title": "Cache-Oblivious Iterated Predecessor Queries via Range Coalescing",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2405996389",
+      "title": "View-dependent Tetrahedral Meshing and Rendering using Arbitrary Segments.",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2412440871",
+      "title": "Verified lifting of stencil computations",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2413414340",
+      "title": "The I/O Complexity of Computing Prime Tables",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2444244351",
+      "title": "Program-Centric Cost Models for Locality and Parallelism",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2467057949",
+      "title": "Experimental Analysis of Space-Bounded Schedulers",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2473738173",
+      "title": "An Efficient External Memory Algorithm for Terrain Viewshed Computation",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2475955799",
+      "title": "Cache oblivious algorithms",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W2478200899",
+      "title": "Cache Aware Dynamics Data Layout for Efficient Shared Memory Parallelisation of EUROPLEXUS",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2486120050",
+      "title": "Interactive visualization and collision detection using dynamic simplification and cache-coherent layouts",
+      "year": 2005
+    },
+    {
+      "id": "openalex:W2504664975",
+      "title": "Interactive inspection of complex multi-object industrial assemblies",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2518569579",
+      "title": "Bandwidth-efficient BVH layout for incremental hardware traversal",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2521073699",
+      "title": "Visualizing program memory behavior using memory reference traces",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2523511629",
+      "title": "In Situ Storage Layout Optimization for AMR Spatio-temporal Read Accesses",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2530769523",
+      "title": "A structure-exploiting numbering algorithm for finite elements onextruded meshes, and its performance evaluation in Firedrake",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2532403383",
+      "title": "Overlapping long sequence reads: Current innovations and challenges in developing sensitive, specific and scalable algorithms",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2546184100",
+      "title": "RT-DEFORM: Interactive Ray Tracing of Dynamic Scenes using BVHs",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2548101508",
+      "title": "Resilient Priorirty Queue",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2550864768",
+      "title": "In the previous lecture, we discussed the External Memory and Cache Oblivious memory models. We additionally discussed some substantial results from data structures under each model; the most complex of these was the Cache Oblivious B-Tree. In that construction, we used the Ordered File",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2551937430",
+      "title": "Coding Stencil Computations Using the Pochoir Stencil-Specification Language",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W2554564400",
+      "title": "High performance FDTD algorithm for GPGPU supercomputers",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2559739889",
+      "title": "Energy aware scheduling model and online heuristics for stencil codes on heterogeneous computing architectures",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2560149116",
+      "title": "R-LODs",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W2564000105",
+      "title": "Dynamic Data Prefetching and Layout Optimizations for High Performance Heterogeneous Data Access.",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2565525221",
+      "title": "Efficient sparse polynomial factoring using the Funnel heap.",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2566508385",
+      "title": "Comparative Analysis of Triangulation Libraries for Modeling Large Point Clouds from Land and Their Infrastructures",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2566610827",
+      "title": "Innovations and challenges in detecting long read overlaps: an evaluation of the state-of-the-art",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W2574119765",
+      "title": "Breadth first search on massive graphs",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W2579915854",
+      "title": "Simple, Accurate, Analytical Time Modeling and Optimal Tile Size Selection for GPGPU Stencils",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2583500347",
+      "title": "TOAST: Automatic tiling for iterative stencil computations on GPUs",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2584200040",
+      "title": "A Computationally Efficient P-LRU based Optimal Cache Heap Object Replacement Policy",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2593142107",
+      "title": "Designing algorithms for big graph datasets : a study of computing bisimulation and joins",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2602301350",
+      "title": "Evaluation of triangular mesh layout techniques using large mesh simplification",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2603663752",
+      "title": "Closing the Ninja Performance Gap through Traditional Programming and Compiler Technology",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W2604754884",
+      "title": "Locality Transformations for Nested Recursive Iteration Spaces",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2606003984",
+      "title": "Cache Oblivious Minimum Cut",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2607326014",
+      "title": "Packing Vertex Data into Hardware-Decompressible Textures",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2610431052",
+      "title": "Compiler and Runtime Support for Hybrid Static/Dynamic Scheduling",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2615884750",
+      "title": "Cache-oblivious Matrix Multiplication for Exact TU Factorisation",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2619040869",
+      "title": "GraphGrind",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2623521343",
+      "title": "Shared-Memory Parallelism Can Be Simple, Fast, and Scalable",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2711285122",
+      "title": "The Cache-Oblivious Gaussian Elimination Paradigm: Theoretical Framework, Parallelization and Experimental Evaluation",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2730450744",
+      "title": "26 PFLOPS Stencil Computations for Atmospheric Modeling on Sunway TaihuLight",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2736568018",
+      "title": "Interactive digital photography at scale",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W2738446583",
+      "title": "Bounding Cache Miss Costs of Multithreaded Computations Under General Schedulers",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2749903484",
+      "title": "Code modernization strategies to 3-D Stencil-based applications on Intel Xeon Phi: KNC and KNL",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2763909206",
+      "title": "Out-of-Core Progressive Web-Based Rendering of Triangle Meshes",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2766672944",
+      "title": "Cache-Oblivious MPI All-to-All Communications Based on Morton Order",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2766758139",
+      "title": "Cache-mesh, a Dynamics Data Structure for Performance Optimization",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2768789051",
+      "title": "Work-Stealing for Multi-socket Architecture",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2770752914",
+      "title": "Fine-Grained I/O Complexity via Reductions: New lower bounds, faster algorithms, and a time hierarchy",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2771946537",
+      "title": "AutoMatch: An automated framework for relative performance estimation and workload distribution on heterogeneous HPC systems",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2784439888",
+      "title": "White-box methodologies, programming abstractions and libraries",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W2885042653",
+      "title": "Data structures for bandwidth reservations and quality of service on the Internet",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W2913533776",
+      "title": "Tessellating stencils",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W2951723302",
+      "title": "Efficient Tree Layout in a Multilevel Memory Hierarchy",
+      "year": 2002
+    },
+    {
+      "id": "openalex:W2952203735",
+      "title": "The Input/Output Complexity of Sparse Matrix Multiplication",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W2952917086",
+      "title": "Parallel Approximation Algorithms for Facility-Location Problems",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W2953168049",
+      "title": "Optimal Cache-Oblivious Mesh Layouts",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W2955498510",
+      "title": "Cache-Oblivious Computation: Algorithms and Experimental Evaluation",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W3100301280",
+      "title": "Communication Lower Bounds for Distributed-Memory Computations∗",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W3101942351",
+      "title": "Semi-local string comparison : algorithmic techniques and applications",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W310813471",
+      "title": "Locality Properties of Space-Filling Curves",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W3145506805",
+      "title": "Sequoia: Programming the Memory Hierarchy",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W3145971282",
+      "title": "Can traditional programming bridge the Ninja performance gap for parallel computing applications?",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W3528745",
+      "title": "Cache-Oblivious Algorithms and Data Structures",
+      "year": 2003
+    },
+    {
+      "id": "openalex:W367060932",
+      "title": "Grammar-Based Description of Space-Filling Curves",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W398572114",
+      "title": "Further Space-Filling Curves",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W4210959132",
+      "title": "Parallel Lempel-Ziv Factorization",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W4211026850",
+      "title": "Bibliography",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W4211127855",
+      "title": "Sierpinski Curves",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W4211193368",
+      "title": "Approximating Polygons",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W4214549590",
+      "title": "Performance Analysis and Tuning for General Purpose Graphics Processing Units (GPGPU)",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W4231970275",
+      "title": "Verified lifting of stencil computations",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W4235768579",
+      "title": "References",
+      "year": 2016
+    },
+    {
+      "id": "openalex:W4237050465",
+      "title": "A computational study of external-memory BFS algorithms",
+      "year": 2006
+    },
+    {
+      "id": "openalex:W4238596836",
+      "title": "Locality Transformations for Nested Recursive Iteration Spaces",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W4245668848",
+      "title": "Cache-Adaptive Algorithms",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W4245793532",
+      "title": "Fast triangle reordering for vertex locality and reduced overdraw",
+      "year": 2007
+    },
+    {
+      "id": "openalex:W4246674436",
+      "title": "信息处理中有效维持动态有序集的新方法",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W4246918988",
+      "title": "ULCC",
+      "year": 2011
+    },
+    {
+      "id": "openalex:W4251344828",
+      "title": "Ligra: A Lightweight Graph Processing Framework for Shared Memory",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W4251529006",
+      "title": "Locality Transformations for Nested Recursive Iteration Spaces",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W4251637954",
+      "title": "Halide",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W4255608642",
+      "title": "Locality Transformations for Nested Recursive Iteration Spaces",
+      "year": 2017
+    },
+    {
+      "id": "openalex:W4256739278",
+      "title": "Internally deterministic parallel algorithms can be fast",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W44969393",
+      "title": "I/O Efficient Algorithms for Block Hessenberg Reduction Using Panel Approach",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W50204634",
+      "title": "Sierpinski Curves on Triangular and Tetrahedral Meshes",
+      "year": 2012
+    },
+    {
+      "id": "openalex:W74245466",
+      "title": "A Fast Cache Oblivious Mesh Layout with Theoretical Guarantees",
+      "year": 2008
+    },
+    {
+      "id": "openalex:W76123042",
+      "title": "In-Core Optimization of High-Order Stencil Computations.",
+      "year": 2009
+    },
+    {
+      "id": "openalex:W83289625",
+      "title": "Cache-Oblivious Algorithms and Data Structures",
+      "year": 2004
+    },
+    {
+      "id": "openalex:W855424259",
+      "title": "OctaVis: A Simple and Efficient Multi-View Rendering System",
+      "year": 2010
+    },
+    {
+      "id": "openalex:W869573524",
+      "title": "Coupling Memory and Computation for Locality Management",
+      "year": 2015
+    },
+    {
+      "id": "openalex:W92301696",
+      "title": "Fast Parallel Connected Components Algorithms on GPUs",
+      "year": 2014
+    },
+    {
+      "id": "openalex:W92617275",
+      "title": "Fast Compression of Meshes for GPU Ray-Tracing.",
+      "year": 2013
+    },
+    {
+      "id": "openalex:W92842730",
+      "title": "Computations of delaunay and higher order triangulations, with applications to splines",
+      "year": 2007
+    }
+  ],
+  "edges": [
+    [
+      "openalex:W1013549386",
+      "openalex:W1524061576"
+    ],
+    [
+      "openalex:W1027972153",
+      "openalex:W1582397847"
+    ],
+    [
+      "openalex:W1027972153",
+      "openalex:W2770752914"
+    ],
+    [
+      "openalex:W1153030042",
+      "openalex:W2530769523"
+    ],
+    [
+      "openalex:W123924977",
+      "openalex:W2184696288"
+    ],
+    [
+      "openalex:W124383974",
+      "openalex:W2007134090"
+    ],
+    [
+      "openalex:W124383974",
+      "openalex:W2565525221"
+    ],
+    [
+      "openalex:W1482435370",
+      "openalex:W1570377291"
+    ],
+    [
+      "openalex:W1482435370",
+      "openalex:W1595776161"
+    ],
+    [
+      "openalex:W1482435370",
+      "openalex:W2565525221"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W1027972153"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W1509582226"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W1577196593"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W1639292813"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W1972200437"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W1999806580"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W2038371276"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W2044633855"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W2091307407"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W2100346382"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W2132108235"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W2149211280"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W2574119765"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W4237050465"
+    ],
+    [
+      "openalex:W1487258612",
+      "openalex:W83289625"
+    ],
+    [
+      "openalex:W1488399669",
+      "openalex:W2126136185"
+    ],
+    [
+      "openalex:W1488399669",
+      "openalex:W2140026235"
+    ],
+    [
+      "openalex:W1498393600",
+      "openalex:W2070961300"
+    ],
+    [
+      "openalex:W1504320321",
+      "openalex:W1972447202"
+    ],
+    [
+      "openalex:W1504320321",
+      "openalex:W1979457157"
+    ],
+    [
+      "openalex:W1504320321",
+      "openalex:W2099611016"
+    ],
+    [
+      "openalex:W1504320321",
+      "openalex:W2115140794"
+    ],
+    [
+      "openalex:W1504320321",
+      "openalex:W2551937430"
+    ],
+    [
+      "openalex:W1504320321",
+      "openalex:W2579915854"
+    ],
+    [
+      "openalex:W1506424797",
+      "openalex:W2199084870"
+    ],
+    [
+      "openalex:W1506424797",
+      "openalex:W220724191"
+    ],
+    [
+      "openalex:W1506424797",
+      "openalex:W2234212075"
+    ],
+    [
+      "openalex:W1506424797",
+      "openalex:W2913533776"
+    ],
+    [
+      "openalex:W1506955979",
+      "openalex:W1482435370"
+    ],
+    [
+      "openalex:W1509582226",
+      "openalex:W1999806580"
+    ],
+    [
+      "openalex:W1509582226",
+      "openalex:W2104321672"
+    ],
+    [
+      "openalex:W151246516",
+      "openalex:W2059710204"
+    ],
+    [
+      "openalex:W151246516",
+      "openalex:W2118746782"
+    ],
+    [
+      "openalex:W1532213207",
+      "openalex:W2113682966"
+    ],
+    [
+      "openalex:W1537424319",
+      "openalex:W2099611016"
+    ],
+    [
+      "openalex:W1537424319",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W1562540771",
+      "openalex:W2184696288"
+    ],
+    [
+      "openalex:W1567274303",
+      "openalex:W1013549386"
+    ],
+    [
+      "openalex:W1567274303",
+      "openalex:W1524061576"
+    ],
+    [
+      "openalex:W1573954828",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W1573954828",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W1577196593",
+      "openalex:W2038371276"
+    ],
+    [
+      "openalex:W1577196593",
+      "openalex:W2071225564"
+    ],
+    [
+      "openalex:W1577196593",
+      "openalex:W2130664790"
+    ],
+    [
+      "openalex:W1582397847",
+      "openalex:W2000041758"
+    ],
+    [
+      "openalex:W1582397847",
+      "openalex:W2623521343"
+    ],
+    [
+      "openalex:W1582397847",
+      "openalex:W4210959132"
+    ],
+    [
+      "openalex:W1582397847",
+      "openalex:W4251344828"
+    ],
+    [
+      "openalex:W1583793915",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W1583793915",
+      "openalex:W2089064856"
+    ],
+    [
+      "openalex:W1583793915",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W1583793915",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W124383974"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W1482435370"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W1487258612"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W151439197"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W1541188639"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W1567824690"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W1570377291"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W1593732971"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W1595776161"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W1918193513"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W1964543049"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W1978960961"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W1983503576"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2006706309"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2007134090"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2014866763"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2017799838"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2022140469"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2034413563"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2054052779"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2063354603"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2084297766"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2124920620"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2132108235"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2133914707"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2140591634"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2146529252"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2148795536"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2183491405"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2185118258"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2397628599"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2475955799"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2565525221"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W2955498510"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W3528745"
+    ],
+    [
+      "openalex:W1592580490",
+      "openalex:W83289625"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W1482435370"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W1577196593"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W1605023936"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W1964543049"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W1972200437"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W1980322368"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W2001324285"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W2008137555"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W2038371276"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W2039787998"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W2044633855"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W2071225564"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W2076089605"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W2089064856"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W2100346382"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W2125867579"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W2133914707"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W2182091416"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W2253769547"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W2295585735"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W1593732971",
+      "openalex:W83289625"
+    ],
+    [
+      "openalex:W1601617962",
+      "openalex:W1562540771"
+    ],
+    [
+      "openalex:W1601617962",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W1601617962",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W1601617962",
+      "openalex:W2184696288"
+    ],
+    [
+      "openalex:W1605023936",
+      "openalex:W2038371276"
+    ],
+    [
+      "openalex:W1605023936",
+      "openalex:W2071225564"
+    ],
+    [
+      "openalex:W1639292813",
+      "openalex:W2593142107"
+    ],
+    [
+      "openalex:W1745592534",
+      "openalex:W1910851252"
+    ],
+    [
+      "openalex:W1745592534",
+      "openalex:W2093357625"
+    ],
+    [
+      "openalex:W1745592534",
+      "openalex:W2276454361"
+    ],
+    [
+      "openalex:W1745592534",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W1745592534",
+      "openalex:W2738446583"
+    ],
+    [
+      "openalex:W1795008753",
+      "openalex:W2008005532"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W1577196593"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W1592580490"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W1605023936"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W1964543049"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W1983503576"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W2017799838"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W2034413563"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W2038371276"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W2044990032"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W2054052779"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W2071225564"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W2102467006"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W2133914707"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W2185118258"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W2486120050"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W2951723302"
+    ],
+    [
+      "openalex:W1857323784",
+      "openalex:W83289625"
+    ],
+    [
+      "openalex:W1910851252",
+      "openalex:W2136066447"
+    ],
+    [
+      "openalex:W1918193513",
+      "openalex:W1972447202"
+    ],
+    [
+      "openalex:W1918193513",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W1918193513",
+      "openalex:W2144031643"
+    ],
+    [
+      "openalex:W1944226055",
+      "openalex:W2784439888"
+    ],
+    [
+      "openalex:W1964543049",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W1964543049",
+      "openalex:W1980489563"
+    ],
+    [
+      "openalex:W1964543049",
+      "openalex:W2033361497"
+    ],
+    [
+      "openalex:W1964543049",
+      "openalex:W2048064086"
+    ],
+    [
+      "openalex:W1964543049",
+      "openalex:W2253769547"
+    ],
+    [
+      "openalex:W1964543049",
+      "openalex:W4245668848"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W1972200437"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W1972447202"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W1979457157"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W2028637981"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W2089064856"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W2099611016"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W2104342377"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W2122001721"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W2131264486"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W2136066447"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W2551937430"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W2738446583"
+    ],
+    [
+      "openalex:W1965081941",
+      "openalex:W2766672944"
+    ],
+    [
+      "openalex:W1966454460",
+      "openalex:W2029057477"
+    ],
+    [
+      "openalex:W1966454460",
+      "openalex:W2046772626"
+    ],
+    [
+      "openalex:W1966454460",
+      "openalex:W2079558731"
+    ],
+    [
+      "openalex:W1966454460",
+      "openalex:W2108080367"
+    ],
+    [
+      "openalex:W1966454460",
+      "openalex:W2127295009"
+    ],
+    [
+      "openalex:W1966454460",
+      "openalex:W2141488439"
+    ],
+    [
+      "openalex:W1966454460",
+      "openalex:W2149211280"
+    ],
+    [
+      "openalex:W1966454460",
+      "openalex:W22104068"
+    ],
+    [
+      "openalex:W1966454460",
+      "openalex:W4245793532"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1498393600"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1504320321"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1506424797"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W151246516"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1532213207"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1795008753"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1825532946"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1918193513"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1965081941"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1967020723"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1972447202"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1973271197"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1979457157"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1980208272"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1980322368"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1985751298"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1987588924"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W1997597015"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2000909774"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2008005532"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2013938784"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2022140469"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2032495263"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2035701183"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2049080955"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2055312318"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2059710204"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2070961300"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2074326248"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2081422781"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2084002994"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2097757554"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2097909406"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2099611016"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2100580246"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2103518095"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2104342377"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2104512032"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2113682966"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2115140794"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2118746782"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2128544095"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2128653745"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2129050115"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2144031643"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2156300652"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2157685422"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2199084870"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W220724191"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2221279259"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2234212075"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2412440871"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2551937430"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2554564400"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2559739889"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2579915854"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2583500347"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2730450744"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2749903484"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W2913533776"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W3100301280"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W3101942351"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W3145506805"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W4214549590"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W4231970275"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W4251637954"
+    ],
+    [
+      "openalex:W1968013322",
+      "openalex:W76123042"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W1582397847"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W1910851252"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2000041758"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2001125165"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2006835125"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2028637981"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2048207885"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2064270040"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2069559626"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2086337948"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2093357625"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2096898433"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2131264486"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2136066447"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2276454361"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2291714504"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2467057949"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2623521343"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W2768789051"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W4210959132"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W4251344828"
+    ],
+    [
+      "openalex:W1972200437",
+      "openalex:W869573524"
+    ],
+    [
+      "openalex:W1972447202",
+      "openalex:W2913533776"
+    ],
+    [
+      "openalex:W1973271197",
+      "openalex:W1506424797"
+    ],
+    [
+      "openalex:W1973271197",
+      "openalex:W2070961300"
+    ],
+    [
+      "openalex:W1973271197",
+      "openalex:W2096898433"
+    ],
+    [
+      "openalex:W1973271197",
+      "openalex:W2097757554"
+    ],
+    [
+      "openalex:W1973271197",
+      "openalex:W2100580246"
+    ],
+    [
+      "openalex:W1973271197",
+      "openalex:W2104512032"
+    ],
+    [
+      "openalex:W1973271197",
+      "openalex:W2129829929"
+    ],
+    [
+      "openalex:W1973271197",
+      "openalex:W2156300652"
+    ],
+    [
+      "openalex:W1973271197",
+      "openalex:W2199084870"
+    ],
+    [
+      "openalex:W1973271197",
+      "openalex:W2234212075"
+    ],
+    [
+      "openalex:W1973271197",
+      "openalex:W2579915854"
+    ],
+    [
+      "openalex:W1973271197",
+      "openalex:W2913533776"
+    ],
+    [
+      "openalex:W1976888542",
+      "openalex:W2276454361"
+    ],
+    [
+      "openalex:W1976888542",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W1976888542",
+      "openalex:W2467057949"
+    ],
+    [
+      "openalex:W1976888542",
+      "openalex:W2913533776"
+    ],
+    [
+      "openalex:W1979201594",
+      "openalex:W2000041758"
+    ],
+    [
+      "openalex:W1979201594",
+      "openalex:W2064270040"
+    ],
+    [
+      "openalex:W1979201594",
+      "openalex:W2086337948"
+    ],
+    [
+      "openalex:W1979201594",
+      "openalex:W2093357625"
+    ],
+    [
+      "openalex:W1979201594",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W1979201594",
+      "openalex:W2467057949"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W1506424797"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W1967020723"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W1972447202"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W1980208272"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W2055312318"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W2070961300"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W2099611016"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W2118746782"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W2129829929"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W2199084870"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W2221279259"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W2412440871"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W2551937430"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W2579915854"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W2913533776"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W4231970275"
+    ],
+    [
+      "openalex:W1979457157",
+      "openalex:W4251637954"
+    ],
+    [
+      "openalex:W1980322368",
+      "openalex:W2097572763"
+    ],
+    [
+      "openalex:W1980322368",
+      "openalex:W2603663752"
+    ],
+    [
+      "openalex:W1980322368",
+      "openalex:W3145971282"
+    ],
+    [
+      "openalex:W1980489563",
+      "openalex:W123924977"
+    ],
+    [
+      "openalex:W1980489563",
+      "openalex:W2033361497"
+    ],
+    [
+      "openalex:W1980489563",
+      "openalex:W2184696288"
+    ],
+    [
+      "openalex:W1983503576",
+      "openalex:W1504467601"
+    ],
+    [
+      "openalex:W1983503576",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W1983503576",
+      "openalex:W2089064856"
+    ],
+    [
+      "openalex:W1983503576",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W1983503576",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W1983503576",
+      "openalex:W83289625"
+    ],
+    [
+      "openalex:W1983997639",
+      "openalex:W2253769547"
+    ],
+    [
+      "openalex:W1983997639",
+      "openalex:W4245668848"
+    ],
+    [
+      "openalex:W1987588924",
+      "openalex:W1997597015"
+    ],
+    [
+      "openalex:W1987588924",
+      "openalex:W2049080955"
+    ],
+    [
+      "openalex:W1987588924",
+      "openalex:W2221279259"
+    ],
+    [
+      "openalex:W1987588924",
+      "openalex:W2579915854"
+    ],
+    [
+      "openalex:W1987588924",
+      "openalex:W2913533776"
+    ],
+    [
+      "openalex:W1987588924",
+      "openalex:W4214549590"
+    ],
+    [
+      "openalex:W1991111959",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W1996466054",
+      "openalex:W1980489563"
+    ],
+    [
+      "openalex:W1996466054",
+      "openalex:W2048064086"
+    ],
+    [
+      "openalex:W1996466054",
+      "openalex:W2130664790"
+    ],
+    [
+      "openalex:W1996466054",
+      "openalex:W2186744555"
+    ],
+    [
+      "openalex:W1997597015",
+      "openalex:W2055312318"
+    ],
+    [
+      "openalex:W1997597015",
+      "openalex:W2104512032"
+    ],
+    [
+      "openalex:W1997597015",
+      "openalex:W2156300652"
+    ],
+    [
+      "openalex:W1997597015",
+      "openalex:W2583500347"
+    ],
+    [
+      "openalex:W1997597015",
+      "openalex:W4251637954"
+    ],
+    [
+      "openalex:W2000041758",
+      "openalex:W2619040869"
+    ],
+    [
+      "openalex:W2000531453",
+      "openalex:W2006724429"
+    ],
+    [
+      "openalex:W2000531453",
+      "openalex:W2025442915"
+    ],
+    [
+      "openalex:W2000531453",
+      "openalex:W2029057477"
+    ],
+    [
+      "openalex:W2000531453",
+      "openalex:W2141488439"
+    ],
+    [
+      "openalex:W2000531453",
+      "openalex:W2167729645"
+    ],
+    [
+      "openalex:W2000531453",
+      "openalex:W2273040603"
+    ],
+    [
+      "openalex:W2000531453",
+      "openalex:W2504664975"
+    ],
+    [
+      "openalex:W2001125165",
+      "openalex:W1582397847"
+    ],
+    [
+      "openalex:W2001125165",
+      "openalex:W2000041758"
+    ],
+    [
+      "openalex:W2001125165",
+      "openalex:W2623521343"
+    ],
+    [
+      "openalex:W2001125165",
+      "openalex:W4210959132"
+    ],
+    [
+      "openalex:W2001125165",
+      "openalex:W4251344828"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W1918193513"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W1965081941"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W1972200437"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W1972447202"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W1983997639"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W2008137555"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W2028637981"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W2029108714"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W2064270040"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W2065457989"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W2081422781"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W2082940000"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W2089064856"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W2101863832"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W2122001721"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W2131264486"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W2276454361"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W2711285122"
+    ],
+    [
+      "openalex:W2002209075",
+      "openalex:W869573524"
+    ],
+    [
+      "openalex:W2002322113",
+      "openalex:W1836678964"
+    ],
+    [
+      "openalex:W2002322113",
+      "openalex:W2044633855"
+    ],
+    [
+      "openalex:W2002322113",
+      "openalex:W2076089605"
+    ],
+    [
+      "openalex:W2005397752",
+      "openalex:W2155912474"
+    ],
+    [
+      "openalex:W2006706309",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2006706309",
+      "openalex:W2022140469"
+    ],
+    [
+      "openalex:W2006706309",
+      "openalex:W2063354603"
+    ],
+    [
+      "openalex:W2006706309",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2006706309",
+      "openalex:W2148795536"
+    ],
+    [
+      "openalex:W2006724429",
+      "openalex:W2273040603"
+    ],
+    [
+      "openalex:W2006785118",
+      "openalex:W2771946537"
+    ],
+    [
+      "openalex:W2007134090",
+      "openalex:W2565525221"
+    ],
+    [
+      "openalex:W2008137555",
+      "openalex:W1910851252"
+    ],
+    [
+      "openalex:W2008137555",
+      "openalex:W2089064856"
+    ],
+    [
+      "openalex:W2008137555",
+      "openalex:W2131264486"
+    ],
+    [
+      "openalex:W2013480322",
+      "openalex:W1027972153"
+    ],
+    [
+      "openalex:W2013480322",
+      "openalex:W1570377291"
+    ],
+    [
+      "openalex:W2013480322",
+      "openalex:W1595776161"
+    ],
+    [
+      "openalex:W2013480322",
+      "openalex:W2574119765"
+    ],
+    [
+      "openalex:W2014866763",
+      "openalex:W1918193513"
+    ],
+    [
+      "openalex:W2014866763",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2014866763",
+      "openalex:W2024633610"
+    ],
+    [
+      "openalex:W2014866763",
+      "openalex:W2063354603"
+    ],
+    [
+      "openalex:W2014866763",
+      "openalex:W2112885227"
+    ],
+    [
+      "openalex:W2014866763",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2014866763",
+      "openalex:W2132108235"
+    ],
+    [
+      "openalex:W2014866763",
+      "openalex:W2140591634"
+    ],
+    [
+      "openalex:W2014866763",
+      "openalex:W2955498510"
+    ],
+    [
+      "openalex:W2014866763",
+      "openalex:W83289625"
+    ],
+    [
+      "openalex:W2016358047",
+      "openalex:W2010629071"
+    ],
+    [
+      "openalex:W2016358047",
+      "openalex:W2039787998"
+    ],
+    [
+      "openalex:W2016358047",
+      "openalex:W2116941322"
+    ],
+    [
+      "openalex:W2016358047",
+      "openalex:W2122001721"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W1577196593"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W1592580490"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W1593732971"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W1639292813"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W1857323784"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W1983503576"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2006706309"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2022117185"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2022140469"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2034413563"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2054052779"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2063354603"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2102467006"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2105156747"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2124920620"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2146529252"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2148795536"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2171038510"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2185118258"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2475955799"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W2951723302"
+    ],
+    [
+      "openalex:W2017799838",
+      "openalex:W83289625"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1027972153"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W123924977"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W124383974"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1482435370"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1487258612"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1488399669"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1504467601"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1506955979"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1509582226"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W151439197"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1562540771"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1570377291"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1574726470"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1577196593"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1592580490"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1593732971"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1595776161"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1601617962"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1669591663"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W169080399"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1857323784"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1918193513"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1978960961"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1983503576"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W1999806580"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2002209075"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2006706309"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2007134090"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2014866763"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2017799838"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2022140469"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2024197950"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2024633610"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2034413563"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2035701183"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2038371276"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2054052779"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2058294003"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2063354603"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2065208758"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2071225564"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2082591084"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2084297766"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2089064856"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2089384111"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2091307407"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2093269509"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2100346382"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2102467006"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2102826167"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2104321672"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2105156747"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2112885227"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2115550033"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2116904467"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2117098610"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2124920620"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2132108235"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2132416440"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2133914707"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2140026235"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2140591634"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2146529252"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2148795536"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2159947164"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2163255197"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2167868137"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2168938467"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2171038510"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2182091416"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2184696288"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2185118258"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2186744555"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2203012675"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2288916024"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2338027756"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2397628599"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2413414340"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2475955799"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2548101508"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2550864768"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2565525221"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2584200040"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2784439888"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2885042653"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2951723302"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W2955498510"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W3528745"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W4246674436"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W83289625"
+    ],
+    [
+      "openalex:W2022117185",
+      "openalex:W92301696"
+    ],
+    [
+      "openalex:W2024633610",
+      "openalex:W1570377291"
+    ],
+    [
+      "openalex:W2024633610",
+      "openalex:W1918193513"
+    ],
+    [
+      "openalex:W2024633610",
+      "openalex:W2065208758"
+    ],
+    [
+      "openalex:W2024633610",
+      "openalex:W2090947057"
+    ],
+    [
+      "openalex:W2024633610",
+      "openalex:W2953168049"
+    ],
+    [
+      "openalex:W2024633610",
+      "openalex:W2955498510"
+    ],
+    [
+      "openalex:W2025442915",
+      "openalex:W2006724429"
+    ],
+    [
+      "openalex:W2025442915",
+      "openalex:W4235768579"
+    ],
+    [
+      "openalex:W2028637981",
+      "openalex:W1420243053"
+    ],
+    [
+      "openalex:W2028637981",
+      "openalex:W1910851252"
+    ],
+    [
+      "openalex:W2028637981",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W2028637981",
+      "openalex:W2093357625"
+    ],
+    [
+      "openalex:W2028637981",
+      "openalex:W2276454361"
+    ],
+    [
+      "openalex:W2028637981",
+      "openalex:W2291714504"
+    ],
+    [
+      "openalex:W2028637981",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W2028637981",
+      "openalex:W2467057949"
+    ],
+    [
+      "openalex:W2028637981",
+      "openalex:W2738446583"
+    ],
+    [
+      "openalex:W2028637981",
+      "openalex:W3100301280"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W1013549386"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W1153030042"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W149399617"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W1524061576"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W154322363"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W15708769"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W162174704"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W173366111"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W1883792959"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W1940144584"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W2150486346"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W2194895351"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W2213768512"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W2226133766"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W2336157664"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W2530769523"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W310813471"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W367060932"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W398572114"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W4211127855"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W4211193368"
+    ],
+    [
+      "openalex:W2028763350",
+      "openalex:W50204634"
+    ],
+    [
+      "openalex:W2029057477",
+      "openalex:W2046772626"
+    ],
+    [
+      "openalex:W2029057477",
+      "openalex:W2141488439"
+    ],
+    [
+      "openalex:W2029057477",
+      "openalex:W2183511781"
+    ],
+    [
+      "openalex:W2029108714",
+      "openalex:W2623521343"
+    ],
+    [
+      "openalex:W2029108714",
+      "openalex:W4210959132"
+    ],
+    [
+      "openalex:W2029108714",
+      "openalex:W4251344828"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W1487258612"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W1504467601"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W1509582226"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W1583793915"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W1601617962"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W1918193513"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W1980489563"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W1983503576"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W1991111959"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W1999806580"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2017799838"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2048064086"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2054052779"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2063354603"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2084297766"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2091307407"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2124920620"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2125548905"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2127483723"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2132108235"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2140591634"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2148795536"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2183491405"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2185118258"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2186744555"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2253769547"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W2606003984"
+    ],
+    [
+      "openalex:W2034413563",
+      "openalex:W83289625"
+    ],
+    [
+      "openalex:W2034972469",
+      "openalex:W1975686297"
+    ],
+    [
+      "openalex:W2035303986",
+      "openalex:W2006724429"
+    ],
+    [
+      "openalex:W2035303986",
+      "openalex:W2025442915"
+    ],
+    [
+      "openalex:W2035303986",
+      "openalex:W2167729645"
+    ],
+    [
+      "openalex:W2035701183",
+      "openalex:W151246516"
+    ],
+    [
+      "openalex:W2035701183",
+      "openalex:W2221279259"
+    ],
+    [
+      "openalex:W2035701183",
+      "openalex:W2234212075"
+    ],
+    [
+      "openalex:W2035701183",
+      "openalex:W2554564400"
+    ],
+    [
+      "openalex:W2035937417",
+      "openalex:W2159870643"
+    ],
+    [
+      "openalex:W2037593097",
+      "openalex:W1420243053"
+    ],
+    [
+      "openalex:W2038371276",
+      "openalex:W1605023936"
+    ],
+    [
+      "openalex:W2039120387",
+      "openalex:W2017137072"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W122851984"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W123924977"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W149399617"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W1512347326"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W1528439592"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W1534421253"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W1537424319"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W154322363"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W15708769"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W1605023936"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W162174704"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W1731124780"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W173366111"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W1883792959"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W1890530603"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W1918193513"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W1983616264"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2004414525"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2006835125"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2010629071"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2016358047"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2035937417"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2038371276"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2041089549"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2044360242"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2048207885"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2064910003"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2070122234"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2071225564"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2085251186"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2099611016"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2107410315"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2113277707"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2116941322"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2118235465"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2122001721"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2125548905"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2129102442"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2138090156"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2144714514"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2149211280"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2149710423"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2155342760"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2159870643"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2168748809"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2183919453"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2184696288"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2194895351"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2213768512"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2226133766"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2253769547"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2275977038"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2331706524"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2478200899"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2602301350"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2604754884"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2610431052"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2619040869"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W2711285122"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W310813471"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W367060932"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W398572114"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W4211127855"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W4211193368"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W4214549590"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W4238596836"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W4245668848"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W4246918988"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W4251529006"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W4255608642"
+    ],
+    [
+      "openalex:W2039787998",
+      "openalex:W50204634"
+    ],
+    [
+      "openalex:W2040992920",
+      "openalex:W2602301350"
+    ],
+    [
+      "openalex:W2044371773",
+      "openalex:W2000998233"
+    ],
+    [
+      "openalex:W2044633855",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W1602768168"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2000531453"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2025442915"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2034972469"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2059565836"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2100632417"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2101863832"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2113372580"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2127295009"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2136836784"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2149211280"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2162920780"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2167729645"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2518569579"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2546184100"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2560149116"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W2766758139"
+    ],
+    [
+      "openalex:W2044990032",
+      "openalex:W4235768579"
+    ],
+    [
+      "openalex:W2046772626",
+      "openalex:W2141488439"
+    ],
+    [
+      "openalex:W2046772626",
+      "openalex:W2183511781"
+    ],
+    [
+      "openalex:W2046772626",
+      "openalex:W2260451409"
+    ],
+    [
+      "openalex:W2046772626",
+      "openalex:W2602301350"
+    ],
+    [
+      "openalex:W2052193348",
+      "openalex:W1537424319"
+    ],
+    [
+      "openalex:W2052193348",
+      "openalex:W2099611016"
+    ],
+    [
+      "openalex:W2052193348",
+      "openalex:W44969393"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W1504467601"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W1534421253"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W1577196593"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W1592580490"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W1972447202"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W1979457157"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W1983503576"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2001324285"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2028637981"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2033361497"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2048207885"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2065208758"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2065457989"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2082591084"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2091558427"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2099611016"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2100632417"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2105156747"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2131264486"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2155912474"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2473738173"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2584200040"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2602301350"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2606003984"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2738446583"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W2766672944"
+    ],
+    [
+      "openalex:W2052196304",
+      "openalex:W3528745"
+    ],
+    [
+      "openalex:W2054052779",
+      "openalex:W1027972153"
+    ],
+    [
+      "openalex:W2054052779",
+      "openalex:W1964543049"
+    ],
+    [
+      "openalex:W2054052779",
+      "openalex:W1996466054"
+    ],
+    [
+      "openalex:W2054052779",
+      "openalex:W2038371276"
+    ],
+    [
+      "openalex:W2054052779",
+      "openalex:W2071225564"
+    ],
+    [
+      "openalex:W2054052779",
+      "openalex:W2117098610"
+    ],
+    [
+      "openalex:W2054052779",
+      "openalex:W2123268668"
+    ],
+    [
+      "openalex:W2054052779",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2054052779",
+      "openalex:W2133914707"
+    ],
+    [
+      "openalex:W2055312318",
+      "openalex:W1980208272"
+    ],
+    [
+      "openalex:W2055312318",
+      "openalex:W2234212075"
+    ],
+    [
+      "openalex:W2055312318",
+      "openalex:W2276454361"
+    ],
+    [
+      "openalex:W2055312318",
+      "openalex:W2412440871"
+    ],
+    [
+      "openalex:W2055312318",
+      "openalex:W2579915854"
+    ],
+    [
+      "openalex:W2055312318",
+      "openalex:W4231970275"
+    ],
+    [
+      "openalex:W2059273139",
+      "openalex:W2593142107"
+    ],
+    [
+      "openalex:W2059565836",
+      "openalex:W1604557386"
+    ],
+    [
+      "openalex:W2059710204",
+      "openalex:W2097572763"
+    ],
+    [
+      "openalex:W2059710204",
+      "openalex:W2115140794"
+    ],
+    [
+      "openalex:W2059710204",
+      "openalex:W2603663752"
+    ],
+    [
+      "openalex:W2059710204",
+      "openalex:W3145971282"
+    ],
+    [
+      "openalex:W2060645111",
+      "openalex:W4211026850"
+    ],
+    [
+      "openalex:W2062959712",
+      "openalex:W2041994075"
+    ],
+    [
+      "openalex:W2062959712",
+      "openalex:W2065457989"
+    ],
+    [
+      "openalex:W2062959712",
+      "openalex:W2738446583"
+    ],
+    [
+      "openalex:W2063354603",
+      "openalex:W1506955979"
+    ],
+    [
+      "openalex:W2063354603",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2063354603",
+      "openalex:W2022140469"
+    ],
+    [
+      "openalex:W2063354603",
+      "openalex:W2024197950"
+    ],
+    [
+      "openalex:W2063354603",
+      "openalex:W2090947057"
+    ],
+    [
+      "openalex:W2063354603",
+      "openalex:W2606003984"
+    ],
+    [
+      "openalex:W2063354603",
+      "openalex:W2770752914"
+    ],
+    [
+      "openalex:W2064270040",
+      "openalex:W2000041758"
+    ],
+    [
+      "openalex:W2064270040",
+      "openalex:W2093357625"
+    ],
+    [
+      "openalex:W2064270040",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W2064270040",
+      "openalex:W2467057949"
+    ],
+    [
+      "openalex:W2064270040",
+      "openalex:W2623521343"
+    ],
+    [
+      "openalex:W2064270040",
+      "openalex:W4210959132"
+    ],
+    [
+      "openalex:W2064270040",
+      "openalex:W4251344828"
+    ],
+    [
+      "openalex:W2065457989",
+      "openalex:W2282989799"
+    ],
+    [
+      "openalex:W2065457989",
+      "openalex:W2623521343"
+    ],
+    [
+      "openalex:W2065457989",
+      "openalex:W4210959132"
+    ],
+    [
+      "openalex:W2065457989",
+      "openalex:W4251344828"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W1153030042"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W148484292"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W1538459416"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W1576855227"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W1602768168"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W1604557386"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W1778234905"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W1940144584"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W1966454460"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W1975686297"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W1977184607"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W1988431663"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W1995561720"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2000531453"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2000998233"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2006724429"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2007290376"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2017137072"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2025442915"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2029057477"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2030816052"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2033361497"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2034972469"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2035303986"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2039120387"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2040992920"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2044371773"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2044990032"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2046772626"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2054515912"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2059565836"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2060645111"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2079558731"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2087050046"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2090947057"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2091558427"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2100632417"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2100809848"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2101863832"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2102873416"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2108080367"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2108157916"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2110971776"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2113372580"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2113615072"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2123268668"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2125867579"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2127295009"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2136825063"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2136836784"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2141488439"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2141672427"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2145304484"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2147828044"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2149211280"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2162920780"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2167729645"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2169205860"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2169672547"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2182817605"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2182827928"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2183511781"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W22104068"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2253769547"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2260451409"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2294163059"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2296715499"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2336157664"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2405996389"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2486120050"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2504664975"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2518569579"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2521073699"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2523511629"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2530769523"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2546184100"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2560149116"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2564000105"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2566508385"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2602301350"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2607326014"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2736568018"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2763909206"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2766758139"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W2953168049"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W4211026850"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W4235768579"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W4245793532"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W74245466"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W855424259"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W92617275"
+    ],
+    [
+      "openalex:W2067062659",
+      "openalex:W92842730"
+    ],
+    [
+      "openalex:W2069559626",
+      "openalex:W2768789051"
+    ],
+    [
+      "openalex:W2070961300",
+      "openalex:W1506424797"
+    ],
+    [
+      "openalex:W2070961300",
+      "openalex:W2199084870"
+    ],
+    [
+      "openalex:W2070961300",
+      "openalex:W2221279259"
+    ],
+    [
+      "openalex:W2070961300",
+      "openalex:W2234212075"
+    ],
+    [
+      "openalex:W2070961300",
+      "openalex:W2579915854"
+    ],
+    [
+      "openalex:W2070961300",
+      "openalex:W2583500347"
+    ],
+    [
+      "openalex:W2070961300",
+      "openalex:W2913533776"
+    ],
+    [
+      "openalex:W2071225564",
+      "openalex:W2038371276"
+    ],
+    [
+      "openalex:W2074326206",
+      "openalex:W2001324285"
+    ],
+    [
+      "openalex:W2076089605",
+      "openalex:W1639292813"
+    ],
+    [
+      "openalex:W2079558731",
+      "openalex:W2087050046"
+    ],
+    [
+      "openalex:W2079558731",
+      "openalex:W2127295009"
+    ],
+    [
+      "openalex:W2079558731",
+      "openalex:W2149211280"
+    ],
+    [
+      "openalex:W2079558731",
+      "openalex:W22104068"
+    ],
+    [
+      "openalex:W2079558731",
+      "openalex:W2607326014"
+    ],
+    [
+      "openalex:W2079558731",
+      "openalex:W2766758139"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W1745592534"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W1918193513"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W1972200437"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W1972447202"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W1973271197"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W2008005532"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W2008137555"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W2089064856"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W2100580246"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W2104342377"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W2122001721"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W2129829929"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W2136066447"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W2711285122"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W2913533776"
+    ],
+    [
+      "openalex:W2081422781",
+      "openalex:W869573524"
+    ],
+    [
+      "openalex:W2082940000",
+      "openalex:W1983997639"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W1745592534"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W1918193513"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W1965081941"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W1972447202"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W2028637981"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W2081422781"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W2122001721"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W2126136185"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W2131264486"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W2144031643"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W2253769547"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W2711285122"
+    ],
+    [
+      "openalex:W2084002994",
+      "openalex:W3101942351"
+    ],
+    [
+      "openalex:W2084297766",
+      "openalex:W1482435370"
+    ],
+    [
+      "openalex:W2084297766",
+      "openalex:W1570377291"
+    ],
+    [
+      "openalex:W2084297766",
+      "openalex:W1595776161"
+    ],
+    [
+      "openalex:W2084297766",
+      "openalex:W1918193513"
+    ],
+    [
+      "openalex:W2084297766",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2086337948",
+      "openalex:W2000041758"
+    ],
+    [
+      "openalex:W2086337948",
+      "openalex:W2064270040"
+    ],
+    [
+      "openalex:W2086337948",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W2086337948",
+      "openalex:W2623521343"
+    ],
+    [
+      "openalex:W2086337948",
+      "openalex:W4210959132"
+    ],
+    [
+      "openalex:W2086337948",
+      "openalex:W4251344828"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W1420243053"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W1569078565"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W1582397847"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W1745592534"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W1910851252"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W1972200437"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W1973271197"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W1975755183"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W1979201594"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W1983997639"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2000041758"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2001125165"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2006785118"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2008137555"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2010953531"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2028637981"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2029108714"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2037593097"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2041994075"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2062959712"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2064270040"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2065457989"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2068182735"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2069559626"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2082940000"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2086337948"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2092720654"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2093357625"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2096898433"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2097572763"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2104507648"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2121820647"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2129829929"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2131264486"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2132468911"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2136066447"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2253769547"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2273040603"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2275977038"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2276454361"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2282989799"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2291714504"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2467057949"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2603663752"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2606003984"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2615884750"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2623521343"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2738446583"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2766672944"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2768789051"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2771946537"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W2952917086"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W3145971282"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W4210959132"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W4214549590"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W4245668848"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W4251344828"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W4256739278"
+    ],
+    [
+      "openalex:W2089064856",
+      "openalex:W869573524"
+    ],
+    [
+      "openalex:W2089384111",
+      "openalex:W1980489563"
+    ],
+    [
+      "openalex:W2089384111",
+      "openalex:W2048064086"
+    ],
+    [
+      "openalex:W2089384111",
+      "openalex:W2186744555"
+    ],
+    [
+      "openalex:W2090947057",
+      "openalex:W2029108714"
+    ],
+    [
+      "openalex:W2090947057",
+      "openalex:W2033361497"
+    ],
+    [
+      "openalex:W2090947057",
+      "openalex:W2089064856"
+    ],
+    [
+      "openalex:W2090947057",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W2090947057",
+      "openalex:W2602301350"
+    ],
+    [
+      "openalex:W2091307407",
+      "openalex:W1577196593"
+    ],
+    [
+      "openalex:W2091307407",
+      "openalex:W1601617962"
+    ],
+    [
+      "openalex:W2091307407",
+      "openalex:W2038371276"
+    ],
+    [
+      "openalex:W2091307407",
+      "openalex:W2071225564"
+    ],
+    [
+      "openalex:W2091307407",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2093357625",
+      "openalex:W1910851252"
+    ],
+    [
+      "openalex:W2093357625",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W2093357625",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W2096898433",
+      "openalex:W2069559626"
+    ],
+    [
+      "openalex:W2096898433",
+      "openalex:W2768789051"
+    ],
+    [
+      "openalex:W2097757554",
+      "openalex:W1506424797"
+    ],
+    [
+      "openalex:W2097757554",
+      "openalex:W2070961300"
+    ],
+    [
+      "openalex:W2097757554",
+      "openalex:W2129829929"
+    ],
+    [
+      "openalex:W2097757554",
+      "openalex:W2199084870"
+    ],
+    [
+      "openalex:W2097757554",
+      "openalex:W220724191"
+    ],
+    [
+      "openalex:W2097757554",
+      "openalex:W2221279259"
+    ],
+    [
+      "openalex:W2097757554",
+      "openalex:W2579915854"
+    ],
+    [
+      "openalex:W2097757554",
+      "openalex:W2913533776"
+    ],
+    [
+      "openalex:W2097909406",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W2099611016",
+      "openalex:W2282989799"
+    ],
+    [
+      "openalex:W2100580246",
+      "openalex:W2579915854"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W1602768168"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W1639292813"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W1996466054"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2000531453"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2025442915"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2029057477"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2033361497"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2034972469"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2040992920"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2044371773"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2044990032"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2046772626"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2059565836"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2060645111"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2079558731"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2108080367"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2123268668"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2127295009"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2149211280"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2169205860"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2183511781"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2260451409"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2546184100"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2560149116"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2602301350"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2736568018"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W2766758139"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W4235768579"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W4245793532"
+    ],
+    [
+      "openalex:W2100632417",
+      "openalex:W74245466"
+    ],
+    [
+      "openalex:W2100809848",
+      "openalex:W1995561720"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W1592580490"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W1857323784"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W1983503576"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W2017799838"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W2034413563"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W2054052779"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W2111461592"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W2117098610"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W2124920620"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W2133914707"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W2140029414"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W2148795536"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W2171038510"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W2951723302"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W3528745"
+    ],
+    [
+      "openalex:W2102467006",
+      "openalex:W83289625"
+    ],
+    [
+      "openalex:W2104342377",
+      "openalex:W1972447202"
+    ],
+    [
+      "openalex:W2104342377",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W2104342377",
+      "openalex:W1979457157"
+    ],
+    [
+      "openalex:W2104512032",
+      "openalex:W1506424797"
+    ],
+    [
+      "openalex:W2104512032",
+      "openalex:W2032495263"
+    ],
+    [
+      "openalex:W2104512032",
+      "openalex:W2070961300"
+    ],
+    [
+      "openalex:W2104512032",
+      "openalex:W2118746782"
+    ],
+    [
+      "openalex:W2104512032",
+      "openalex:W2129829929"
+    ],
+    [
+      "openalex:W2104512032",
+      "openalex:W2199084870"
+    ],
+    [
+      "openalex:W2104512032",
+      "openalex:W2221279259"
+    ],
+    [
+      "openalex:W2104512032",
+      "openalex:W2412440871"
+    ],
+    [
+      "openalex:W2104512032",
+      "openalex:W2579915854"
+    ],
+    [
+      "openalex:W2104512032",
+      "openalex:W2583500347"
+    ],
+    [
+      "openalex:W2104512032",
+      "openalex:W2913533776"
+    ],
+    [
+      "openalex:W2104512032",
+      "openalex:W4231970275"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W1487258612"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W1504467601"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W151439197"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W1570377291"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W1573954828"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W1583793915"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W1592580490"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W1595776161"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W1601617962"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W1639292813"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W1964543049"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W1983503576"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W1996466054"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2007134090"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2017799838"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2034413563"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2054052779"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2063354603"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2089064856"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2090947057"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2091307407"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2121820647"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2123268668"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2124920620"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2132108235"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2133914707"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2140591634"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2148795536"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2155912474"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2171038510"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2182091416"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2183491405"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2185118258"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2203012675"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2253769547"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2565525221"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2574119765"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W2953168049"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W3528745"
+    ],
+    [
+      "openalex:W2105156747",
+      "openalex:W83289625"
+    ],
+    [
+      "openalex:W2108080367",
+      "openalex:W1576855227"
+    ],
+    [
+      "openalex:W2108080367",
+      "openalex:W1604557386"
+    ],
+    [
+      "openalex:W2108080367",
+      "openalex:W1988431663"
+    ],
+    [
+      "openalex:W2108080367",
+      "openalex:W2029057477"
+    ],
+    [
+      "openalex:W2108080367",
+      "openalex:W2040992920"
+    ],
+    [
+      "openalex:W2108080367",
+      "openalex:W2127295009"
+    ],
+    [
+      "openalex:W2108080367",
+      "openalex:W2141488439"
+    ],
+    [
+      "openalex:W2108080367",
+      "openalex:W2149211280"
+    ],
+    [
+      "openalex:W2108080367",
+      "openalex:W22104068"
+    ],
+    [
+      "openalex:W2108080367",
+      "openalex:W74245466"
+    ],
+    [
+      "openalex:W2108157916",
+      "openalex:W2100809848"
+    ],
+    [
+      "openalex:W2108157916",
+      "openalex:W2128653745"
+    ],
+    [
+      "openalex:W2108157916",
+      "openalex:W2182817605"
+    ],
+    [
+      "openalex:W2110971776",
+      "openalex:W1977184607"
+    ],
+    [
+      "openalex:W2110971776",
+      "openalex:W2040992920"
+    ],
+    [
+      "openalex:W2110971776",
+      "openalex:W2141672427"
+    ],
+    [
+      "openalex:W2110971776",
+      "openalex:W2405996389"
+    ],
+    [
+      "openalex:W2111461592",
+      "openalex:W1639292813"
+    ],
+    [
+      "openalex:W2111461592",
+      "openalex:W2038371276"
+    ],
+    [
+      "openalex:W2112885227",
+      "openalex:W1918193513"
+    ],
+    [
+      "openalex:W2112885227",
+      "openalex:W2155342760"
+    ],
+    [
+      "openalex:W2113615072",
+      "openalex:W2087050046"
+    ],
+    [
+      "openalex:W2115140794",
+      "openalex:W1506424797"
+    ],
+    [
+      "openalex:W2116904467",
+      "openalex:W2102826167"
+    ],
+    [
+      "openalex:W2116904467",
+      "openalex:W92301696"
+    ],
+    [
+      "openalex:W2116941322",
+      "openalex:W2037593097"
+    ],
+    [
+      "openalex:W2116941322",
+      "openalex:W4214549590"
+    ],
+    [
+      "openalex:W2117098610",
+      "openalex:W1964543049"
+    ],
+    [
+      "openalex:W2117098610",
+      "openalex:W2022140469"
+    ],
+    [
+      "openalex:W2117098610",
+      "openalex:W2033361497"
+    ],
+    [
+      "openalex:W2117098610",
+      "openalex:W2038371276"
+    ],
+    [
+      "openalex:W2117098610",
+      "openalex:W2071225564"
+    ],
+    [
+      "openalex:W2117098610",
+      "openalex:W2169325838"
+    ],
+    [
+      "openalex:W2117098610",
+      "openalex:W2222823054"
+    ],
+    [
+      "openalex:W2117098610",
+      "openalex:W2253769547"
+    ],
+    [
+      "openalex:W2117098610",
+      "openalex:W2784439888"
+    ],
+    [
+      "openalex:W2117098610",
+      "openalex:W4245668848"
+    ],
+    [
+      "openalex:W2121820647",
+      "openalex:W2041994075"
+    ],
+    [
+      "openalex:W2121820647",
+      "openalex:W2062959712"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W1918193513"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W1965081941"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W1972200437"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W1996466054"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W2008137555"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W2039787998"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W2089064856"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W2093357625"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W2121820647"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W2131264486"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W2144031643"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W2291714504"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W2467057949"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W2711285122"
+    ],
+    [
+      "openalex:W2122001721",
+      "openalex:W869573524"
+    ],
+    [
+      "openalex:W2123268668",
+      "openalex:W1996466054"
+    ],
+    [
+      "openalex:W2124920620",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2124920620",
+      "openalex:W2063354603"
+    ],
+    [
+      "openalex:W2124920620",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2124920620",
+      "openalex:W2148795536"
+    ],
+    [
+      "openalex:W2125867579",
+      "openalex:W1778234905"
+    ],
+    [
+      "openalex:W2125867579",
+      "openalex:W22104068"
+    ],
+    [
+      "openalex:W2125867579",
+      "openalex:W2566508385"
+    ],
+    [
+      "openalex:W2125867579",
+      "openalex:W92842730"
+    ],
+    [
+      "openalex:W2127295009",
+      "openalex:W2059565836"
+    ],
+    [
+      "openalex:W2127295009",
+      "openalex:W2060645111"
+    ],
+    [
+      "openalex:W2127295009",
+      "openalex:W2087050046"
+    ],
+    [
+      "openalex:W2127295009",
+      "openalex:W2113615072"
+    ],
+    [
+      "openalex:W2127295009",
+      "openalex:W2145304484"
+    ],
+    [
+      "openalex:W2127295009",
+      "openalex:W2763909206"
+    ],
+    [
+      "openalex:W2127483723",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W2127483723",
+      "openalex:W2606003984"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W1027972153"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W1482435370"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W1504467601"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W1570377291"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W1595776161"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W1639292813"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W1996466054"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W2013480322"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W2035701183"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W2089064856"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W2090947057"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W2130664790"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W2160422146"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W2253769547"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W2565525221"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W2574119765"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W2953168049"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W4237050465"
+    ],
+    [
+      "openalex:W2127902590",
+      "openalex:W4245668848"
+    ],
+    [
+      "openalex:W2128653745",
+      "openalex:W2000041758"
+    ],
+    [
+      "openalex:W2128653745",
+      "openalex:W2623521343"
+    ],
+    [
+      "openalex:W2128653745",
+      "openalex:W4210959132"
+    ],
+    [
+      "openalex:W2128653745",
+      "openalex:W4251344828"
+    ],
+    [
+      "openalex:W2129050115",
+      "openalex:W2074326248"
+    ],
+    [
+      "openalex:W2129050115",
+      "openalex:W2097757554"
+    ],
+    [
+      "openalex:W2129050115",
+      "openalex:W2100580246"
+    ],
+    [
+      "openalex:W2129050115",
+      "openalex:W2129829929"
+    ],
+    [
+      "openalex:W2129829929",
+      "openalex:W2074326248"
+    ],
+    [
+      "openalex:W2129829929",
+      "openalex:W2579915854"
+    ],
+    [
+      "openalex:W2130664790",
+      "openalex:W1562540771"
+    ],
+    [
+      "openalex:W2130664790",
+      "openalex:W2184696288"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W1420243053"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W1745592534"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W1910851252"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W1972200437"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W1983997639"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2006835125"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2028637981"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2041994075"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2048207885"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2064270040"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2082940000"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2089064856"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2093357625"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2102826167"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2116904467"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2121820647"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2126136185"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2132468911"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2136066447"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2144031643"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2168748809"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2276454361"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2467057949"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W2711285122"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W4214549590"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W869573524"
+    ],
+    [
+      "openalex:W2131264486",
+      "openalex:W92301696"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W1027972153"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W124383974"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W1482435370"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W1487258612"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W1570377291"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W1918193513"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W1978960961"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W2007134090"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W2013480322"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W2014866763"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W2024197950"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W2024633610"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W2063354603"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W2084297766"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W2090947057"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W2140591634"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W2565525221"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W2574119765"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W2606003984"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W2953168049"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W2955498510"
+    ],
+    [
+      "openalex:W2132108235",
+      "openalex:W83289625"
+    ],
+    [
+      "openalex:W2132468911",
+      "openalex:W2006785118"
+    ],
+    [
+      "openalex:W2133914707",
+      "openalex:W1577196593"
+    ],
+    [
+      "openalex:W2133914707",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2133914707",
+      "openalex:W1964543049"
+    ],
+    [
+      "openalex:W2133914707",
+      "openalex:W2038371276"
+    ],
+    [
+      "openalex:W2133914707",
+      "openalex:W2054052779"
+    ],
+    [
+      "openalex:W2133914707",
+      "openalex:W2063354603"
+    ],
+    [
+      "openalex:W2133914707",
+      "openalex:W2071225564"
+    ],
+    [
+      "openalex:W2133914707",
+      "openalex:W2124920620"
+    ],
+    [
+      "openalex:W2133914707",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2133914707",
+      "openalex:W2148795536"
+    ],
+    [
+      "openalex:W2133914707",
+      "openalex:W2185118258"
+    ],
+    [
+      "openalex:W2133914707",
+      "openalex:W2186744555"
+    ],
+    [
+      "openalex:W2133914707",
+      "openalex:W2203012675"
+    ],
+    [
+      "openalex:W2133914707",
+      "openalex:W4245668848"
+    ],
+    [
+      "openalex:W2133914707",
+      "openalex:W83289625"
+    ],
+    [
+      "openalex:W2136066447",
+      "openalex:W1910851252"
+    ],
+    [
+      "openalex:W2136066447",
+      "openalex:W2028637981"
+    ],
+    [
+      "openalex:W2136066447",
+      "openalex:W2093357625"
+    ],
+    [
+      "openalex:W2136066447",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W2136066447",
+      "openalex:W2738446583"
+    ],
+    [
+      "openalex:W2140029414",
+      "openalex:W2295585735"
+    ],
+    [
+      "openalex:W2140591634",
+      "openalex:W1482435370"
+    ],
+    [
+      "openalex:W2140591634",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2140591634",
+      "openalex:W2084297766"
+    ],
+    [
+      "openalex:W2140591634",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2141488439",
+      "openalex:W2183511781"
+    ],
+    [
+      "openalex:W2141488439",
+      "openalex:W2260451409"
+    ],
+    [
+      "openalex:W2141672427",
+      "openalex:W2736568018"
+    ],
+    [
+      "openalex:W2144031643",
+      "openalex:W1890530603"
+    ],
+    [
+      "openalex:W2144031643",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2144031643",
+      "openalex:W1972447202"
+    ],
+    [
+      "openalex:W2144031643",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W2144031643",
+      "openalex:W1979457157"
+    ],
+    [
+      "openalex:W2144031643",
+      "openalex:W2126136185"
+    ],
+    [
+      "openalex:W2144031643",
+      "openalex:W2253769547"
+    ],
+    [
+      "openalex:W2144031643",
+      "openalex:W2551937430"
+    ],
+    [
+      "openalex:W2144031643",
+      "openalex:W2579915854"
+    ],
+    [
+      "openalex:W2144031643",
+      "openalex:W2738446583"
+    ],
+    [
+      "openalex:W2144031643",
+      "openalex:W4245668848"
+    ],
+    [
+      "openalex:W2145304484",
+      "openalex:W2087050046"
+    ],
+    [
+      "openalex:W2147828044",
+      "openalex:W2035303986"
+    ],
+    [
+      "openalex:W2147828044",
+      "openalex:W2059565836"
+    ],
+    [
+      "openalex:W2147828044",
+      "openalex:W2060645111"
+    ],
+    [
+      "openalex:W2147828044",
+      "openalex:W2296715499"
+    ],
+    [
+      "openalex:W2147828044",
+      "openalex:W92617275"
+    ],
+    [
+      "openalex:W2148795536",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2149211280",
+      "openalex:W2044371773"
+    ],
+    [
+      "openalex:W2149211280",
+      "openalex:W2101863832"
+    ],
+    [
+      "openalex:W2149211280",
+      "openalex:W2602301350"
+    ],
+    [
+      "openalex:W2149211280",
+      "openalex:W2607326014"
+    ],
+    [
+      "openalex:W2149710423",
+      "openalex:W2069559626"
+    ],
+    [
+      "openalex:W2149710423",
+      "openalex:W2096898433"
+    ],
+    [
+      "openalex:W2149710423",
+      "openalex:W2768789051"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W149399617"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W154322363"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W15708769"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W162174704"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W1639292813"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W173366111"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W1883792959"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W2001324285"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W2022140469"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W2028763350"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W2091558427"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W2149211280"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W2194895351"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W2213768512"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W2226133766"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W310813471"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W367060932"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W398572114"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W4211127855"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W4211193368"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W50204634"
+    ],
+    [
+      "openalex:W2150486346",
+      "openalex:W74245466"
+    ],
+    [
+      "openalex:W2157685422",
+      "openalex:W2104512032"
+    ],
+    [
+      "openalex:W2157685422",
+      "openalex:W2913533776"
+    ],
+    [
+      "openalex:W2159870643",
+      "openalex:W2035937417"
+    ],
+    [
+      "openalex:W2163255197",
+      "openalex:W1980489563"
+    ],
+    [
+      "openalex:W2163255197",
+      "openalex:W2048064086"
+    ],
+    [
+      "openalex:W2163255197",
+      "openalex:W2089384111"
+    ],
+    [
+      "openalex:W2167729645",
+      "openalex:W2006724429"
+    ],
+    [
+      "openalex:W2167868137",
+      "openalex:W151246516"
+    ],
+    [
+      "openalex:W2167868137",
+      "openalex:W2090947057"
+    ],
+    [
+      "openalex:W2167868137",
+      "openalex:W2099611016"
+    ],
+    [
+      "openalex:W2167868137",
+      "openalex:W2118746782"
+    ],
+    [
+      "openalex:W2167868137",
+      "openalex:W2953168049"
+    ],
+    [
+      "openalex:W2168748809",
+      "openalex:W1537424319"
+    ],
+    [
+      "openalex:W2168748809",
+      "openalex:W2099611016"
+    ],
+    [
+      "openalex:W2168748809",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W2169325838",
+      "openalex:W2222823054"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W1669591663"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W1964543049"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W1983503576"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W2006706309"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W2017799838"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W2034413563"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W2054052779"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W2063354603"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W2124920620"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W2133914707"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W2146529252"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W2148795536"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W2185118258"
+    ],
+    [
+      "openalex:W2171038510",
+      "openalex:W83289625"
+    ],
+    [
+      "openalex:W2182091416",
+      "openalex:W2100346382"
+    ],
+    [
+      "openalex:W2183491405",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2183491405",
+      "openalex:W2188494356"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W1577196593"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W1583793915"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W1601617962"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W1991111959"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2000531453"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2025442915"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2028637981"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2038371276"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2044990032"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2052196304"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2063354603"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2067062659"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2067089961"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2071225564"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2091307407"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2100632417"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2101863832"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2127295009"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2127483723"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2131264486"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2182091416"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W2486120050"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W74245466"
+    ],
+    [
+      "openalex:W2185118258",
+      "openalex:W83289625"
+    ],
+    [
+      "openalex:W2199084870",
+      "openalex:W2913533776"
+    ],
+    [
+      "openalex:W2253769547",
+      "openalex:W2274935188"
+    ],
+    [
+      "openalex:W2253769547",
+      "openalex:W2276454361"
+    ],
+    [
+      "openalex:W2253769547",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W2275977038",
+      "openalex:W2006785118"
+    ],
+    [
+      "openalex:W2275977038",
+      "openalex:W2771946537"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W1778234905"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2029057477"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2039120387"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2040992920"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2044371773"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2044990032"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2046772626"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2067062659"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2087050046"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2100632417"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2110971776"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2125867579"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2127295009"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2141488439"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2141672427"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2145304484"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2149211280"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2169205860"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2182827928"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W22104068"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2405996389"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2486120050"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2566508385"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W2602301350"
+    ],
+    [
+      "openalex:W2294163059",
+      "openalex:W92842730"
+    ],
+    [
+      "openalex:W2314666169",
+      "openalex:W2738446583"
+    ],
+    [
+      "openalex:W2405996389",
+      "openalex:W1977184607"
+    ],
+    [
+      "openalex:W2444244351",
+      "openalex:W1582397847"
+    ],
+    [
+      "openalex:W2444244351",
+      "openalex:W2000041758"
+    ],
+    [
+      "openalex:W2444244351",
+      "openalex:W2093357625"
+    ],
+    [
+      "openalex:W2444244351",
+      "openalex:W2276454361"
+    ],
+    [
+      "openalex:W2444244351",
+      "openalex:W2291714504"
+    ],
+    [
+      "openalex:W2444244351",
+      "openalex:W2467057949"
+    ],
+    [
+      "openalex:W2467057949",
+      "openalex:W2276454361"
+    ],
+    [
+      "openalex:W2475955799",
+      "openalex:W1639292813"
+    ],
+    [
+      "openalex:W2475955799",
+      "openalex:W1980322368"
+    ],
+    [
+      "openalex:W2475955799",
+      "openalex:W2033361497"
+    ],
+    [
+      "openalex:W2475955799",
+      "openalex:W2065457989"
+    ],
+    [
+      "openalex:W2475955799",
+      "openalex:W2155912474"
+    ],
+    [
+      "openalex:W2475955799",
+      "openalex:W4237050465"
+    ],
+    [
+      "openalex:W2546184100",
+      "openalex:W2000531453"
+    ],
+    [
+      "openalex:W2546184100",
+      "openalex:W2006724429"
+    ],
+    [
+      "openalex:W2546184100",
+      "openalex:W2025442915"
+    ],
+    [
+      "openalex:W2546184100",
+      "openalex:W2035303986"
+    ],
+    [
+      "openalex:W2546184100",
+      "openalex:W2044990032"
+    ],
+    [
+      "openalex:W2546184100",
+      "openalex:W2059565836"
+    ],
+    [
+      "openalex:W2546184100",
+      "openalex:W2147828044"
+    ],
+    [
+      "openalex:W2551937430",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W2560149116",
+      "openalex:W2000531453"
+    ],
+    [
+      "openalex:W2560149116",
+      "openalex:W2035303986"
+    ],
+    [
+      "openalex:W2560149116",
+      "openalex:W2044990032"
+    ],
+    [
+      "openalex:W2560149116",
+      "openalex:W2059565836"
+    ],
+    [
+      "openalex:W2560149116",
+      "openalex:W2060645111"
+    ],
+    [
+      "openalex:W2560149116",
+      "openalex:W2147828044"
+    ],
+    [
+      "openalex:W2560149116",
+      "openalex:W2167729645"
+    ],
+    [
+      "openalex:W2565525221",
+      "openalex:W2007134090"
+    ],
+    [
+      "openalex:W2583500347",
+      "openalex:W2913533776"
+    ],
+    [
+      "openalex:W2603663752",
+      "openalex:W2097572763"
+    ],
+    [
+      "openalex:W2603663752",
+      "openalex:W3145971282"
+    ],
+    [
+      "openalex:W2711285122",
+      "openalex:W1745592534"
+    ],
+    [
+      "openalex:W2711285122",
+      "openalex:W1890530603"
+    ],
+    [
+      "openalex:W2711285122",
+      "openalex:W1972200437"
+    ],
+    [
+      "openalex:W2711285122",
+      "openalex:W1972447202"
+    ],
+    [
+      "openalex:W2711285122",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W2711285122",
+      "openalex:W2028637981"
+    ],
+    [
+      "openalex:W2711285122",
+      "openalex:W2126136185"
+    ],
+    [
+      "openalex:W2711285122",
+      "openalex:W2131264486"
+    ],
+    [
+      "openalex:W2711285122",
+      "openalex:W2136066447"
+    ],
+    [
+      "openalex:W2711285122",
+      "openalex:W2144031643"
+    ],
+    [
+      "openalex:W2711285122",
+      "openalex:W2253769547"
+    ],
+    [
+      "openalex:W2711285122",
+      "openalex:W2738446583"
+    ],
+    [
+      "openalex:W2711285122",
+      "openalex:W4245668848"
+    ],
+    [
+      "openalex:W2951723302",
+      "openalex:W1964543049"
+    ],
+    [
+      "openalex:W2951723302",
+      "openalex:W2017799838"
+    ],
+    [
+      "openalex:W2951723302",
+      "openalex:W2044990032"
+    ],
+    [
+      "openalex:W2951723302",
+      "openalex:W2054052779"
+    ],
+    [
+      "openalex:W2951723302",
+      "openalex:W2133914707"
+    ],
+    [
+      "openalex:W3100301280",
+      "openalex:W2099611016"
+    ],
+    [
+      "openalex:W3100301280",
+      "openalex:W2314666169"
+    ],
+    [
+      "openalex:W3145506805",
+      "openalex:W2010629071"
+    ],
+    [
+      "openalex:W3145506805",
+      "openalex:W2097909406"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1013549386"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1482435370"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1487258612"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1524061576"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1541188639"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1567274303"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1567824690"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1573954828"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1583793915"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1607456165"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1639292813"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1836678964"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1964543049"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1969885937"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1980489563"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1981002423"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1991111959"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W1996466054"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2001324285"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2002322113"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2005397752"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2008137555"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2013480322"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2028763350"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2044633855"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2048064086"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2049647076"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2052193348"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2052196304"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2059273139"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2064270040"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2067089961"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2074326206"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2076089605"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2089064856"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2100346382"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2101062586"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2102902087"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2111461592"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2123268668"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2126136185"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2127483723"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2130664790"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2131264486"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2133914707"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2136453484"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2140029414"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2150486346"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2155912474"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2160422146"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2169325838"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2183491405"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2184948564"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2186744555"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2188494356"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2203012675"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2222823054"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2253769547"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2273221897"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2274935188"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2283409396"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2295585735"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2320907252"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2444244351"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2473738173"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2532403383"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2566610827"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2574119765"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2593142107"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2602301350"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2770752914"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2784439888"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W2952203735"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W4237050465"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W4245668848"
+    ],
+    [
+      "openalex:W3528745",
+      "openalex:W44969393"
+    ],
+    [
+      "openalex:W4237050465",
+      "openalex:W1570377291"
+    ],
+    [
+      "openalex:W4237050465",
+      "openalex:W1639292813"
+    ],
+    [
+      "openalex:W4237050465",
+      "openalex:W2574119765"
+    ],
+    [
+      "openalex:W4245793532",
+      "openalex:W1988431663"
+    ],
+    [
+      "openalex:W4245793532",
+      "openalex:W2029057477"
+    ],
+    [
+      "openalex:W4245793532",
+      "openalex:W2127295009"
+    ],
+    [
+      "openalex:W4245793532",
+      "openalex:W2141488439"
+    ],
+    [
+      "openalex:W4245793532",
+      "openalex:W2149211280"
+    ],
+    [
+      "openalex:W4245793532",
+      "openalex:W4211026850"
+    ],
+    [
+      "openalex:W4246918988",
+      "openalex:W2096898433"
+    ],
+    [
+      "openalex:W4246918988",
+      "openalex:W2768789051"
+    ],
+    [
+      "openalex:W4251637954",
+      "openalex:W2234212075"
+    ],
+    [
+      "openalex:W4256739278",
+      "openalex:W2623521343"
+    ],
+    [
+      "openalex:W4256739278",
+      "openalex:W4210959132"
+    ],
+    [
+      "openalex:W4256739278",
+      "openalex:W4251344828"
+    ],
+    [
+      "openalex:W76123042",
+      "openalex:W1972447202"
+    ],
+    [
+      "openalex:W76123042",
+      "openalex:W1976888542"
+    ],
+    [
+      "openalex:W76123042",
+      "openalex:W1979457157"
+    ],
+    [
+      "openalex:W76123042",
+      "openalex:W2128544095"
+    ],
+    [
+      "openalex:W76123042",
+      "openalex:W2551937430"
+    ],
+    [
+      "openalex:W76123042",
+      "openalex:W2579915854"
+    ],
+    [
+      "openalex:W83289625",
+      "openalex:W1487258612"
+    ],
+    [
+      "openalex:W83289625",
+      "openalex:W1583793915"
+    ],
+    [
+      "openalex:W83289625",
+      "openalex:W1601617962"
+    ],
+    [
+      "openalex:W83289625",
+      "openalex:W1918193513"
+    ],
+    [
+      "openalex:W83289625",
+      "openalex:W1944226055"
+    ],
+    [
+      "openalex:W83289625",
+      "openalex:W1969885937"
+    ],
+    [
+      "openalex:W83289625",
+      "openalex:W2024197950"
+    ],
+    [
+      "openalex:W83289625",
+      "openalex:W2044633855"
+    ],
+    [
+      "openalex:W83289625",
+      "openalex:W2052196304"
+    ],
+    [
+      "openalex:W83289625",
+      "openalex:W2076089605"
+    ],
+    [
+      "openalex:W83289625",
+      "openalex:W2089064856"
+    ],
+    [
+      "openalex:W83289625",
+      "openalex:W2091307407"
+    ],
+    [
+      "openalex:W83289625",
+      "openalex:W2127902590"
+    ],
+    [
+      "openalex:W83289625",
+      "openalex:W2602301350"
+    ],
+    [
+      "openalex:W83289625",
+      "openalex:W2784439888"
+    ]
+  ],
+  "counterexample_nodes": [
+    "openalex:W1420243053",
+    "openalex:W1524061576",
+    "openalex:W1570377291",
+    "openalex:W1595776161",
+    "openalex:W1999806580",
+    "openalex:W2001324285",
+    "openalex:W2022140469",
+    "openalex:W2024197950",
+    "openalex:W2033361497",
+    "openalex:W2041994075",
+    "openalex:W2048064086",
+    "openalex:W2048207885",
+    "openalex:W2087050046",
+    "openalex:W2097572763",
+    "openalex:W2100346382",
+    "openalex:W2101863832",
+    "openalex:W2118746782",
+    "openalex:W2126136185",
+    "openalex:W2146529252",
+    "openalex:W2155912474",
+    "openalex:W2184696288",
+    "openalex:W2186744555",
+    "openalex:W2203012675",
+    "openalex:W22104068",
+    "openalex:W2486120050",
+    "openalex:W2574119765",
+    "openalex:W2953168049",
+    "openalex:W2955498510",
+    "openalex:W3145971282",
+    "openalex:W4214549590",
+    "openalex:W4245668848",
+    "openalex:W74245466"
+  ]
+}

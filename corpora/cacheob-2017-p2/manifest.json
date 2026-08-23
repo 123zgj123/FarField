@@ -1,0 +1,74 @@
+{
+  "spec": {
+    "topic": "cache oblivious algorithms memory hierarchy",
+    "corpus_id": "cacheob-2017-p2",
+    "T": 2017,
+    "roots": 6,
+    "per_root": 100,
+    "max_nodes": 600,
+    "confirmed_quantile": 0.9,
+    "confirmed_min_citations": 20,
+    "counterexample_min_in_degree": 2,
+    "counterexample_quantile": 0.75,
+    "counterexample_min_age": 3,
+    "confirmed_rule": "post-2017 node in the top 10% of post-2017 citation counts in this corpus, and cited at least 20 times: the direction it took was itself taken up by others",
+    "counterexample_rule": "pre-2017 node published on or before 2014 with no outgoing edge inside G_<=T, at least 2 incoming ones, and an in-degree in the top 25% of such dead ends: well cited for this corpus, old enough for a successor, and nothing in the corpus built forward from it"
+  },
+  "corpus_uid": "cacheob-2017-p2-883c6f7a01ce",
+  "content_digest": "883c6f7a01ce",
+  "fetched_at": "2026-08-14T04:13:23Z",
+  "pages": [
+    {
+      "url": "https://api.openalex.org/works?search=cache%20oblivious%20algorithms%20memory%20hierarchy&filter=publication_year:1900-2017&per-page=6&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "98ec3f142a07b3edb9aadb57ef2b6a5273570d7b2bce67a31d4b3814c895f88f"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W1968013322&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "067f00616b310121977058f1ca672c269edb90fc5241649babc2042f37d4c929"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W2089064856&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "299ecd6cee692cc70bb6444b4c0e0f24f8289111d43358b847b77d4eabfed883"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W3528745&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "bf83bc88463d2c1b95b373ca4aa70c628e62f5b9b6358d8e410d61e024f40a80"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W2022117185&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "3c6209616903d6ba8f3e9f07d47d543be2e5cf3bbcb41214373e36aa4bfa9b7e"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W2067062659&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "8a331344dafb674ce9f1f020cb80dea48e781f527dcd9f8e2595a639fd2ba564"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W2039787998&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "587bccdc4506d4dd5945246325548b01aacbb459d40259739f82544b52f29a82"
+    }
+  ],
+  "seed_nodes": [
+    "openalex:W1968013322",
+    "openalex:W2089064856",
+    "openalex:W3528745",
+    "openalex:W2022117185",
+    "openalex:W2067062659",
+    "openalex:W2039787998"
+  ],
+  "counts": {
+    "nodes_full": 536,
+    "nodes_walker": 431,
+    "edges_full": 2195,
+    "edges_walker": 1648,
+    "post_T_nodes": 105,
+    "confirmed": 8,
+    "confirmed_citation_floor": 20,
+    "counterexample_nodes": 32
+  },
+  "digests": {
+    "G_full": "6d9b81314d89ede23ac8850012ddae71c57a155b760340da81f1e562cb99f8c5",
+    "G_le_T": "4487bd994dbfc516c353c01d5670c4ac51525e8ad6d7c1fb6860e8f4fb672cab",
+    "heldout": "b32ff4f21aa70b26ad6ca82c198bf141d6b59893ff2bfa367a09a706a644ed08"
+  },
+  "known_limitation": "which pre-T works enter the corpus depends on OpenAlex relevance for the topic string, so the corpus is a sample of the literature, not the literature; both arms are scored on the same sample"
+}

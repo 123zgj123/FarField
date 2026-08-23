@@ -1,0 +1,60 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Secrets: API keys live in $FARFIELD_LLM_KEY_FILE, never in the tree.
+llm.key
+
+# Recorded API pages. These are the provenance behind every corpus — a build
+# can be replayed from them without touching the network — but they are large
+# OpenAlex JSON and arXiv XML, so they stay out of history. The corpus
+# manifests that reference them by digest are tracked.
+corpora/*/raw/
+concepts/*/raw/
+
+# Large rebuildable concept graphs (GitHub file limit is 100 MB). Manifests
+# and held-out pair files stay tracked. Rebuild with
+# `PYTHONPATH=src python3 scripts/build_concepts.py --replay`. The small
+# `attn-concepts-s1` slice ships so a clone can run unit tests and a demo
+# jump without a harvest.
+concepts/*/G_full.json
+concepts/*/G_le_T.json
+!concepts/attn-concepts-s1/G_full.json
+!concepts/attn-concepts-s1/G_le_T.json
+
+# Runtime and local leftovers. None of this is source.
+var/
+experiments/
+worlds/.cache/
+worlds/wishlist.json
+worlds/.*
+pytest-cache-files-*/
+
+# GitHub sanitizes SVG in READMEs; the hero is a PNG.
+assets/*.svg
+
+# One-shot local recovery after a harvest incident. Public rebuild is
+# `scripts/build_concepts.py --replay`.
+scripts/reconstruct_cl_pages.py
+
+# Design notes and development process stay local. The public tree is
+# the runtime, fixtures, tests, and how-to README — not the design diary.
+docs/
+CONTRIBUTING.md
+.cursor/
+
+# Bytecode / logs / editor
+*.log
+.idea/
+.vscode/
+*.swp
+.DS_Store

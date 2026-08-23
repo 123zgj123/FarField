@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>arXiv Query: search_query</title>
+  <entry>
+    <id>http://arxiv.org/abs/1901.00001</id>
+    <title>Linear Least Squares as a Frozen Baseline</title>
+    <summary>
+      Ordinary least squares recovers a linear map from noisy observations.
+      This fixture exists so Wave A tests never contact the network.
+    </summary>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1901.00002</id>
+    <title>Majority Class Baselines on Imbalanced Holdouts</title>
+    <summary>
+      A majority class predictor is hard to beat when the feature carries no signal about the label.
+      Reported gains over such a baseline are often split artefacts.
+    </summary>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1901.00003</id>
+    <title>Citation Distance and the Reuse of Nearby Methods</title>
+    <summary>
+      Methods reused within two citation hops tend to repeat the assumptions of the seed paper.
+      Distant paths are harder to inspect but less likely to inherit those assumptions.
+    </summary>
+  </entry>
+</feed>

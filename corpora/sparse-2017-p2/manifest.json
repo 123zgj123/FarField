@@ -1,0 +1,74 @@
+{
+  "spec": {
+    "topic": "sparse matrix factorization low rank approximation",
+    "corpus_id": "sparse-2017-p2",
+    "T": 2017,
+    "roots": 6,
+    "per_root": 100,
+    "max_nodes": 600,
+    "confirmed_quantile": 0.9,
+    "confirmed_min_citations": 20,
+    "counterexample_min_in_degree": 2,
+    "counterexample_quantile": 0.75,
+    "counterexample_min_age": 3,
+    "confirmed_rule": "post-2017 node in the top 10% of post-2017 citation counts in this corpus, and cited at least 20 times: the direction it took was itself taken up by others",
+    "counterexample_rule": "pre-2017 node published on or before 2014 with no outgoing edge inside G_<=T, at least 2 incoming ones, and an in-degree in the top 25% of such dead ends: well cited for this corpus, old enough for a successor, and nothing in the corpus built forward from it"
+  },
+  "corpus_uid": "sparse-2017-p2-c3b6ec3b83f6",
+  "content_digest": "c3b6ec3b83f6",
+  "fetched_at": "2026-08-14T04:13:24Z",
+  "pages": [
+    {
+      "url": "https://api.openalex.org/works?search=sparse%20matrix%20factorization%20low%20rank%20approximation&filter=publication_year:1900-2017&per-page=6&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "8c19f029a1eafa410c813a350695b82109822e7a87732c9c7dffa9006cbd8ca2"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W2117756735&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "fd8bc2dfdd8c0e58249b3c02867f4fdd1390d20d023b9aa406ece0820de42dd5"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W2087070363&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "dcb62cd46298877e0947008d5e4be51051e59396c71c1651c0048c70e456034f"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W2097897435&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "d5f7474411e661e2a06364bf97e1dc315abaf078af0c875a0d9b0d1fbad15f2f"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W2611328865&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "1ec95d4a4cc9d10d4cf91a7e6ca71c1a23f55af21209ffc595e18d8d730b4717"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W2098290597&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "ed2677a372a4ed251830ae0293e9b83d84992ae39f83ebe213f07e1855b0c575"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W2043571470&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "65f98ad80e80f54e2127132335f6485cbb32f80300b258606596803a40939a38"
+    }
+  ],
+  "seed_nodes": [
+    "openalex:W2117756735",
+    "openalex:W2087070363",
+    "openalex:W2097897435",
+    "openalex:W2611328865",
+    "openalex:W2098290597",
+    "openalex:W2043571470"
+  ],
+  "counts": {
+    "nodes_full": 590,
+    "nodes_walker": 415,
+    "edges_full": 2579,
+    "edges_walker": 1391,
+    "post_T_nodes": 175,
+    "confirmed": 18,
+    "confirmed_citation_floor": 950,
+    "counterexample_nodes": 16
+  },
+  "digests": {
+    "G_full": "e09f5f612f7455286752ff679db9c0266d6205045f380e2f199a878cde0ee772",
+    "G_le_T": "fcf267d09282d32bfc35fa88d559749a82b71f1fe03bee621bcb2fb20cb784f0",
+    "heldout": "43975a1155def6de347df52956e3196b391e75dfd7b903191153e35f462ce3aa"
+  },
+  "known_limitation": "which pre-T works enter the corpus depends on OpenAlex relevance for the topic string, so the corpus is a sample of the literature, not the literature; both arms are scored on the same sample"
+}

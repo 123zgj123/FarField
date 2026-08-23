@@ -1,0 +1,31 @@
+{
+  "id": "a2a-task-lifecycle",
+  "title": "A2A TaskState lifecycle including TASK_STATE_AUTH_REQUIRED",
+  "source": "a2aproject/A2A specification/a2a.proto enum TaskState; docs/specification.md in-task authorization (Apache-2.0). Host-compiled labeled digraph of official states, not an attack model.",
+  "source_url": "https://raw.githubusercontent.com/a2aproject/A2A/main/specification/a2a.proto",
+  "source_digest": "b4de599979421cf8ed9e807b17259da35ee82a04fb74a87b403089da4b738b11",
+  "retrieved_at": "2026-08-21",
+  "domains": [
+    "a2a",
+    "agent",
+    "agentcard",
+    "jsonrpc",
+    "authentication",
+    "authorization",
+    "protocol",
+    "security",
+    "task",
+    "auth"
+  ],
+  "files": [
+    "origin.json",
+    "world.json"
+  ],
+  "role": "world",
+  "schema": "symbolic_trace",
+  "load_hint": "payload = json.loads(Path('data/world.json').read_text(encoding='utf-8')); states = payload['states']; transitions = payload['transitions']  # attested learned automaton; do not fetch",
+  "slice_rule": {
+    "kind": "all"
+  },
+  "digest": "e2f9a1fd10dfacd0bb45812f8114efe565cb1333dbdf87f2be2e68bf70844a56"
+}

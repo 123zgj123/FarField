@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FarField console demo</title>
+  <style>
+    html, body { margin: 0; background: #0b1f33; }
+    .wrap {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 24px;
+      box-sizing: border-box;
+    }
+    h1 {
+      color: #e8d5a3; font-family: Georgia, serif; font-weight: 500;
+      font-size: 22px; margin: 0 0 16px; text-align: center;
+    }
+    video {
+      width: min(920px, 100%); background: #000; border-radius: 10px;
+    }
+    p {
+      color: #a8adb9; font-family: system-ui, sans-serif; font-size: 14px;
+      text-align: center;
+    }
+    a { color: #e8d5a3; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>FarField · DeepSeek-V4-Pro console demo</h1>
+    <video
+      controls
+      autoplay
+      playsinline
+      src="assets/farfield-diffusion-agent-security-live.mp4"
+      poster="assets/farfield-demo-poster.png">
+    </video>
+    <p>
+      Same-object contract · GENERATED labeled_traces · 0 corroborated ·
+      <a href="https://github.com/123zgj123/FarField">back to the repository</a>
+    </p>
+  </div>
+</body>
+</html>

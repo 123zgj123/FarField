@@ -1,0 +1,19 @@
+{
+  "url": "https://raw.githubusercontent.com/damascenodiego/automata_wiki/master/benchmarks/TCP/TCP_Linux_Server.dot",
+  "retrieved_at": "2026-08-21",
+  "source_digest": "247820f5846f3a16281321eb6adc1a01cefe005bbcf5a1338d638d482fe43389",
+  "text_digest": "247820f5846f3a16281321eb6adc1a01cefe005bbcf5a1338d638d482fe43389",
+  "slice_rule": {
+    "kind": "all"
+  },
+  "parent": {
+    "n": 57,
+    "m": 684,
+    "initial": "s0",
+    "format": "dot_labeled_digraph"
+  },
+  "slice": {
+    "n": 57,
+    "m": 684
+  }
+}

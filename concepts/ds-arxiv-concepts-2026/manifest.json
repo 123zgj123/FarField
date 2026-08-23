@@ -1,0 +1,182 @@
+{
+  "spec": {
+    "kind": "concept_cooccurrence",
+    "topic": "data structures and algorithms",
+    "corpus_id": "ds-arxiv-concepts-2026",
+    "T": 2025,
+    "pre_works": 10000,
+    "post_works": 10000,
+    "generic_df": 0.15,
+    "min_df": 10,
+    "stale_years": 3,
+    "stale_decline_quantile": 0.15,
+    "stale_decline_ceiling": 0.5,
+    "stale_quantile": 0.75,
+    "confirmed_quantile": 0.9,
+    "confirmed_min_df": 3,
+    "max_vocabulary": 20000,
+    "max_labels_per_work": 16,
+    "vocabulary_rule": "a label carried by at least 10 pre-2025 works and by no more than 15% of them: frequent enough to pair, specific enough for the pairing to mean something; at most 20000 survive, the rarest first, and a work contributes at most 16 of them",
+    "edge_rule": "two vocabulary concepts share an edge when some work carries both labels; the walker graph counts only pre-2025 works, so an edge there means the combination had already been made",
+    "confirmed_rule": "a concept absent from every pre-2025 work, carried by at least 3 post-2025 works, and in the top 10% of post-2025 document frequency: a direction that did not exist at T and then became one",
+    "counterexample_rule": "a vocabulary concept used by at least 10 works up to 2022, whose per-work usage rate over the last 3 years before T fell into the steepest-declining 15% of such concepts and to no more than 50% of its earlier rate, with a pre-2025 degree in the top 25% of those: it was well connected and then the field moved off it. Read entirely from pre-2025 data, so the walker could see it too",
+    "seed_rule": "the most connected concepts whose pre-2025 document frequency sits between the 40th and 80th percentile of the vocabulary: above that band a concept is generic residue with no topic, below it there is too little structure to walk"
+  },
+  "source": {
+    "catalogue": "arxiv-oai-pmh",
+    "endpoint": "http://export.arxiv.org/oai2",
+    "set_spec": "cs:cs:DS",
+    "since": "2012-01-01",
+    "until_year": null,
+    "metadata_prefix": "oai_dc",
+    "min_gram": 2,
+    "max_gram": 3,
+    "use_abstract": true,
+    "selection_rule": "every work in OAI set cs:cs:DS submitted on or after 2012-01-01; no relevance ranking and no expansion from roots, so the slice is the whole subject over that period and a combination made anywhere in it is observable",
+    "window_rule": "open-ended: every submission since the opening date",
+    "completeness_rule": "a datestamp is never earlier than the submission it belongs to, so a datestamp harvest from 2012-01-01 contains every work submitted since; works submitted earlier also come back when they were revised since, and are dropped, because they are a sample of long-lived old papers rather than of old papers",
+    "label_rule": "lowercased 2..3-grams of the title and abstract, cut at stopwords, numbers and punctuation, with hyphens read as spaces and trailing plurals folded; every label is a phrase some recorded abstract contains; under the noun-phrases-v1 discipline a run also breaks at a versioned list of verb inflections, number words, generic adjectives and discourse adverbs, so every label is noun-phrase shaped",
+    "label_discipline": "noun-phrases-v1"
+  },
+  "corpus_uid": "ds-arxiv-concepts-2026-0c14fa66a270",
+  "content_digest": "0c14fa66a270818d6374bc30a627f1dc5b25d45670280a40d512b0bed2b7920d",
+  "fetched_at": "2026-08-15T20:20:48Z",
+  "pages": [
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&set=cs%3Acs%3ADS&metadataPrefix=oai_dc&from=2012-01-01",
+      "digest": "cf3165d5e906b8551878e5da69f2000c4ab874cd0b1d41433c9479a6c641d593",
+      "file": "cf3165d5e906b855.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2013-08-01%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D10",
+      "digest": "522475b8483e733e7956420eea58d850f09b64dc004567617eec2d4c0fc46f23",
+      "file": "522475b8483e733e.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2014-11-14%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D1",
+      "digest": "55b52888114517d2b120ecaa54a6e418493ea3e3b52fad3698878e0fe4d72783",
+      "file": "55b52888114517d2.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2015-09-28%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D1",
+      "digest": "dd42161e52fd23291b5ca9d746f8b8712f392263745ca856ed28baac2db4fd77",
+      "file": "dd42161e52fd2329.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2016-10-05%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D2",
+      "digest": "2866a165bfd4ae47aad3c4ce1ee463cfcb374959964430fc65631eb1553456a3",
+      "file": "2866a165bfd4ae47.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2017-08-08%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D2",
+      "digest": "f166e6fbcc345945bdd09fa25fc0a25864d3eb6b14dad90f6f30abb3ad41e053",
+      "file": "f166e6fbcc345945.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2018-06-08%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D1",
+      "digest": "46bfe94c9ae3fa0bf31e046309f249e5593e2f380595990cff5ae24b2380372d",
+      "file": "46bfe94c9ae3fa0b.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2019-03-25%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D0",
+      "digest": "e07ed2cb586f4e64f8c52c1e5f468922c69b5a5a5fe36bc5f9fcf11aeb0c6136",
+      "file": "e07ed2cb586f4e64.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2019-11-25%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D4",
+      "digest": "9fb165d0bb3f39c4bcaf9a3c8d6b9d8915f8b5960b2b48f20446e75cc3798db2",
+      "file": "9fb165d0bb3f39c4.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2020-07-20%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D3",
+      "digest": "5c87d1789519ecc187bf0ff8bccda10d1aff11f8bdf5ac7e595e0a0c76ea419b",
+      "file": "5c87d1789519ecc1.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2021-02-24%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D3",
+      "digest": "b7c591c1fdd1ae9b35a9840ce0b05ed84a0977ff38a7f75549ca876ffb522226",
+      "file": "b7c591c1fdd1ae9b.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2021-10-19%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D0",
+      "digest": "cb5ad6e07cb6001aa846686b5b940142731874cbf4e6cfedc86f21c21f5a3789",
+      "file": "cb5ad6e07cb6001a.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2022-06-02%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D5",
+      "digest": "f9ddde1ee0734abccde6f31fc45730ecb45b8324803693ca4b38847546ea5d3c",
+      "file": "f9ddde1ee0734abc.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2023-01-19%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D3",
+      "digest": "00cf7ef03b222eb2ae12e633ce172c38a3e3292e9f25a9cfc0bb7318daf10703",
+      "file": "00cf7ef03b222eb2.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2023-08-08%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D2",
+      "digest": "df125393d854af92f947157acad27492b9497b945dc820745bb5fa9f71748f48",
+      "file": "df125393d854af92.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-02-28%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D4",
+      "digest": "0c601e0138ecb079c6629157de7a406d7a9c7fe13819f3a28c3976c924117827",
+      "file": "0c601e0138ecb079.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2024-09-06%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D0",
+      "digest": "dd5af30a9469ef2442c1363976734f1ce5c595a8df36f394a925001f63d6b6e3",
+      "file": "dd5af30a9469ef24.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-03-25%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D2",
+      "digest": "e9c81a9e36c896895323c20deced8d03286b2c2e36b2c6f7e77842a1d67f0343",
+      "file": "e9c81a9e36c89689.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2025-09-12%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D6",
+      "digest": "97dbe42710839d724ebcad308c5ad7ef535776ffb89709ea32219a4a7434d4ae",
+      "file": "97dbe42710839d72.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-02-12%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D3",
+      "digest": "a05f7163476edc534ac8688e9fc34792de72e7e37a20d65ec9cb4ba50c81935c",
+      "file": "a05f7163476edc53.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-06-02%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D18",
+      "digest": "82547db3857c0628307e711d9f84fb82af5a39bfd1f6ed87e558de4c90050cfd",
+      "file": "82547db3857c0628.xml"
+    },
+    {
+      "url": "http://export.arxiv.org/oai2?verb=ListRecords&resumptionToken=verb%253DListRecords%2526metadataPrefix%253Doai_dc%2526from%253D2026-08-12%2526set%253Dcs%25253Acs%25253ADS%2526skip%253D19",
+      "digest": "1a0d2e087d6127de4b501efe669f45408929d4e2b491938d69665a72e13d58e8",
+      "file": "1a0d2e087d6127de.xml"
+    }
+  ],
+  "seed_nodes": [
+    "concept:vector-space",
+    "concept:natural-setting",
+    "concept:non-asymptotic",
+    "concept:probabilistic-model",
+    "concept:meta-algorithm",
+    "concept:logistic-regression"
+  ],
+  "counts": {
+    "pre_works": 24595,
+    "post_works": 1941,
+    "vocabulary": 9541,
+    "nodes_full": 9549,
+    "nodes_walker": 9541,
+    "pre_t_pairs": 1004667,
+    "post_t_new_pairs": 66907,
+    "confirmed": 8,
+    "confirmed_df_floor": 4,
+    "counterexample_nodes": 163
+  },
+  "digests": {
+    "G_full": "0f6a872a13db581bcb2729acaadcd544bb847d89275f6a263107f834ef153d14",
+    "G_le_T": "e2dea6733d73cb1614cca66a855e2c8a0e54fdcedd3ebe24b597f5ba6ef3f19e",
+    "heldout": "8b845b2058e286a6be5417ab5cbbd5c98cd92bf5ca00eb495d242eeee5848790"
+  },
+  "known_limitation": "the vocabulary is arxiv-oai-pmh's labelling of this slice, so a combination the labels do not distinguish is invisible here; both arms are scored against the same labelling"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "phix174",
+  "title": "phiX174 complete genome NC_001422.1",
+  "source": "NCBI Nucleotide NC_001422.1 (Sanger et al. 1977, first sequenced DNA genome). FASTA fetched 2026-08-18 via NCBI E-utilities; 5386 bp.",
+  "retrieved_at": "2026-08-18",
+  "domains": [
+    "sequence",
+    "genomic",
+    "dna",
+    "fasta",
+    "phix"
+  ],
+  "files": [
+    "phix174.fasta",
+    "meta.json"
+  ],
+  "role": "world",
+  "schema": "fasta",
+  "load_hint": "seq = ''.join(line.strip() for line in Path('data/phix174.fasta').read_text(encoding='utf-8').splitlines() if not line.startswith('>'))",
+  "digest": "79f5f67bc21bbbd92fe44f6c538baf41a38036ab6e72a8f28449dc10fd608d0e"
+}

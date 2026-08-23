@@ -1,0 +1,60 @@
+1
+00:00:00,000 --> 00:00:03,200
+FarField  ·  recorded DeepSeek-V4-Pro run
+回放这场已记录的英文任务
+
+2
+00:00:03,200 --> 00:00:07,000
+Same object for bind, construct, lever, and probe
+绑定、构造、杠杆、探针必须是同一个科学对象
+
+3
+00:00:07,000 --> 00:00:13,400
+Topic → search → hypothesis → screening → experiment → protocol
+每场同一条路径，最后写出 RESEARCH_PACKET.md
+
+4
+00:00:13,400 --> 00:00:18,400
+DeepSeek  ·  deepseek-v4-pro  ·  key sent once, never saved
+API 密钥只随这次请求发送，不写磁盘
+
+5
+00:00:18,400 --> 00:00:22,800
+Topic — diffusion models × agent-tool authorization security
+题目：扩散模型 × agent 工具授权安全
+
+6
+00:00:22,800 --> 00:00:31,000
+Replaying 20260823-050252  ·  no new model calls
+回放已记录任务，远场检索很少一起讨论的概念对
+
+7
+00:00:31,000 --> 00:00:36,000
+Kept draft 1 — diffusion model × quasipolynomial time algorithm
+筛卡留下第 1 稿的这一对概念
+
+8
+00:00:36,000 --> 00:00:42,500
+No freeze for tool-call traces (labeled_traces)  ·  do not swap data
+目录未命中轨迹冻件，不换别的数据集
+
+9
+00:00:42,500 --> 00:00:47,500
+Built a GENERATED labeled_traces world  ·  executable, not attested
+任务内造 authorized / bypass 有序轨迹，可以削弱，不能佐证
+
+10
+00:00:47,500 --> 00:00:56,000
+path_order=true → 4 bypasses    ·    endpoint embedding → 10
+两臂同一度量，只差这一面旗
+
+11
+00:00:56,000 --> 00:01:05,000
+Pre-registered treatment_lower  ·  GENERATED supports, not corroborated
+方向事先写好。判定成立，但不是确认
+
+12
+00:01:05,000 --> 00:01:18,000
+1 draft  ·  1 kept  ·  1 RESEARCH_PACKET.md  ·  0 confirmed
+写出方案不是科学发现
+

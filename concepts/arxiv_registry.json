@@ -1,0 +1,189 @@
+{
+  "T": 2017,
+  "kind": "concept_cooccurrence",
+  "catalogue": "arxiv-oai-pmh",
+  "snapshots": [
+    {
+      "snapshot_id": "attn-concepts-s1",
+      "role": "demo",
+      "status": "ships in git (~8 MB). Product missions fall back here when the production G_full.json is not present.",
+      "corpus_uid": "attn-concepts-s1-6145b56a3678",
+      "set_spec": "openalex:sparse-attention-transformer",
+      "graph": "concepts/attn-concepts-s1/G_le_T.json",
+      "full_graph": "concepts/attn-concepts-s1/G_full.json",
+      "heldout": "concepts/attn-concepts-s1/heldout_post_T.json",
+      "post_t_placement": "real: a pair is combined when some post-T work carries both labels, read off that work alone",
+      "seeds": [
+        "transformer",
+        "machine learning",
+        "algorithm",
+        "artificial neural network",
+        "deep learning",
+        "pattern recognition"
+      ],
+      "seed_nodes": [
+        "concept:transformer",
+        "concept:machine-learning",
+        "concept:algorithm",
+        "concept:artificial-neural-network",
+        "concept:deep-learning",
+        "concept:pattern-recognition-psychology"
+      ],
+      "T": 2017
+    },
+    {
+      "snapshot_id": "ds-arxiv-concepts",
+      "role": "train",
+      "status": "archived: pre-discipline vocabulary, kept because the p1/p2/p3 reports cite it; new readings use ds-arxiv-concepts-v2",
+      "corpus_uid": "ds-arxiv-concepts-6b621a756fb8",
+      "set_spec": "cs:cs:DS",
+      "graph": "concepts/ds-arxiv-concepts/G_le_T.json",
+      "full_graph": "concepts/ds-arxiv-concepts/G_full.json",
+      "heldout": "concepts/ds-arxiv-concepts/heldout_post_T.json",
+      "post_t_placement": "real: a pair is combined when some post-T work carries both labels, read off that work alone",
+      "seeds": [
+        "broad class",
+        "algorithm design",
+        "improved bound",
+        "computation time",
+        "algorithm find",
+        "non linear"
+      ],
+      "seed_nodes": [
+        "concept:broad-class",
+        "concept:algorithm-design",
+        "concept:improved-bound",
+        "concept:computation-time",
+        "concept:algorithm-find",
+        "concept:non-linear"
+      ],
+      "T": 2017
+    },
+    {
+      "snapshot_id": "cl-arxiv-concepts",
+      "role": "holdout",
+      "status": "archived: pre-discipline vocabulary, kept because the p2/p3 reports cite it; new readings use cl-arxiv-concepts-v2",
+      "T": 2020,
+      "corpus_uid": "cl-arxiv-concepts-bdb2a2998436",
+      "set_spec": "cs:cs:CL",
+      "graph": "concepts/cl-arxiv-concepts/G_le_T.json",
+      "full_graph": "concepts/cl-arxiv-concepts/G_full.json",
+      "heldout": "concepts/cl-arxiv-concepts/heldout_post_T.json",
+      "post_t_placement": "real: a pair is combined when some post-T work carries both labels, read off that work alone",
+      "seeds": [
+        "inference model",
+        "english sentence",
+        "sentence containing",
+        "least one",
+        "model typically",
+        "automatically extracted"
+      ],
+      "seed_nodes": [
+        "concept:inference-model",
+        "concept:english-sentence",
+        "concept:sentence-containing",
+        "concept:least-one",
+        "concept:model-typically",
+        "concept:automatically-extracted"
+      ]
+    },
+    {
+      "snapshot_id": "ds-arxiv-concepts-v2",
+      "role": "train",
+      "discipline": "noun-phrases-v1",
+      "corpus_uid": "ds-arxiv-concepts-v2-58d5e5b2f571",
+      "set_spec": "cs:cs:DS",
+      "graph": "concepts/ds-arxiv-concepts-v2/G_le_T.json",
+      "full_graph": "concepts/ds-arxiv-concepts-v2/G_full.json",
+      "heldout": "concepts/ds-arxiv-concepts-v2/heldout_post_T.json",
+      "post_t_placement": "real: a pair is combined when some post-T work carries both labels, read off that work alone",
+      "seeds": [
+        "algorithm design",
+        "broad class",
+        "computation time",
+        "non linear",
+        "optimal value",
+        "max cut"
+      ],
+      "seed_nodes": [
+        "concept:algorithm-design",
+        "concept:broad-class",
+        "concept:computation-time",
+        "concept:non-linear",
+        "concept:optimal-value",
+        "concept:max-cut"
+      ],
+      "T": 2017
+    },
+    {
+      "snapshot_id": "cl-arxiv-concepts-v2",
+      "role": "holdout",
+      "discipline": "noun-phrases-v1",
+      "T": 2020,
+      "corpus_uid": "cl-arxiv-concepts-v2-b3bd7f7844d1",
+      "set_spec": "cs:cs:CL",
+      "graph": "concepts/cl-arxiv-concepts-v2/G_le_T.json",
+      "full_graph": "concepts/cl-arxiv-concepts-v2/G_full.json",
+      "heldout": "concepts/cl-arxiv-concepts-v2/heldout_post_T.json",
+      "post_t_placement": "real: a pair is combined when some post-T work carries both labels, read off that work alone",
+      "seeds": [
+        "deeper understanding",
+        "unified model",
+        "model named",
+        "learned model",
+        "crowd sourcing",
+        "corpu level"
+      ],
+      "seed_nodes": [
+        "concept:deeper-understanding",
+        "concept:unified-model",
+        "concept:model-named",
+        "concept:learned-model",
+        "concept:crowd-sourcing",
+        "concept:corpu-level"
+      ]
+    },
+    {
+      "snapshot_id": "ds-arxiv-concepts-2026",
+      "role": "production",
+      "discipline": "noun-phrases-v1",
+      "corpus_uid": "ds-arxiv-concepts-2026-0c14fa66a270",
+      "set_spec": "cs:cs:DS",
+      "graph": "concepts/ds-arxiv-concepts-2026/G_le_T.json",
+      "full_graph": "concepts/ds-arxiv-concepts-2026/G_full.json",
+      "heldout": "concepts/ds-arxiv-concepts-2026/heldout_post_T.json",
+      "post_t_placement": "real: a pair is combined when some post-T work carries both labels, read off that work alone",
+      "seeds": [
+        "vector space",
+        "natural setting",
+        "non asymptotic",
+        "probabilistic model",
+        "meta algorithm",
+        "logistic regression"
+      ],
+      "seed_nodes": [
+        "concept:vector-space",
+        "concept:natural-setting",
+        "concept:non-asymptotic",
+        "concept:probabilistic-model",
+        "concept:meta-algorithm",
+        "concept:logistic-regression"
+      ],
+      "T": 2025,
+      "note": "production slice: vocabulary and walker edges cover 2012..2025, full graph to the 2026-08-14 harvest end; the live idea oracle reads the full graph so a 2026 combination is not offered as open"
+    }
+  ],
+  "envelope": {
+    "wall_clock_minutes": 180,
+    "literature_fetches": 3,
+    "token_cost": 20000,
+    "accelerator_hours": 0,
+    "api_calls": 8,
+    "human_rating_minutes": 0
+  },
+  "T_star_campaign_ids": [],
+  "e2_status": "N/A here: this registry exists for the beta sweep and the novelty anchor; tau_F is measured by experiments/s4_meta_loop.py",
+  "provenance": "built by experiments/build_arxiv_concepts.py from export.arxiv.org OAI-PMH; complete subject slices rather than relevance samples, so there is no expansion cone to be blind outside of; raw pages and digests are under each corpus manifest",
+  "note_on_T": "each snapshot carries its own cut year: ds harvests from 2012 and cuts at the kernel pin 2017; cl harvests from mid-2015 and cuts at 2020 so that both the pre-T side (counterexample decline) and the post-T side (realization) have five years. Realization rates are therefore never compared across corpora, only each arm against its own matched chance within one corpus.",
+  "note_on_v2": "the -v2 snapshots re-read the same recorded harvests under the noun-phrases-v1 label discipline (see extras/arxiv.py): verb inflections, number words, generic adjectives and discourse adverbs now break phrase runs, which removed 13.8% of the ds vocabulary and 16.3% of the cl vocabulary and replaced seeds like 'least one' and 'improved bound' with 'max cut' and 'optimal value'. The v1 snapshots stay because the archived p1/p2/p3 readings are measured in their pair space and must stay replayable."
+}

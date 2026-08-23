@@ -1,0 +1,72 @@
+{
+  "spec": {
+    "topic": "attention mechanism neural sequence model",
+    "corpus_id": "attn-2017",
+    "T": 2017,
+    "roots": 6,
+    "per_root": 100,
+    "max_nodes": 600,
+    "confirmed_quantile": 0.9,
+    "confirmed_min_citations": 20,
+    "counterexample_min_in_degree": 2,
+    "confirmed_rule": "post-2017 node in the top 10% of post-2017 citation counts in this corpus, and cited at least 20 times: the direction it took was itself taken up by others",
+    "counterexample_rule": "pre-2017 node with no outgoing edge inside G_<=T and at least 2 incoming ones: cited, then nothing in this corpus built on it"
+  },
+  "corpus_uid": "attn-2017-cb4cb2279a3e",
+  "content_digest": "cb4cb2279a3e",
+  "fetched_at": "2026-08-14T03:38:14Z",
+  "pages": [
+    {
+      "url": "https://api.openalex.org/works?search=attention%20mechanism%20neural%20sequence%20model&filter=publication_year:1900-2017&per-page=6&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "609ef8e0971978e6189adebbba27aadfde4957d32a081239f1b7fd593e62f556"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W1902237438&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "a1a21c1578791a231ac4d6d9a5c7817aceb30e98795cf53f22782e66b8616cd4"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W2133564696&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "389ca514d62dd5a2b67faf93c059d1eee7cb02b45349c3a22b6b66ca5315e693"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W2112796928&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "a9fe45647a5d086e1c8064805dd4344211165b87ef7948a211eb0ac56b83701e"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W1940872118&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "730f222f899ce48733ec6b3f7fece6aedcf0416d43d9ca6ea45b7718613ecdf0"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W2054802006&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "5e7456dda0bd8a707025f560052df7d56001b6ed9e0372705cde1dffd0ef6d07"
+    },
+    {
+      "url": "https://api.openalex.org/works?filter=cites:W2963929190&per-page=100&select=id,title,publication_year,referenced_works,cited_by_count",
+      "digest": "77028e8df970bc309e5aa9f4520cd24f35bf035798a9459c10ea856700d8eaa2"
+    }
+  ],
+  "seed_nodes": [
+    "openalex:W1902237438",
+    "openalex:W2133564696",
+    "openalex:W2112796928",
+    "openalex:W1940872118",
+    "openalex:W2054802006",
+    "openalex:W2963929190"
+  ],
+  "counts": {
+    "nodes_full": 580,
+    "nodes_walker": 281,
+    "edges_full": 2968,
+    "edges_walker": 1177,
+    "post_T_nodes": 299,
+    "confirmed": 31,
+    "confirmed_citation_floor": 2782,
+    "counterexample_nodes": 101
+  },
+  "digests": {
+    "G_full": "0c92751bc7f14949f20b4c40809b0ad22c4aaad759393a23e0bd143d387360eb",
+    "G_le_T": "d732898baeefe7dad2f0e22abc6f86f8c7c6445f7244463e3585624d03a827b6",
+    "heldout": "65f8f287b0ba1206a9c27ded0ba71c9cc594a0e1a2894e15dfa379adc4b674bf"
+  },
+  "known_limitation": "which pre-T works enter the corpus depends on OpenAlex relevance for the topic string, so the corpus is a sample of the literature, not the literature; both arms are scored on the same sample"
+}

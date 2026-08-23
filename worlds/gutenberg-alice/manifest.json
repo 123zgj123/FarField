@@ -1,0 +1,20 @@
+{
+  "id": "gutenberg-alice",
+  "title": "Alice in Wonderland excerpt (Project Gutenberg 11)",
+  "source": "https://www.gutenberg.org/ebooks/11 — public domain excerpt frozen 2026-08-18. stream.json / keys.json are deterministic tokenisations of alice.txt, not a second download.",
+  "retrieved_at": "2026-08-18",
+  "domains": [
+    "prose",
+    "english",
+    "narrative"
+  ],
+  "files": [
+    "alice.txt",
+    "stream.json",
+    "keys.json"
+  ],
+  "role": "world",
+  "schema": "text_stream",
+  "load_hint": "text = Path('data/alice.txt').read_text(encoding='utf-8'); tokens = json.loads(Path('data/stream.json').read_text(encoding='utf-8'))['tokens']; keys = json.loads(Path('data/keys.json').read_text(encoding='utf-8'))['keys']",
+  "digest": "3572b8ac3241abd5f829f44ed802857b6dd01a17abc50ddfc09c0451a32614a3"
+}
