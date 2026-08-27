@@ -46,6 +46,7 @@ pytest-cache-files-*/
 # Console demo video is published separately.
 assets/*.svg
 assets/*.mp4
+assets/*.srt
 
 # One-shot local recovery after a harvest incident. Public rebuild is
 # `scripts/build_concepts.py --replay`.
