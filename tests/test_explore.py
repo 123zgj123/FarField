@@ -28,12 +28,27 @@ class ExploreRuleTests(unittest.TestCase):
         decision = decide_next(
             opened=1,
             cap=4,
-            records=[{"verdict": "supports", "prior_kills": False}],
+            records=[
+                {
+                    "verdict": "supports",
+                    "prior_kills": False,
+                    "probe_kind": "WORLD",
+                }
+            ],
         )
         self.assertFalse(decision["continue"])
         self.assertEqual(decision["reason"], "has_plan")
 
-    def test_a_registered_experiment_stops_spray(self) -> None:
+    def test_synthetic_support_does_not_stop_spray(self) -> None:
+        decision = decide_next(
+            opened=1,
+            cap=4,
+            records=[{"verdict": "supports", "prior_kills": False}],
+        )
+        self.assertTrue(decision["continue"])
+        self.assertEqual(decision["reason"], "no_plan")
+
+    def test_a_registered_experiment_does_not_stop_spray(self) -> None:
         decision = decide_next(
             opened=1,
             cap=4,
@@ -46,9 +61,9 @@ class ExploreRuleTests(unittest.TestCase):
                 }
             ],
         )
-        self.assertFalse(decision["continue"])
-        self.assertEqual(decision["reason"], "has_plan")
-        self.assertTrue(
+        self.assertTrue(decision["continue"])
+        self.assertEqual(decision["reason"], "no_plan")
+        self.assertFalse(
             has_research_plan(
                 [{"experiment": "two-arm test", "verdict": "uninformative"}]
             )
@@ -75,7 +90,8 @@ class ExploreRuleTests(unittest.TestCase):
     def test_entered_without_a_verdict_is_not_a_live_line(self) -> None:
         self.assertFalse(has_live_line([{"verdict": None, "prior_kills": False}]))
         self.assertFalse(has_live_line([{"verdict": "weakens"}]))
-        self.assertTrue(has_live_line([{"verdict": "supports"}]))
+        self.assertTrue(has_live_line([{"verdict": "supports", "probe_kind": "WORLD"}]))
+        self.assertFalse(has_live_line([{"verdict": "supports"}]))
         self.assertFalse(has_research_plan([{"verdict": None}]))
 
     def test_polish_minus_one_is_auto_with_a_cap(self) -> None:

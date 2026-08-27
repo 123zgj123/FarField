@@ -36,6 +36,13 @@ class KindTests(unittest.TestCase):
     def test_a_script_must_name_data_to_count_as_reading_the_world(self) -> None:
         self.assertTrue(reads_world_data("Path('data/path.json').read_text()"))
         self.assertFalse(reads_world_data("nodes = list(range(8))"))
+        fixture = load_catalog(ROOT)["a2a-task-lifecycle"]
+        self.assertTrue(reads_world_data("Path('data/world.json').read_text()", fixture))
+        self.assertFalse(
+            reads_world_data(
+                "json.loads((Path('data') / 'seed.json').read_text())", fixture
+            )
+        )
 
 
 class CatalogTests(unittest.TestCase):
@@ -212,6 +219,14 @@ class CatalogTests(unittest.TestCase):
                 pride,
                 named_instance="a public prose token stream",
                 lineage_schema="text_stream",
+            )
+        )
+        a2a = catalog["a2a-task-lifecycle"]
+        self.assertFalse(
+            lineage_conflicts(
+                a2a,
+                named_instance="attested tool-call traces with authorization preconditions",
+                lineage_schema="labeled_traces",
             )
         )
         self.assertTrue(

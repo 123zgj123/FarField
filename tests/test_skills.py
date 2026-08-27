@@ -107,9 +107,24 @@ class DistillTests(unittest.TestCase):
                 "treatment": 1.0,
                 "control": 8.0,
                 "measure": "hops",
+                "kind": "WORLD",
             },
         )
         self.assertIsNotNone(minted)
+        self.assertIsNone(
+            distill_skill(
+                topic="compress genomic sequence collections",
+                seed_label="succinct data structure",
+                card=card,
+                diagnosis=diagnosis,
+                probe={
+                    "verdict": "supports",
+                    "treatment": 1.0,
+                    "control": 8.0,
+                    "kind": "SYNTHETIC",
+                },
+            )
+        )
         assert minted is not None
         with tempfile.TemporaryDirectory() as tmp:
             written = persist_skill(

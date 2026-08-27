@@ -56,19 +56,21 @@ def dsh_on_path() -> str | None:
     return shutil.which("dsh") or shutil.which("dsh.cmd")
 
 
-def persist_skill(skill: Skill, *, workspace: Path | None, catalog: Path) -> dict[str, str]:
-    """Evidence-gated skill: this mission's workspace and the durable catalog.
+def persist_skill(
+    skill: Skill, *, workspace: Path | None, catalog: Path | None = None
+) -> dict[str, str]:
+    """Evidence-gated skill for one idea directory.
 
-    `catalog` is typically `var/skills` so later missions
-    load it without committing a new file to git from every run. Seed skills
-    that belong in the repo are authored under `<repo>/.agents/skills`.
+    Distillation upgrades *this* idea's next round. It does not write the
+    neighbourhood catalog — that would leak into other ideas' prompts.
+    Tests that pass only `catalog` still get a SKILL.md there.
     Distillation writes SKILL.md only — never plugin.py.
     """
-    written: dict[str, str] = {
-        "catalog": str(write_skill(catalog, skill)),
-    }
+    written: dict[str, str] = {}
     if workspace is not None:
-        written["workspace"] = str(write_dsh_skill(workspace, skill))
+        written["workspace"] = str(write_skill(Path(workspace) / "skills", skill))
+    elif catalog is not None:
+        written["catalog"] = str(write_skill(catalog, skill))
     return written
 
 

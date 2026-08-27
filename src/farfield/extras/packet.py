@@ -771,6 +771,26 @@ def _plan_body(rec: dict[str, Any], *, workspace: str | None) -> list[str]:
     elif rec.get("world_id"):
         extra = f" / {rec['world_schema']}" if rec.get("world_schema") else ""
         lines.extend([f"**世界：** `{rec.get('world_id')}`{extra}", ""])
+    analysis = rec.get("idea_analysis")
+    if isinstance(analysis, dict) and str(analysis.get("summary") or "").strip():
+        lines.extend(
+            [
+                "**前向模拟（主张分析，不能爬梯）**",
+                "",
+                str(analysis["summary"]),
+                "",
+            ]
+        )
+        stop = str(analysis.get("stop_reason") or "").strip()
+        if stop:
+            lines.append(f"- 停止原因：`{stop}`")
+        if "room_to_move" in analysis:
+            lines.append(
+                "- 对象上还有可执行空间"
+                if analysis.get("room_to_move")
+                else "- 对象上没有可执行空间"
+            )
+        lines.append("")
     if rec.get("verdict"):
         lines.append(f"**便宜探针：** `{rec['verdict']}`（{_kind(rec)}）")
         lines.append("")

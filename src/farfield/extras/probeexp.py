@@ -225,7 +225,7 @@ Experiment to implement: {experiment}
 Treatment arm: {treatment_arm}
 Control arm: {control_arm}
 
-The two arms must differ ONLY in the mechanism under test. If no frozen world is bound, invent a small constructed dataset; that run is SYNTHETIC and cannot corroborate. Use the same data and the same measurement in both arms. Both arms MUST call one shared `measure(...)` (or equivalent); the only difference is a boolean or config that turns the mechanism on or off. Do not hard-code different numbers for the two arms. Do not `pass` in one arm and count in the other. Do not increment a counter unconditionally in treatment and under a predicate in control. Do not touch the network. Do not decide which outcome is good — the expected direction was pre-registered before this call.
+The two arms must differ ONLY in the mechanism under test. If no frozen world is bound, this run is a coherence check on invented data: it can weaken, it cannot corroborate, it cannot stop distant exploration, and it cannot be distilled. Prefer not to invent. Use the same data and the same measurement in both arms. Both arms MUST call one shared `measure(...)` (or equivalent); the only difference is a boolean or config that turns the mechanism on or off. Do not hard-code different numbers for the two arms. Do not `pass` in one arm and count in the other. Do not increment a counter unconditionally in treatment and under a predicate in control. Do not touch the network. Do not decide which outcome is good — the expected direction was pre-registered before this call.
 
 The sandbox is deterministic: only these modules may be imported — {allowed_modules}. There is no `time` module, so never measure wall-clock speed; count the work instead (comparisons, node visits, pointer hops, bytes written) with an explicit counter, and report the counts. If the experiment uses any randomness, sampling, or arbitrary ordering, derive ALL of it from the integer in data/seed.json when that file exists (fall back to 0 when it does not) — the runtime replays this same script under seeds it chooses to test whether the effect survives variation, and a script that ignores its seed cannot be confirmed at that tier. Dunder names (`__import__`, `__class__`, `__globals__`) are forbidden; ordinary helpers like `_load_fixture` are allowed. print/eval/exec/open-for-anything-but-metrics are unavailable. Use this skeleton:
 
@@ -635,7 +635,7 @@ def write_probe(
                 mechanism=card.mechanism,
                 topic=topic,
             )
-            if world is not None and not reads_world_data(spec.source):
+            if world is not None and not reads_world_data(spec.source, world):
                 raise _refuse(
                     "read the bound world",
                     "data/ is bound; a probe that invents its own dataset"

@@ -104,14 +104,14 @@ The treatment and control must read the same attested bytes and differ only by t
 
 WORLD_DYNAMICS = """
 
-This world is forward-simulatable. The trusted runtime rolled it under each lever along an intensity ramp and measured every observable (relative change, baseline to full ramp):
+This world is forward-simulatable. The trusted runtime executes each lever on the evolving state until a stop (absorbing, plateau, or horizon) and measures every observable (relative change, start to stop):
 {lever_lines}
 Observables the runtime can compute on this world: {observables}
 
 Add to the JSON:
 "world_lever": the ONE lever above your mechanism acts through — the treatment arm's intervention must be an instance of it; write "none" if the claimed mechanism has no handle in this world,
 "world_observable": the ONE observable above that the claim's predicted quantity is about (required unless world_lever is "none").
-An honest "none" unbinds the world and the probe runs as a coherence check that cannot corroborate; a surrogate binding that pretends a handle exists is worse than no world. A lever the simulation shows inert cannot separate your arms — pick a responsive one or say "none".
+An honest "none" means the prediction has no handle on this object: skip the probe rather than invent data. A surrogate binding that pretends a handle exists is worse than no world. A lever the simulation shows inert cannot separate your arms — pick a responsive one or say "none".
 """
 
 SCOUT_FEEDBACK = """
@@ -136,8 +136,7 @@ Design the two arms against THIS instance. Both arms must read data/world.json a
 REQUIREMENT_CONTEXT = """
 
 No attested freeze matches this claim (object_type={object_type}). Do not bind a substitute catalog fixture.
-After this diagnosis, the mission will CONSTRUCT a GENERATED world of THIS claim's object family — the same schema the experiment measures, not a formula automaton standing in for a graph, table, stream, or trajectory. It can weaken; it cannot corroborate.
-Design arms that can run on that constructed instance. Both arms read data/world.json and differ only by the mechanism flag. Name the invariant and the quantity both arms measure. Do not invent treatment/control numbers.
+Do not invent a dataset and call it verification. Do not construct a GENERATED stand-in for this missing object. Record the requirement for a later host freeze. Design the two arms against the named object so a freeze can run them; both arms will read data/ of that freeze.
 """
 
 LINEAGE_CONTEXT = """

@@ -126,7 +126,7 @@ def execute_protocol(
                 raise ExecuteError(str(exc)) from exc
         else:
             bind_world(work, fixture)
-        if not reads_world_data(source):
+        if not reads_world_data(source, fixture):
             raise ExecuteError(
                 "experiment.py does not name data/; a host run that invents "
                 "its own integers is still SYNTHETIC"

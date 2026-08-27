@@ -285,6 +285,28 @@ class WorldBindingTests(unittest.TestCase):
         spec = write_probe(client, CARD, DIAGNOSIS, "a topic", world=world)
         self.assertIn("data/path.json", spec.source)
 
+    def test_naming_data_seed_is_not_reading_the_bound_automaton(self) -> None:
+        from farfield.extras.world import load_catalog
+
+        world = load_catalog(Path(__file__).resolve().parents[1])["a2a-task-lifecycle"]
+        source = (
+            "import json\n"
+            "from pathlib import Path\n"
+            "seed = json.loads((Path('data') / 'seed.json').read_text()) "
+            "if False else 0\n"
+            "def measure(flag):\n"
+            "    n = 0\n"
+            "    for i in range(4):\n"
+            "        n += i if flag else 1\n"
+            "    return float(n)\n"
+            "Path('metrics.json').write_text("
+            "json.dumps({'treatment': float(measure(True)),"
+            " 'control': float(measure(False))}), encoding='utf-8')\n"
+        )
+        client = ScriptedClient([source, source])
+        with self.assertRaises(ProbeRefused):
+            write_probe(client, CARD, DIAGNOSIS, "a topic", world=world)
+
 
 class ReplicationSeedTests(unittest.TestCase):
     """Executor-owned confirmation: the model is never asked for a heavy

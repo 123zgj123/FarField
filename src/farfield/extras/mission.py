@@ -12,18 +12,19 @@ One mission is one pass of a single loop. Every module hangs off it:
     → gates decide who ENTERS research (ineligible / not selected / entered)
     → on a *text* gate kill, refine the same pair against working H
       (idea_rounds). Graph-dead pairs open a new landing instead.
-    → cheap evidence: survey → prior → diagnosis → construct the world
-      this experiment needs → two-arm probe;
-      WORLD_INCOMPATIBLE still refuses a substitute freeze, then constructs
-      the experimental world for this registration (GENERATED cannot corroborate)
+    → cheap evidence: survey → prior → diagnosis → two-arm probe on
+      an attested freeze (or a SYNTHETIC coherence check if the operator
+      asked for no world); WORLD_INCOMPATIBLE refuses a substitute freeze
+      and does not construct a GENERATED stand-in for verification
     → optional recorded value tournament among live cards (colleague
       opinion only; Elo cannot pick the lead or steer routing)
     → only ideas the evidence did not weaken get a compiled research plan
       (briefing LLM is optional; protocol is compiled either way)
     → lexicographic reading order: WORLD discriminant, wiki-gap aim, host
       execute, then Elo as a tie-break
-    → working H is compiled after each landing *including evidence* so the
-      next generate/refine in this mission sees the probe and diagnosis
+    → this idea's H is compiled after each landing *including evidence*
+      so the next refine of THE SAME pair sees the probe and diagnosis;
+      a new far jump does not inherit another idea's program
     → routing may update on held-out WORLD-supports / promotions
 
 This is the product path. There is no control-arm campaign: `farfield research`
@@ -230,6 +231,7 @@ from .workspace import (
 from .world import (
     KIND_SYNTHETIC,
     KIND_WORLD,
+    attested_freeze,
     bind_world,
     incompatible_family,
     infer_requirement,
@@ -289,9 +291,15 @@ def _root() -> Path:
     return Path(__file__).resolve().parents[3]
 
 
+def _operator_allows_synthetic(world_request: str) -> bool:
+    """True when the operator asked for no freeze: SYNTHETIC coherence is allowed."""
+    text = str(world_request or "").strip().lower()
+    return text in {"", "none", "synthetic", "off", "0"}
+
+
 def _probe_kind_for(world: Any, source: str) -> str:
     """GENERATED fixtures are readable but cannot corroborate."""
-    if world is None or not reads_world_data(source):
+    if world is None or not reads_world_data(source, world):
         return KIND_SYNTHETIC
     if str(getattr(world, "role", "") or "") == "generated":
         return KIND_GENERATED
@@ -459,6 +467,8 @@ def _fold_record_into_outcome(outcome: dict[str, Any], record: dict[str, Any]) -
         outcome["world_has_dynamics"] = bool(record["world_has_dynamics"])
     if "world_forecast_agrees" in record:
         outcome["world_forecast_agrees"] = bool(record["world_forecast_agrees"])
+    if isinstance(record.get("idea_analysis"), dict):
+        outcome["idea_analysis"] = dict(record["idea_analysis"])
     outcome["mechanism_identified"] = record.get("mechanism_identified", True)
     outcome["protocol_complete"] = record.get("protocol_complete")
     outcome["ledger"] = record.get("ledger") or ""
@@ -775,6 +785,7 @@ def _run_entry(
     world_requirement = None
     world_dest = None
     pipeline_world = card_world
+    world_gap = world_event is not None
     if world_event is not None:
         events.append(world_event)
         bundle["skip_writeup"] = False
@@ -802,6 +813,8 @@ def _run_entry(
         program=program,
         world_requirement=world_requirement,
         world_dest=world_dest,
+        world_request=world_request,
+        world_gap=world_gap,
     ):
         events.append(event)
         if event["stage"] == "blocked":
@@ -1133,8 +1146,6 @@ def _run_mission_body(
     targets += [f"open question: {line}" for line in research["unknowns"]]
     targets += [f"literature gap: {line}" for line in wiki_gap_lines(stored_wiki)]
     committed = program_target(stored_program)
-    if committed:
-        targets = [committed] + targets
     farfield_cycle = preferred_operators(policy, JUMP_OPERATORS)
     reframe_cycle = preferred_operators(policy, tuple(sorted(REFRAME_OPERATORS)))
     # A committed program means the first far slot is exploitation.
@@ -1154,8 +1165,17 @@ def _run_mission_body(
          "target": None}
         for i in range(max(0, reframes))
     ]
+    # Contradictions / unknowns / wiki gaps go to reframe first — those
+    # slots exist to question the field. The committed line is not a
+    # field question; it occupies the exploit jump.
     receivers = [s for s in slot_plan if s["track"] == "reframe"]
     receivers += [s for s in slot_plan if s["track"] == "farfield"]
+    if committed:
+        for slot_entry in slot_plan:
+            if slot_entry.get("role") == "exploit":
+                slot_entry["target"] = committed
+                break
+        receivers = [s for s in receivers if s.get("role") != "exploit"]
     for slot_entry, target in zip(receivers, targets):
         slot_entry["target"] = target
     yield {
@@ -1382,6 +1402,13 @@ def _run_mission_body(
             record["world_binding"] = "surrogate"
         elif stage == "world_forecast":
             record["world_forecast_agrees"] = bool(event.get("agrees"))
+            if isinstance(event.get("analysis"), dict):
+                record["idea_analysis"] = dict(event["analysis"])
+        elif stage == "probe_skipped":
+            record["experiment_bottleneck"] = str(event.get("bottleneck") or "world")
+            record["ledger"] = "diagnostic"
+            if isinstance(event.get("analysis"), dict):
+                record["idea_analysis"] = dict(event["analysis"])
         elif stage == "world_placebo":
             record["world_has_dynamics"] = True
             record["world_consumed"] = bool(event.get("consumed"))
@@ -1479,17 +1506,27 @@ def _run_mission_body(
             "far": [],
         }
 
-    def _refresh_program() -> None:
-        nonlocal program_lines
+    def _program_for_refine(current: GeneratedCard) -> tuple[str, ...]:
+        this_found = [row for row in found if row.get("card_id") == current.card_id]
+        this_kills = [
+            kill
+            for kill in all_kills
+            if list(kill.get("pair") or [])[:2] == list(current.pair)[:2]
+        ]
+        previous = program_for(topics_now, corpus_id, near[0], pair=current.pair)
         working = compile_program(
             topic,
-            found=found,
-            kills=all_kills,
-            previous=stored_program,
+            found=this_found,
+            kills=this_kills,
+            previous=previous,
             world=bound_world,
         )
-        if working:
-            program_lines = program_prompt_lines(working)
+        return program_prompt_lines(working) if working else ()
+
+    def _refresh_program() -> None:
+        # Explore generate never inherits another idea's H. Exploit uses
+        # the stored WORLD commit loaded at mission start.
+        return
 
     def _refine_until_enter(
         current: GeneratedCard,
@@ -1541,7 +1578,7 @@ def _run_mission_body(
                         criteria=standards,
                         topic=topic,
                         skills=skill_blocks["generate"],
-                        program=program_lines,
+                        program=_program_for_refine(current),
                         wiki=wiki_lines,
                     )
                 else:
@@ -1560,7 +1597,7 @@ def _run_mission_body(
                         value_criteria=rubric,
                         topic=topic,
                         skills=skill_blocks["generate"],
-                        program=program_lines,
+                        program=_program_for_refine(current),
                         wiki=wiki_lines,
                     )
             except GenerationRefused as exc:
@@ -1665,6 +1702,8 @@ def _run_mission_body(
                 return
 
     def _do_gen(job: dict[str, Any]) -> dict[str, Any]:
+        slot = job.get("slot") or job.get("entry") or {}
+        generate_program = program_lines if slot.get("role") == "exploit" else ()
         try:
             if job["kind"] == "farfield":
                 card = generate_card(
@@ -1684,7 +1723,7 @@ def _run_mission_body(
                     value_criteria=rubric,
                     topic=topic,
                     skills=skill_blocks["generate"],
-                    program=program_lines,
+                    program=generate_program,
                     wiki=wiki_lines,
                 )
             else:
@@ -1698,7 +1737,7 @@ def _run_mission_body(
                     criteria=standards,
                     topic=topic,
                     skills=skill_blocks["generate"],
-                    program=program_lines,
+                    program=generate_program,
                     wiki=wiki_lines,
                 )
             return {"status": "ok", "card": card}
@@ -1981,7 +2020,9 @@ def _run_mission_body(
             experiment_rounds=experiment_budget,
             world=bound_world,
             wiki_works_pool=wiki_pool,
-            program=program_lines,
+            program=program_prompt_lines(
+                program_for(topics_now, corpus_id, near[0], pair=card.pair)
+            ),
             catalog=world_catalog,
             world_request=world_request,
             bound_world=bound_world,
@@ -2607,17 +2648,21 @@ def _evidence_pipeline(
     program: str | tuple[str, ...] = "",
     world_requirement: Any = None,
     world_dest: Path | None = None,
+    world_request: str = "",
+    world_gap: bool = False,
 ) -> Iterator[dict[str, Any]]:
     """Cheap evidence first, expensive writing last.
 
-    Survey → prior check → pre-registered diagnosis → construct the world
-    this experiment needs → two-arm probe → arithmetic evidence. An
-    uninformative or crashed test can be redesigned up to
+    Survey → prior check → pre-registered diagnosis → two-arm probe on
+    an attested freeze (or SYNTHETIC coherence if the operator asked for
+    no world). An uninformative or crashed test can be redesigned up to
     `experiment_rounds` extra times. The stop rule is discrimination
-    (`supports` / `weakens`) or the cap — never a preferred sign. Write-up
-    is a separate pass (`_writeup_pipeline`) so a value tournament can rank
-    live cards before any briefing is paid for. `writeup=False` is the
-    production path; `writeup=True` keeps the old single-card callers working.
+    (`supports` / `weakens`) or the cap — never a preferred sign. A
+    catalog miss or honest `none` skips the probe rather than inventing
+    data. Write-up is a separate pass (`_writeup_pipeline`) so a value
+    tournament can rank live cards before any briefing is paid for.
+    `writeup=False` is the production path; `writeup=True` keeps the old
+    single-card callers working.
 
     `prior_status` is the hypothesis line's current ladder rung. When a
     corroborated line draws a second supporting verdict, this pipeline
@@ -2670,7 +2715,7 @@ def _evidence_pipeline(
     prior_for_diag = prior_probe
     diagnose_skills = (skill_blocks or {}).get("diagnose", "")
     probe_skills = (skill_blocks or {}).get("probe", "")
-    construct = world_requirement is not None
+    allow_synthetic = _operator_allows_synthetic(world_request)
     world_path = None
     paper_pool = list(works) + list(wiki_works_pool or [])
     if paper_pool:
@@ -2721,7 +2766,7 @@ def _evidence_pipeline(
     # reading instead of a byte blob. Scout evidence only — it informs and
     # unbinds; it never climbs.
     dynamics_card: dict[str, Any] | None = None
-    if run_probes and world is not None and not construct:
+    if run_probes and world is not None:
         try:
             dynamics_card = response_card(world)
         except Exception:
@@ -2768,11 +2813,11 @@ def _evidence_pipeline(
                         prior_probe=prior_for_diag,
                         failed_experiments=discarded,
                         skills=diagnose_skills,
-                        world=None if construct else world,
+                        world=world,
                         works=works,
                         program=program,
-                        requirement=world_requirement if construct else None,
-                        dynamics=None if construct else dynamics_card,
+                        requirement=world_requirement if world is None else None,
+                        dynamics=dynamics_card,
                         world_path=world_path,
                     )
                 except GenerationRefused as exc:
@@ -2814,24 +2859,44 @@ def _evidence_pipeline(
 
                 if dynamics_card is not None and world is not None:
                     lever = diagnosis.world_lever or "none"
-                    if lever == "none":
-                        # The honest mismatch: the mechanism has no handle in
-                        # this world's runtime dynamics. Schema match is not
-                        # scientific match — unbind rather than let the claim
-                        # ride a surrogate to corroboration.
+                    if lever == "none" and attested_freeze(world):
+                        analysis = {
+                            "stop_reason": "no_handle",
+                            "room_to_move": False,
+                            "n_steps": 0,
+                            "summary": (
+                                f"On {getattr(world, 'id', '') or 'this object'}, "
+                                "the registered prediction has no runtime handle; "
+                                "the idea cannot be executed here."
+                            ),
+                        }
                         yield {
-                            "stage": "world_surrogate",
+                            "stage": "probe_skipped",
                             "card_id": card.card_id,
                             "world_id": str(getattr(world, "id", "") or ""),
                             "reason": (
-                                "the registered mechanism has no lever in this"
-                                " world's runtime dynamics; the world is"
-                                " unbound and the probe runs as a coherence"
-                                " check that cannot corroborate"
+                                "the registered mechanism has no lever in this "
+                                "world's runtime dynamics; skip the probe rather "
+                                "than invent data"
                             ),
+                            "bottleneck": "world",
+                            "analysis": analysis,
                         }
-                        world = None
-                        dynamics_card = None
+                        last_bottleneck = classify_bottleneck(refused="world")
+                        decision = decide_retry(
+                            attempt=attempt,
+                            cap=extra_rounds,
+                            bottleneck=last_bottleneck,
+                        )
+                        last_action = str(decision.get("action") or "")
+                        yield {
+                            "stage": "experiment_decision",
+                            "card_id": card.card_id,
+                            "attempt": attempt,
+                            "discarded": list(discarded),
+                            **decision,
+                        }
+                        break
                     else:
                         # The prediction check: roll the world forward under
                         # the registered lever before the experiment exists.
@@ -2863,6 +2928,7 @@ def _evidence_pipeline(
                                 "agrees": simulated == diagnosis.expected_direction,
                                 "report_digest": forecast["report_digest"],
                                 "rewrite": inert_forecast,
+                                "analysis": dict(forecast.get("analysis") or {}),
                             }
                             if workspace is not None:
                                 chain.append_event(
@@ -2911,59 +2977,42 @@ def _evidence_pipeline(
                 if not decision["continue"]:
                     break
                 continue
-            need_world = construct and (
-                world is None
-                or need_new_diagnosis
-                or last_action == "adapt_world"
-            )
-            if need_world:
-                previous = None
-                errors = None
-                dest = world_dest or _world_work_dir(workspace, card.card_id)
-                world_dest = dest
-                if last_action == "adapt_world" and world is not None:
-                    try:
-                        previous = load_world_payload(world.root)
-                    except Exception:
-                        previous = None
-                    errors = [
-                        str((impl_failure or {}).get("error") or "world failed execution")
-                    ]
-                world, world_events = _construct_iteration_world(
-                    client,
-                    card,
-                    world_requirement,
-                    dest,
-                    diagnosis=diagnosis,
-                    previous=previous,
-                    errors=errors,
-                    adapted=last_action == "adapt_world",
-                    lineage=world_path,
+            if world is None and not allow_synthetic:
+                analysis = {
+                    "stop_reason": "no_object",
+                    "room_to_move": False,
+                    "n_steps": 0,
+                    "summary": (
+                        "No attested freeze matches this claim; inventing "
+                        "data is not verification and is not an idea analysis."
+                    ),
+                }
+                yield {
+                    "stage": "probe_skipped",
+                    "card_id": card.card_id,
+                    "reason": (
+                        "no attested freeze is bound; skip the probe rather "
+                        "than invent or construct a substitute"
+                    ),
+                    "bottleneck": "world",
+                    "analysis": analysis,
+                    "world_gap": world_gap,
+                }
+                last_bottleneck = classify_bottleneck(refused="world")
+                decision = decide_retry(
+                    attempt=attempt,
+                    cap=extra_rounds,
+                    bottleneck=last_bottleneck,
                 )
-                for world_event in world_events:
-                    yield world_event
-                if world is not None and has_dynamics(world):
-                    try:
-                        constructed_card = response_card(world)
-                    except Exception:
-                        constructed_card = None
-                    if constructed_card is not None:
-                        dynamics_card = constructed_card
-                        yield {
-                            "stage": "world_scout",
-                            "card_id": card.card_id,
-                            "world_id": constructed_card["world_id"],
-                            "levers": sorted(constructed_card["levers"]),
-                            "observables": list(constructed_card["observables"]),
-                            "responses": dict(constructed_card["levers"]),
-                            "inert": list(constructed_card["inert"]),
-                            "report_digest": constructed_card["report_digest"],
-                            "origin": "generated",
-                        }
-                if bundle is not None:
-                    bundle["generated_world"] = True
-                    bundle["world"] = world
-                    bundle["skip_writeup"] = False
+                last_action = str(decision.get("action") or "")
+                yield {
+                    "stage": "experiment_decision",
+                    "card_id": card.card_id,
+                    "attempt": attempt,
+                    "discarded": list(discarded),
+                    **decision,
+                }
+                break
             yield {
                 "stage": "probing",
                 "card_id": card.card_id,
@@ -3454,9 +3503,8 @@ def _writeup_pipeline(
         if minted is not None:
             written = persist_skill(
                 minted,
-                workspace=workspace,
-                catalog=skill_catalog
-                or (Path(workspace) / ".agents" / "skills"),
+                workspace=candidate_dir(Path(workspace), card.card_id),
+                catalog=None,
             )
             yield {
                 "stage": "skill_distilled",

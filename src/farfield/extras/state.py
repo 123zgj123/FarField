@@ -307,11 +307,38 @@ def record_elites(
     return len(kept)
 
 
+def _pair_key(pair: list[str] | tuple[str, ...] | None) -> str:
+    items = [str(item).strip() for item in (pair or [])[:2] if str(item or "").strip()]
+    return " × ".join(items) if len(items) == 2 else ""
+
+
 def program_for(
-    topics: dict[str, Any], corpus_id: str, anchor: str
+    topics: dict[str, Any],
+    corpus_id: str,
+    anchor: str,
+    pair: list[str] | tuple[str, ...] | None = None,
 ) -> dict[str, Any] | None:
-    """The committed generation program for this neighbourhood, or None."""
+    """This idea's program, or the neighbourhood's WORLD-committed line.
+
+    `pair` selects one idea's stored H. Without `pair`, only a WORLD
+    support may occupy the neighbourhood exploit slot — SYNTHETIC H
+    stays on its own pair and does not leak into a new landing.
+    """
     bucket = topics.get(topic_key(corpus_id, anchor)) or {}
+    if pair is not None:
+        key = _pair_key(pair)
+        ideas = bucket.get("idea_programs") or {}
+        idea = ideas.get(key) if key else None
+        if isinstance(idea, dict) and str(idea.get("commit") or "").strip():
+            return dict(idea)
+        program = bucket.get("program")
+        if (
+            isinstance(program, dict)
+            and str(program.get("commit") or "").strip()
+            and list(program.get("pair") or [])[:2] == list(pair)[:2]
+        ):
+            return dict(program)
+        return None
     program = bucket.get("program")
     if isinstance(program, dict) and str(program.get("commit") or "").strip():
         return dict(program)
@@ -324,7 +351,7 @@ def record_program(
     anchor: str,
     program: dict[str, Any] | None,
 ) -> None:
-    """Replace the neighbourhood's generation program. One committed line."""
+    """Store this idea's H. Neighbourhood exploit only on WORLD supports."""
     if not program or not str(program.get("commit") or "").strip():
         return
     with _mutating(path) as topics:
@@ -338,6 +365,7 @@ def record_program(
             "card_id": str(program.get("card_id") or ""),
             "pair": list(program.get("pair") or [])[:2],
             "verdict": program.get("verdict"),
+            "probe_kind": str(program.get("probe_kind") or ""),
             "source": str(program.get("source") or "compiled"),
         }
         raw_h = program.get("h")
@@ -347,7 +375,16 @@ def record_program(
                 for key, value in raw_h.items()
                 if str(value or "").strip()
             }
-        bucket["program"] = payload
+        key = _pair_key(payload["pair"])
+        if key:
+            ideas = bucket.setdefault("idea_programs", {})
+            if not isinstance(ideas, dict):
+                ideas = {}
+                bucket["idea_programs"] = ideas
+            ideas[key] = payload
+        kind = str(payload.get("probe_kind") or "").upper()
+        if kind in {"WORLD", "REAL", "FIXTURE"} and payload.get("verdict") == "supports":
+            bucket["program"] = payload
 
 
 def wiki_for(

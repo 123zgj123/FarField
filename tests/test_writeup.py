@@ -352,6 +352,33 @@ class ProtocolTests(unittest.TestCase):
         self.assertNotIn("下场纲领", text)
         self.assertNotIn("给下一跳 FarField", text)
 
+    def test_the_packet_renders_forward_simulation_analysis(self) -> None:
+        text = render_mission_packet(
+            "succinct pivots",
+            ranked=[{"rank": 1, "card_id": "live", "verdict": "supports"}],
+            found=[
+                {
+                    "card_id": "live",
+                    "title": "Succinct pivot logs",
+                    "claim": CARD.claim,
+                    "verdict": "supports",
+                    "probe_kind": "WORLD",
+                    "has_brief": True,
+                    "world_id": "tcp-linux-server",
+                    "idea_analysis": {
+                        "stop_reason": "plateau",
+                        "room_to_move": True,
+                        "n_steps": 4,
+                        "summary": "On tcp-linux-server under walk, execution stopped at t=3 (plateau).",
+                    },
+                }
+            ],
+        )
+        self.assertIn("前向模拟", text)
+        self.assertIn("plateau", text)
+        self.assertIn("tcp-linux-server under walk", text)
+        self.assertIn("不能爬梯", text)
+
     def test_an_unfinished_line_inlines_the_claim_and_does_not_link_a_missing_protocol(self) -> None:
         text = render_mission_packet(
             "combining diffusion models with formal verification of sampler invariants",

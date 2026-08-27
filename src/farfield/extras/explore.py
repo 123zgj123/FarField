@@ -2,11 +2,18 @@
 
 Far jumps are a cap plus a stop rule, not a third evolution loop.
 Crossover of two parents is not on the product path.
+
+Distant exploration stops only when an attested freeze has already
+discriminated (WORLD supports). A registered experiment, a briefing, or
+supports on invented / constructed data is not a reason to stop jumping
+— those are not verification of the idea on its scientific object.
 """
 
 from __future__ import annotations
 
 from typing import Any
+
+from .world import WORLD_KINDS
 
 
 DEFAULT_EXPLORE = "auto"
@@ -135,44 +142,33 @@ def resolve_polish_rounds(requested: int) -> tuple[int, str]:
     return max(0, n), "fixed"
 
 
-def has_live_line(records: list[dict[str, Any]] | None) -> bool:
-    """True when a scientific `supports` is on the books.
+def _world_support(row: dict[str, Any]) -> bool:
+    """True when supports was measured on an attested freeze the script read."""
+    if row.get("prior_kills") or row.get("killed"):
+        return False
+    if row.get("verdict") != "supports":
+        return False
+    kind = str(row.get("probe_kind") or "").upper()
+    return kind in WORLD_KINDS
 
-    Kept as a readout. Spray uses `has_research_plan`: a registered
-    experiment is enough to stop opening distant landings.
+
+def has_live_line(records: list[dict[str, Any]] | None) -> bool:
+    """True when a WORLD `supports` is on the books.
+
+    SYNTHETIC or GENERATED supports are coherence, not a live scientific
+    line. Spray and self-evolution read this, not bare `verdict`.
     """
-    for row in records or []:
-        if row.get("prior_kills"):
-            continue
-        if row.get("verdict") == "weakens":
-            continue
-        if row.get("killed"):
-            continue
-        if row.get("verdict") == "supports":
-            return True
-    return False
+    return any(_world_support(row) for row in records or [])
 
 
 def has_research_plan(records: list[dict[str, Any]] | None) -> bool:
     """True when another far jump would be spray, not a better idea.
 
-    A colleague can start from a registered two-arm experiment even when
-    the cheap probe was uninformative or ran on a constructed world.
-    Weakened and prior-killed lines are dead. Gate-entered cards with no
-    diagnosis yet are not a plan.
+    Only an attested-world support is verification deep enough to stop
+    distant exploration. A registered experiment, a briefing, or supports
+    on invented or constructed data must not close the jump budget.
     """
-    for row in records or []:
-        if row.get("prior_kills") or row.get("killed"):
-            continue
-        if row.get("verdict") == "weakens":
-            continue
-        if row.get("verdict") == "supports":
-            return True
-        if str(row.get("experiment") or "").strip():
-            return True
-        if row.get("has_brief"):
-            return True
-    return False
+    return has_live_line(records)
 
 
 def decide_next(
@@ -183,9 +179,9 @@ def decide_next(
 ) -> dict[str, Any]:
     """Whether to open another generation slot.
 
-    Stop when this mission already has a research plan a colleague can
-    start, or the cap is hit. Continue when nothing entered, or every
-    entered line is closed or weakened.
+    Stop when an attested freeze already supported a line, or the cap is
+    hit. Continue through synthetic plans so distant exploration stays
+    complete until the object has spoken, or the budget is gone.
     """
     cap = max(0, int(cap))
     opened = max(0, int(opened))
@@ -195,8 +191,8 @@ def decide_next(
             "action": "stop",
             "reason": "has_plan",
             "detail": (
-                "a registered experiment or a scientific support is already "
-                "on the books; more far jumps would be spray"
+                "an attested-world support is already on the books; "
+                "more far jumps would be spray"
             ),
         }
     if opened >= cap:
@@ -204,13 +200,14 @@ def decide_next(
             "continue": False,
             "action": "stop",
             "reason": "hit_cap",
-            "detail": f"opened {opened} of cap {cap} with no research plan",
+            "detail": f"opened {opened} of cap {cap} with no attested-world support",
         }
     return {
         "continue": True,
         "action": "continue",
         "reason": "no_plan",
         "detail": (
-            "every entered line is closed or weakened, or nothing entered yet"
+            "no WORLD support yet; keep opening distant landings until "
+            "the object discriminates or the cap is hit"
         ),
     }

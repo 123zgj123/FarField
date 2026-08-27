@@ -149,14 +149,35 @@ def incompatible_family(object_type: str) -> bool:
     return str(object_type or "") in _INCOMPATIBLE_FAMILIES
 
 
-def reads_world_data(source: str) -> bool:
-    """True when the script names the bound `data/` tree.
+def reads_world_data(source: str, world: Any = None) -> bool:
+    """True when the script reads the bound scientific object under `data/`.
 
-    This is teeth, not a security boundary. The sandbox still has no
-    network. The check exists so a WORLD-bound probe that invents its
-    own list of integers cannot launder itself into corroboration.
+    Naming `Path('data') / 'seed.json'` is not enough: that still invents
+    the instance. When `world` is given, the script must name a payload
+    file from the fixture (not seed/origin/manifest).
     """
-    return bool(_DATA_REF.search(source or ""))
+    if not _DATA_REF.search(source or ""):
+        return False
+    if world is None:
+        return True
+    skip = {"seed.json", "origin.json", "manifest.json"}
+    payload = [
+        str(name)
+        for name in (getattr(world, "files", ()) or [])
+        if Path(str(name)).name not in skip
+    ]
+    if not payload:
+        return True
+    text = source or ""
+    return any(Path(name).name in text for name in payload)
+
+
+def attested_freeze(world: Any) -> bool:
+    """True when `world` is a catalog freeze, not a constructed stand-in."""
+    if world is None:
+        return False
+    role = str(getattr(world, "role", "") or "").strip().lower()
+    return role not in {"generated", "placebo", "synthetic"}
 
 
 def world_attested(outcome: dict[str, Any] | None) -> bool:
@@ -629,7 +650,20 @@ def lineage_conflicts(
     named_instance: str = "",
     lineage_schema: str = "",
 ) -> str:
-    """Why a literature lineage unbinds this freeze, or empty if it may stay."""
+    """Why a literature lineage unbinds this freeze, or empty if it may stay.
+
+    Schema name is not scientific identity. `domain_compatible` already
+    binds by instance tags. If the papers name an object, that object
+    decides — Pride vs agent-tool traces unbinds; an A2A automaton vs a
+    lineage that says labeled_traces does not, because the named instance
+    is not foreign to this freeze. Schema family is only consulted when
+    the lineage did not name an instance.
+    """
+    named = content_tokens(named_instance)
+    if named and foreign_conflict(fixture, named):
+        return "the named instance is a different scientific object than this freeze"
+    if named:
+        return ""
     if lineage_schema and schema_family(lineage_schema) != schema_family(
         fixture.schema
     ):
@@ -637,9 +671,6 @@ def lineage_conflicts(
             f"lineage schema {lineage_schema} is not this fixture's family "
             f"{fixture.schema}"
         )
-    named = content_tokens(named_instance)
-    if named and foreign_conflict(fixture, named):
-        return "the named instance is a different scientific object than this freeze"
     return ""
 
 

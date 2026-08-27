@@ -184,14 +184,8 @@ def default_skill_roots(
         repo / ".agents" / "skills",
         repo / "experiments" / ".agents" / "skills",
     ]
-    if workspace is not None:
-        ws = Path(workspace)
-        roots.extend(
-            [
-                ws / ".agents" / "skills",
-                ws / ".dsh" / "skills",
-            ]
-        )
+    # Distilled idea skills live under candidates/<card>/ and are loaded
+    # only for that idea. Do not mount the mission workspace tree here.
     roots.extend(Path(item) for item in extra)
     return tuple(roots)
 
@@ -311,6 +305,9 @@ def distill_skill(
     does not change weights.
     """
     if str(probe.get("verdict") or "") != "supports":
+        return None
+    kind = str(probe.get("kind") or probe.get("probe_kind") or "").upper()
+    if kind not in {"WORLD", "REAL", "FIXTURE"}:
         return None
     if probe.get("treatment") is None or probe.get("control") is None:
         return None

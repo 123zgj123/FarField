@@ -129,6 +129,7 @@ def candidate_dir(mission: Path, card_id: str) -> Path:
         "host",
         "logs",
         "verdict",
+        "skills",
     ):
         (dest / name).mkdir(parents=True, exist_ok=True)
     return dest

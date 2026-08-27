@@ -37,19 +37,23 @@ experiments/
 worlds/.cache/
 worlds/wishlist.json
 worlds/.*
+worlds/*.lock
+worlds/chain.jsonl
+worlds/wish-*/
 pytest-cache-files-*/
 
 # GitHub sanitizes SVG in READMEs; the hero is a PNG.
+# Console demo video is published separately.
 assets/*.svg
+assets/*.mp4
 
 # One-shot local recovery after a harvest incident. Public rebuild is
 # `scripts/build_concepts.py --replay`.
 scripts/reconstruct_cl_pages.py
 
-# Design notes and development process stay local. The public tree is
-# the runtime, fixtures, tests, and how-to README — not the design diary.
+# Internal design notes stay local. CONTRIBUTING.md is part of the
+# public repository.
 docs/
-CONTRIBUTING.md
 .cursor/
 
 # Bytecode / logs / editor

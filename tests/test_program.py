@@ -42,7 +42,7 @@ class CompileProgramTests(unittest.TestCase):
         self.assertTrue(prompt_lines(program))
         self.assertIn("committed program", target_line(program) or "")
 
-    def test_a_world_gap_constructs_the_experiment_world(self) -> None:
+    def test_a_world_gap_does_not_construct_a_substitute(self) -> None:
         program = compile_program(
             "diffusion sampler invariants",
             found=[
@@ -65,9 +65,11 @@ class CompileProgramTests(unittest.TestCase):
         )
         self.assertIsNotNone(program)
         self.assertIn("Lyapunov", program["commit"])
-        self.assertIn("this mission", program["next_card_must"])
-        self.assertIn("construct the executable world", program["next_card_must"])
+        self.assertIn("this pair has no attested freeze", program["next_card_must"])
+        self.assertIn("do not construct a substitute", program["next_card_must"])
+        self.assertNotIn("construct the executable world", program["next_card_must"])
         self.assertIn("measurable", program["do_not_generate"])
+        self.assertNotIn("terminal set", program["do_not_generate"])
 
     def test_a_synthetic_support_tells_the_next_card_to_bind_a_world(self) -> None:
         program = compile_program(
@@ -202,7 +204,7 @@ class PromptSlotTests(unittest.TestCase):
 
 
 class MissionProgramTests(unittest.TestCase):
-    def test_a_finished_mission_banks_a_program_that_shrinks_the_next_spray(self) -> None:
+    def test_synthetic_support_stays_on_its_own_pair(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             shared = {
                 "state_store": Path(tmp) / "state.json",
@@ -220,8 +222,16 @@ class MissionProgramTests(unittest.TestCase):
             self.assertTrue(prog["commit"])
             anchor = next(e for e in first if e["stage"] == "anchor")["anchors"][0]["concept"]
             stored = program_for(load(shared["state_store"]), PRODUCTION_CORPUS, anchor)
-            self.assertIsNotNone(stored)
-            self.assertEqual(stored["commit"], prog["commit"])
+            self.assertIsNone(stored)
+            card = next(e for e in first if e["stage"] == "card")
+            idea = program_for(
+                load(shared["state_store"]),
+                PRODUCTION_CORPUS,
+                anchor,
+                pair=card["pair"],
+            )
+            self.assertIsNotNone(idea)
+            self.assertEqual(idea["commit"], prog["commit"])
             client = SchemingClient()
             second = list(
                 run_mission(
@@ -233,17 +243,64 @@ class MissionProgramTests(unittest.TestCase):
                 )
             )
             agenda = next(e for e in second if e["stage"] == "agenda")
+            self.assertFalse(agenda["deepen"])
+            far = [s for s in agenda["slots"] if s["track"] == "farfield"]
+            self.assertTrue(all(s.get("role") != "exploit" for s in far))
+            self.assertFalse(
+                any("Committed research program" in p for p in client.prompts),
+            )
+
+    def test_a_world_support_commits_the_neighbourhood_exploit_slot(self) -> None:
+        from tests.test_mission import FakeFeed, WorldProbeClient
+
+        with tempfile.TemporaryDirectory() as tmp:
+            shared = {
+                "state_store": Path(tmp) / "state.json",
+                "policy_log": Path(tmp) / "log.json",
+                "policy_file": Path(tmp) / "policy.json",
+                "polish_rounds": 0,
+                "explore": "fixed",
+            }
+            first = list(
+                run_mission(
+                    TOPIC,
+                    jumps=1,
+                    candidates=1,
+                    client=WorldProbeClient(),
+                    feed=FakeFeed(),
+                    world="path-trace",
+                    **shared,
+                )
+            )
+            prog = next(e for e in first if e["stage"] == "program")
+            self.assertEqual(prog.get("probe_kind"), "WORLD")
+            anchor = next(e for e in first if e["stage"] == "anchor")["anchors"][0]["concept"]
+            stored = program_for(load(shared["state_store"]), PRODUCTION_CORPUS, anchor)
+            self.assertIsNotNone(stored)
+            self.assertEqual(stored["commit"], prog["commit"])
+            client = WorldProbeClient()
+            second = list(
+                run_mission(
+                    TOPIC,
+                    jumps=4,
+                    candidates=1,
+                    client=client,
+                    feed=FakeFeed(),
+                    world="path-trace",
+                    **shared,
+                )
+            )
+            agenda = next(e for e in second if e["stage"] == "agenda")
             self.assertTrue(agenda["deepen"])
             far = [s for s in agenda["slots"] if s["track"] == "farfield"]
-            self.assertEqual(len(far), 4)
             self.assertEqual(far[0].get("role"), "exploit")
+            self.assertTrue(
+                str(far[0].get("target") or "").startswith("committed program:"),
+                far[0].get("target"),
+            )
             self.assertTrue(
                 any("Committed research program" in p for p in client.prompts),
                 client.prompts[0][:200] if client.prompts else "no prompts",
-            )
-            self.assertTrue(
-                any("Runtime H" in p for p in client.prompts),
-                "next mission must see compiled runtime H",
             )
 
 

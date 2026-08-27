@@ -18,21 +18,21 @@ the *trusted runtime* owns —
   here and must say so.
 - **observables**: named measurements the runtime computes from the
   world state. An observable is a verifier the model did not write.
-- **forward simulation**: roll the frozen payload under a lever along
-  an intensity ramp and record every observable per step. Deterministic
-  given (world digest, lever, seed): any auditor can recompute the
-  trajectory bit for bit.
+- **forward simulation**: execute the registered lever on the *evolving*
+  state until a runtime stop (absorbing configuration, observable
+  plateau, or horizon). The trajectory is the idea analysis on this
+  object — not a dose ramp reapplied to frozen bytes, and not a model
+  narrative. Deterministic given (world digest, lever, seed).
 
 The model never writes a transition rule. A dynamics authored after
 seeing the claim would just be a larger invented world — the same hole
 the network ban closed for data. Bridges live here, versioned with the
 runtime, written before any particular hypothesis exists.
 
-Epistemic status: everything this module produces is **scout evidence**.
-It may inform a diagnosis, expose an inert lever, sharpen a redesign,
-or unbind a surrogate world. It may never climb the ladder — `supports`
-still comes only from the registered two-arm probe and its host/heavy
-reproductions.
+Epistemic status: the trajectory may veto a probe (no handle, no room
+to move) and must appear in the research plan. It may never climb the
+ladder — `supports` still comes only from the registered two-arm probe
+on the same attested bytes.
 """
 
 from __future__ import annotations
@@ -54,10 +54,11 @@ _MAX_BASES = 40_000
 _MAX_ROWS = 4_000
 _MAX_TRANSITIONS = 10_000
 
-# Ramp defaults: t=0 is the untouched world, later steps raise the
-# lever intensity linearly up to `intensity`.
+# Step 0 is the untouched world. Later steps apply the lever to the
+# *previous* state at this working intensity until a stop condition.
 DEFAULT_INTENSITY = 0.6
-DEFAULT_HORIZON = 4
+DEFAULT_HORIZON = 8
+PLATEAU_STEPS = 2
 
 # Below this relative change over the full ramp a lever/observable pair
 # is reported inert — pulling it would probably yield an uninformative
@@ -145,7 +146,13 @@ def _load_trace(root: Path) -> dict[str, Any]:
         for t in payload["transitions"][:_MAX_TRANSITIONS]
     ]
     initial = str(payload.get("initial") or (states[0] if states else ""))
-    return {"states": states, "transitions": transitions, "initial": initial}
+    return {
+        "states": states,
+        "transitions": transitions,
+        "initial": initial,
+        "current": initial,
+        "history": [initial] if initial else [],
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -248,10 +255,15 @@ def _observe_trace(state: dict[str, Any]) -> dict[str, float]:
                 stack.append(peer)
     total = max(1, len(states))
     dead = sum(1 for s in states if not adjacency.get(s))
+    current = str(state.get("current") or state.get("initial") or "")
+    absorbing = 1.0 if current and not adjacency.get(current) else 0.0
+    hops = max(0, len(state.get("history") or []) - 1)
     return {
         "reachable_fraction": len(seen) / total,
         "dead_end_fraction": dead / total,
         "mean_out_degree": len(transitions) / total,
+        "at_absorbing": absorbing,
+        "walk_hops": float(hops),
     }
 
 
@@ -363,6 +375,15 @@ def _lever_trace(
     state: dict[str, Any], lever: str, intensity: float, rng: random.Random
 ) -> dict[str, Any]:
     transitions = list(state["transitions"])
+    if lever == "walk":
+        current = str(state.get("current") or state.get("initial") or "")
+        outgoing = [dst for src, dst in transitions if src == current]
+        if not outgoing:
+            return dict(state)
+        nxt = rng.choice(outgoing)
+        history = list(state.get("history") or [])
+        history.append(nxt)
+        return {**state, "current": nxt, "history": history}
     if lever == "dropout":
         return {**state, "transitions": _keep(transitions, intensity, rng)}
     if lever == "rewire":
@@ -408,7 +429,7 @@ _BRIDGES: dict[str, dict[str, Any]] = {
         "load": _load_trace,
         "observe": _observe_trace,
         "apply": _lever_trace,
-        "levers": ("dropout", "rewire"),
+        "levers": ("walk", "dropout", "rewire"),
     },
 }
 _BRIDGES["undirected_named_graph"] = _BRIDGES["undirected_graph"]
@@ -440,6 +461,69 @@ def _rng(fixture: WorldFixture, lever: str, seed: int, step: int) -> random.Rand
     return random.Random(int(hashlib.sha256(key.encode()).hexdigest()[:16], 16))
 
 
+def _relative_delta(base: float, end: float) -> float:
+    if abs(base) > 1e-12:
+        return (end - base) / abs(base)
+    return end - base
+
+
+def _observables_plateau(
+    previous: dict[str, float], current: dict[str, float]
+) -> bool:
+    if not previous:
+        return False
+    for key, value in current.items():
+        delta = abs(_relative_delta(float(previous.get(key, value)), float(value)))
+        if delta >= RESPONSE_FLOOR:
+            return False
+    return True
+
+
+def _analysis_of(trajectory: dict[str, Any]) -> dict[str, Any]:
+    """Compile the idea-analysis product from a finished trajectory.
+
+    Runtime text, not a model narrative. Goes into the packet. Cannot climb.
+    """
+    steps = list(trajectory.get("steps") or [])
+    response = dict(trajectory.get("response") or {})
+    room = any(abs(float(delta)) >= RESPONSE_FLOOR for delta in response.values())
+    stop = str(trajectory.get("stop_reason") or "horizon")
+    lever = str(trajectory.get("lever") or "")
+    world_id = str(trajectory.get("world_id") or "")
+    last_t = steps[-1]["t"] if steps else 0
+    if stop == "no_handle":
+        summary = (
+            f"On {world_id}, the registered prediction has no runtime handle; "
+            "the idea cannot be executed on this object."
+        )
+    elif stop == "no_object":
+        summary = (
+            "No attested freeze matches this claim; inventing data is not "
+            "verification and is not an idea analysis."
+        )
+    elif not room:
+        summary = (
+            f"On {world_id} under {lever}, observables did not move by step "
+            f"{last_t} ({stop}); the prediction has no trajectory here."
+        )
+    else:
+        moved = ", ".join(
+            f"{name} {delta:+.1%}"
+            for name, delta in sorted(response.items())
+            if abs(float(delta)) >= RESPONSE_FLOOR
+        )
+        summary = (
+            f"On {world_id} under {lever}, execution stopped at t={last_t} "
+            f"({stop}). Moved: {moved}."
+        )
+    return {
+        "stop_reason": stop,
+        "room_to_move": room,
+        "n_steps": len(steps),
+        "summary": summary,
+    }
+
+
 def forward_simulate(
     fixture: WorldFixture,
     lever: str,
@@ -448,44 +532,60 @@ def forward_simulate(
     seed: int = 0,
     horizon: int = DEFAULT_HORIZON,
 ) -> dict[str, Any]:
-    """Roll the frozen world under `lever` along an intensity ramp.
+    """Execute `lever` on the evolving world until a runtime stop.
 
-    Step 0 is the untouched world. Each later step re-applies the lever
-    to the *frozen* payload at a higher intensity — a ramp, not a random
-    walk, so a trajectory reads as a dose-response curve. Deterministic
-    given (world digest, lever, seed, horizon): recompute and compare.
+    Step 0 is the untouched world. Each later step applies the lever to
+    the *previous* state at `intensity` — a trajectory of the prediction
+    on this object, not a dose ramp from frozen bytes. Stops on an
+    absorbing configuration, an observable plateau, or the horizon.
+    Deterministic given (world digest, lever, seed, horizon).
     """
     bridge = _bridge_of(fixture)
     if bridge is None:
         raise DynamicsUnavailable(f"no bridge for schema {fixture.schema!r}")
     if lever not in bridge["levers"]:
         raise DynamicsUnavailable(f"unknown lever {lever!r} for {fixture.schema}")
-    frozen = bridge["load"](fixture.root)
+    state = bridge["load"](fixture.root)
     steps: list[dict[str, Any]] = []
+    stop_reason = "horizon"
+    plateau_streak = 0
     for t in range(horizon + 1):
-        level = intensity * t / max(1, horizon)
-        state = (
-            frozen
-            if t == 0
-            else bridge["apply"](frozen, lever, level, _rng(fixture, lever, seed, t))
-        )
-        steps.append(
-            {
-                "t": t,
-                "intensity": round(level, 6),
-                "observables": {
-                    key: round(value, 6)
-                    for key, value in bridge["observe"](state).items()
-                },
-            }
-        )
-    response: dict[str, float] = {}
+        if t == 0:
+            current = state
+            level = 0.0
+        else:
+            level = intensity
+            current = bridge["apply"](
+                state, lever, level, _rng(fixture, lever, seed, t)
+            )
+        observables = {
+            key: round(value, 6)
+            for key, value in bridge["observe"](current).items()
+        }
+        row: dict[str, Any] = {
+            "t": t,
+            "intensity": round(level, 6),
+            "observables": observables,
+        }
+        if current.get("current"):
+            row["current"] = current["current"]
+        steps.append(row)
+        if t > 0:
+            if current == state:
+                stop_reason = "absorbing"
+                break
+            if _observables_plateau(steps[t - 1]["observables"], observables):
+                plateau_streak += 1
+                if plateau_streak >= PLATEAU_STEPS:
+                    stop_reason = "plateau"
+                    break
+            else:
+                plateau_streak = 0
+        state = current
     first, last = steps[0]["observables"], steps[-1]["observables"]
+    response: dict[str, float] = {}
     for key, base in first.items():
-        end = last.get(key, base)
-        response[key] = round(
-            (end - base) / abs(base) if abs(base) > 1e-12 else end - base, 6
-        )
+        response[key] = round(_relative_delta(base, last.get(key, base)), 6)
     trajectory = {
         "world_id": fixture.id,
         "world_digest": fixture.digest,
@@ -494,11 +594,16 @@ def forward_simulate(
         "intensity": intensity,
         "seed": seed,
         "horizon": horizon,
+        "stop_reason": stop_reason,
         "steps": steps,
         "response": response,
     }
+    trajectory["analysis"] = _analysis_of(trajectory)
     trajectory["report_digest"] = hashlib.sha256(
-        json.dumps(trajectory, sort_keys=True).encode("utf-8")
+        json.dumps(
+            {key: trajectory[key] for key in trajectory if key != "report_digest"},
+            sort_keys=True,
+        ).encode("utf-8")
     ).hexdigest()
     return trajectory
 
@@ -506,7 +611,7 @@ def forward_simulate(
 def response_card(
     fixture: WorldFixture, *, seed: int = 0, horizon: int = 3
 ) -> dict[str, Any]:
-    """One forward simulation per lever: the world's measured dynamics.
+    """One forward execution per lever: the world's measured dynamics.
 
     The card is what a diagnosis gets to read — which levers exist,
     which observables they move, and by how much. `inert` collects the

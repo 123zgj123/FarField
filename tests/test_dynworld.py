@@ -4,8 +4,8 @@ A fixture used to be a byte blob a model-written script read however it
 liked. The dynamics bridge gives every schema family levers (the only
 ways a mechanism can act on this world), observables (verifiers the
 model did not write), and a forward simulation any auditor can
-recompute. These tests pin the contract: deterministic, ramped from the
-untouched world, vocabulary-closed — and the diagnosis may choose a
+recompute. These tests pin the contract: deterministic, stepwise on the
+evolving state, vocabulary-closed — and the diagnosis may choose a
 handle from that vocabulary, not invent one.
 """
 
@@ -93,6 +93,28 @@ class ForwardSimulationTests(unittest.TestCase):
         # Removing hubs must shrink the giant component — a world fact the
         # runtime measured, available to any diagnosis before it registers.
         self.assertLess(trajectory["response"]["largest_component_fraction"], -0.03)
+        self.assertTrue(trajectory["analysis"]["summary"])
+        self.assertIn(trajectory["stop_reason"], {"absorbing", "plateau", "horizon"})
+
+    def test_walk_executes_the_trace_until_a_runtime_stop(self) -> None:
+        trajectory = forward_simulate(CATALOG["tcp-linux-server"], "walk", seed=0)
+        self.assertIn("walk", levers_of(CATALOG["tcp-linux-server"]))
+        self.assertIn(trajectory["stop_reason"], {"absorbing", "plateau", "horizon"})
+        self.assertGreaterEqual(len(trajectory["steps"]), 1)
+        self.assertEqual(trajectory["analysis"]["stop_reason"], trajectory["stop_reason"])
+        self.assertTrue(trajectory["analysis"]["summary"])
+
+    def test_later_steps_apply_the_lever_to_the_previous_state(self) -> None:
+        trajectory = forward_simulate(
+            CATALOG["zachary-karate"], "dropout", seed=0, horizon=4
+        )
+        degrees = [
+            step["observables"]["mean_degree"] for step in trajectory["steps"]
+        ]
+        self.assertGreaterEqual(len(degrees), 2)
+        # Dropout on the evolving graph cannot restore edges the previous
+        # step already removed.
+        self.assertLessEqual(degrees[-1], degrees[1])
 
 
 class ResponseCardTests(unittest.TestCase):

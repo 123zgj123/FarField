@@ -182,8 +182,8 @@ def decide_retry(
             "reason": "world_incompatible",
             "bottleneck": "world",
             "detail": (
-                "no freeze matched and no experimental world was constructed; "
-                "rewriting the script cannot create a matching world"
+                "no attested freeze matches this claim; inventing or "
+                "constructing a substitute is not verification"
             ),
         }
     if attempt >= cap:

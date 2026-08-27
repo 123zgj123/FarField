@@ -974,7 +974,7 @@ class ValueAndEvolveTests(unittest.TestCase):
 
 
 class AutoExploreTests(unittest.TestCase):
-    def test_a_live_line_stops_before_the_jump_cap(self) -> None:
+    def test_synthetic_support_uses_the_full_jump_cap(self) -> None:
         events = run_all(
             jumps=4,
             explore="auto",
@@ -984,15 +984,47 @@ class AutoExploreTests(unittest.TestCase):
         far = [
             e for e in events if e["stage"] == "jump" and e.get("track") == "farfield"
         ]
+        self.assertEqual(len(far), 4)
+        decisions = [e for e in events if e["stage"] == "explore_decision"]
+        self.assertTrue(decisions)
+        self.assertEqual(decisions[-1]["reason"], "hit_cap")
+        self.assertFalse(decisions[-1]["continue"])
+        self.assertEqual(events[0]["explore"], "auto")
+        self.assertEqual(events[-1]["jumps_opened"], 4)
+
+    def test_a_world_support_stops_before_the_jump_cap(self) -> None:
+        events = run_all(
+            jumps=4,
+            explore="auto",
+            client=WorldProbeClient(),
+            feed=FakeFeed(),
+            world="path-trace",
+        )
+        far = [
+            e for e in events if e["stage"] == "jump" and e.get("track") == "farfield"
+        ]
         self.assertEqual(len(far), 1)
         decisions = [e for e in events if e["stage"] == "explore_decision"]
         self.assertTrue(decisions)
         self.assertEqual(decisions[0]["reason"], "has_plan")
         self.assertFalse(decisions[0]["continue"])
-        self.assertEqual(events[0]["explore"], "auto")
         self.assertEqual(events[-1]["jumps_opened"], 1)
 
-    def test_a_live_far_line_does_not_spray_a_reframe(self) -> None:
+    def test_a_world_far_line_does_not_spray_a_reframe(self) -> None:
+        events = run_all(
+            jumps=4,
+            reframes=1,
+            explore="auto",
+            client=WorldProbeClient(),
+            feed=FakeFeed(),
+            world="path-trace",
+        )
+        reframes = [
+            e for e in events if e["stage"] == "jump" and e.get("track") == "reframe"
+        ]
+        self.assertEqual(reframes, [])
+
+    def test_synthetic_support_still_opens_a_reframe(self) -> None:
         events = run_all(
             jumps=4,
             reframes=1,
@@ -1003,7 +1035,7 @@ class AutoExploreTests(unittest.TestCase):
         reframes = [
             e for e in events if e["stage"] == "jump" and e.get("track") == "reframe"
         ]
-        self.assertEqual(reframes, [])
+        self.assertEqual(len(reframes), 1)
 
     def test_failed_generation_uses_the_full_cap(self) -> None:
         events = run_all(
@@ -1155,7 +1187,7 @@ class IdeaRefineMissionTests(unittest.TestCase):
         ]
         self.assertTrue(entered)
 
-    def test_the_next_jump_sees_this_jump_probe_in_h(self) -> None:
+    def test_the_next_jump_does_not_inherit_another_idea_h(self) -> None:
         client = ProbeScriptClient([WEAKEN_ARMS])
         events = run_all(
             jumps=2,
@@ -1178,8 +1210,8 @@ class IdeaRefineMissionTests(unittest.TestCase):
             if "Seed concept:" in p and "Revise THIS idea" not in p
         ]
         self.assertGreaterEqual(len(generate_prompts), 2)
-        self.assertIn("this-mission probes: weakens", generate_prompts[1])
-        self.assertIn("weakened mechanism", generate_prompts[1])
+        self.assertNotIn("this-mission probes: weakens", generate_prompts[1])
+        self.assertNotIn("Committed research program", generate_prompts[1])
 
 
 class ExperimentIterationTests(unittest.TestCase):
@@ -1398,6 +1430,7 @@ class AwakenedWorldTests(unittest.TestCase):
         forecast = events[stages.index("world_forecast")]
         self.assertEqual(forecast["lever"], "dropout")
         self.assertEqual(forecast["observable"], "kmer8_diversity")
+        self.assertTrue(forecast.get("analysis", {}).get("summary"))
         self.assertIn(
             forecast["simulated_direction"],
             ("treatment_lower", "treatment_higher", "flat"),
@@ -1554,13 +1587,14 @@ class AwakenedWorldTests(unittest.TestCase):
         self.assertIn("world_path", stages)
         self.assertIn("world_surrogate", stages)
         self.assertLess(stages.index("world_path"), stages.index("world_surrogate"))
-        for probe in (e for e in events if e["stage"] == "probe"):
-            self.assertNotEqual(probe.get("kind"), "WORLD")
+        skipped = [e for e in events if e["stage"] == "probe_skipped"]
+        self.assertTrue(skipped)
+        self.assertFalse([e for e in events if e["stage"] == "probe"])
 
-    def test_a_mechanism_with_no_lever_unbinds_the_world(self) -> None:
+    def test_a_mechanism_with_no_lever_skips_the_probe(self) -> None:
         # SchemingClient's diagnosis never names a lever: with a dynamics
-        # vocabulary on the table that is the honest "none", and the world
-        # must be unbound rather than ridden as a surrogate.
+        # vocabulary on the table that is the honest "none". Skip the probe
+        # rather than unbind-then-invent.
         events = run_all(
             jumps=1,
             client=SchemingClient(),
@@ -1569,10 +1603,9 @@ class AwakenedWorldTests(unittest.TestCase):
         )
         stages = [e["stage"] for e in events]
         self.assertIn("world_scout", stages)
-        self.assertIn("world_surrogate", stages)
-        self.assertLess(stages.index("diagnosis"), stages.index("world_surrogate"))
-        for probe in (e for e in events if e["stage"] == "probe"):
-            self.assertNotEqual(probe.get("kind"), "WORLD")
+        self.assertIn("probe_skipped", stages)
+        self.assertNotIn("world_surrogate", stages)
+        self.assertFalse([e for e in events if e["stage"] == "probe"])
         for promo in (e for e in events if e["stage"] == "promotion"):
             self.assertNotIn(promo["status"], ("corroborated", "verified"))
 
@@ -1685,15 +1718,12 @@ class WorldLadderTests(unittest.TestCase):
             for e in events
             if e["stage"] in {"world_constructed", "world_generated"}
         ]
-        self.assertTrue(generated)
+        self.assertFalse(generated)
+        skipped = [e for e in events if e["stage"] == "probe_skipped"]
+        self.assertTrue(skipped)
+        self.assertEqual(skipped[0].get("bottleneck"), "world")
         stages = [e["stage"] for e in events]
         self.assertLess(stages.index("world_incompatible"), stages.index("diagnosis"))
-        constructed_at = next(
-            i
-            for i, stage in enumerate(stages)
-            if stage in {"world_constructed", "world_generated"}
-        )
-        self.assertLess(stages.index("diagnosis"), constructed_at)
         for probe in [e for e in events if e["stage"] == "probe"]:
             self.assertNotEqual(probe.get("kind"), "WORLD")
         promo = [e for e in events if e["stage"] == "promotion"]
@@ -1770,10 +1800,9 @@ class WorldLadderTests(unittest.TestCase):
         self.assertEqual(paths[0]["cite_ids"], ["2608.09999v1"])
         self.assertIn("buffer-pool", paths[0]["named_instance"])
         constructed = [e for e in events if e["stage"] == "world_constructed"]
-        self.assertTrue(constructed)
-        self.assertEqual(
-            constructed[0]["lineage"]["cite_ids"], ["2608.09999v1"]
-        )
+        self.assertFalse(constructed)
+        skipped = [e for e in events if e["stage"] == "probe_skipped"]
+        self.assertTrue(skipped)
         for probe in [e for e in events if e["stage"] == "probe"]:
             self.assertNotEqual(probe.get("kind"), "WORLD")
 

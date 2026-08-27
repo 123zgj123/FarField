@@ -300,7 +300,7 @@ class FollowupTests(unittest.TestCase):
         self.assertIn("data/path.json", client.prompts[2])
         self.assertNotIn("frozen experimental world", client.prompts[0])
 
-    def test_a_requirement_without_a_freeze_tells_diagnosis_a_world_will_be_constructed(self) -> None:
+    def test_a_requirement_without_a_freeze_does_not_invent_a_world(self) -> None:
         client = EchoClient()
         write_diagnosis(
             client,
@@ -308,9 +308,10 @@ class FollowupTests(unittest.TestCase):
             "a topic",
             requirement={"object_type": "formula"},
         )
-        self.assertIn("CONSTRUCT a GENERATED world", client.prompts[0])
+        self.assertIn("Do not construct a GENERATED stand-in", client.prompts[0])
         self.assertIn("formula", client.prompts[0])
-        self.assertIn("data/world.json", client.prompts[0])
+        self.assertIn("Do not invent a dataset", client.prompts[0])
+        self.assertNotIn("CONSTRUCT a GENERATED world", client.prompts[0])
 
     def test_a_committed_program_reaches_the_diagnosis_prompt(self) -> None:
         client = EchoClient()

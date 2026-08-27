@@ -15,6 +15,8 @@ from __future__ import annotations
 from collections import Counter
 from typing import Any
 
+from .explore import pair_structurally_dead
+
 
 def compile_program(
     topic: str,
@@ -89,7 +91,9 @@ def compile_program(
     killed_pairs: list[str] = []
     for kill in kills:
         pair = kill.get("pair") or []
-        if len(pair) >= 2:
+        # Text-gate deaths are repaired by idea_rounds on the same pair.
+        # Only a graph-dead pair is a combination not to generate again.
+        if len(pair) >= 2 and pair_structurally_dead(kill.get("killed_by")):
             killed_pairs.append(f"{pair[0]} × {pair[1]}")
         for reason in kill.get("killed_by") or []:
             kill_reasons[str(reason)] += 1
@@ -121,10 +125,11 @@ def compile_program(
         ]
         if lead.get("world_incompatible") and verdict not in {"supports", "weakens"}:
             must = (
-                "keep this pair in this mission and construct the executable "
-                "world this experiment needs; a constructed world cannot "
-                "corroborate; do not rewrite the claim to fit a freeze "
-                "catalog; do not open a new distant landing"
+                "this pair has no attested freeze; do not invent a dataset "
+                "and do not construct a substitute world for verification; "
+                "keep evolving THIS idea's memory against the missing object "
+                "or freeze a matching public source — other ideas do not "
+                "inherit this gap"
             )
         elif verdict == "supports":
             kind = str(lead.get("probe_kind") or "").upper()
@@ -181,6 +186,7 @@ def compile_program(
             "card_id": str(lead.get("card_id") or ""),
             "pair": list(lead.get("pair") or []),
             "verdict": verdict,
+            "probe_kind": str(lead.get("probe_kind") or ""),
             "source": "compiled",
         }
     else:
@@ -200,8 +206,19 @@ def compile_program(
             "card_id": "",
             "pair": list((previous or {}).get("pair") or []),
             "verdict": None,
+            "probe_kind": "",
             "source": "compiled",
         }
+    if lead:
+        pair = list(program.get("pair") or [])
+        if len(pair) >= 2:
+            label = f"{pair[0]} × {pair[1]}"
+            alt = f"{pair[0]} x {pair[1]}"
+            program["do_not_generate"] = "; ".join(
+                part.strip()
+                for part in str(program.get("do_not_generate") or "").split(";")
+                if part.strip() and label not in part and alt not in part
+            )
     program["h"] = _compile_h(
         lead=lead,
         found=found,
@@ -283,6 +300,14 @@ def _compile_h(
             "; host execute blocked: "
             + str(lead.get("host_status") or "unspecified")[:120]
         )
+    if lead and isinstance(lead.get("idea_analysis"), dict):
+        analysis = lead["idea_analysis"]
+        tools += (
+            "; idea analysis "
+            + str(analysis.get("stop_reason") or "unknown")
+            + ": "
+            + str(analysis.get("summary") or "")[:200]
+        )
     dominant = ", ".join(f"{name} ({n})" for name, n in kill_reasons.most_common(3))
     verifiers = dominant or "no gate kills recorded"
     failed = []
@@ -338,10 +363,10 @@ def _compile_h(
         "verifiers": verifiers,
         "routing": routing,
         "honesty": (
-            "H is compiled runtime state. It is not evidence and cannot "
-            "climb the promotion ladder. In-mission idea refine is how the "
-            "hypothesis evolves. A generated "
-            "symbolic world is diagnostic and cannot corroborate."
+            "H is this idea's runtime state. It upgrades the next round of "
+            "THE SAME idea (memory, tools, verifiers). It is not evidence, "
+            "cannot climb, and must not be pasted into a different idea's "
+            "generation. A generated world is diagnostic and cannot corroborate."
         ),
     }
 
