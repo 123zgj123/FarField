@@ -162,9 +162,12 @@ class CatalogTests(unittest.TestCase):
         # An agent-tool claim must not bind a prose token stream; when an
         # attested labeled-trace fixture exists, it is the correct family.
         agent_trace = pick_world("caching hash sketches of agent tool traces", catalog)
-        self.assertIsNotNone(agent_trace)
-        self.assertEqual(agent_trace.schema, "labeled_traces")
-        self.assertEqual(agent_trace.id, "live-swe-agent-verified-v1")
+        if "live-swe-agent-verified-v1" in catalog:
+            self.assertIsNotNone(agent_trace)
+            self.assertEqual(agent_trace.schema, "labeled_traces")
+            self.assertEqual(agent_trace.id, "live-swe-agent-verified-v1")
+        else:
+            self.assertIsNone(agent_trace, "missing optional traces must not bind a substitute")
         daojo = pick_world(
             "Daojo Lab matrixgames decision traces prisoners dilemma "
             "seat-scoped observations payoffs Stag Hunt",
@@ -207,15 +210,19 @@ class CatalogTests(unittest.TestCase):
             "agent trajectory distillation data pipeline for tool-use SFT",
             catalog,
         )
-        self.assertIsNotNone(distill_topic_world)
-        self.assertEqual(distill_topic_world.schema, "labeled_traces")
+        if "live-swe-agent-verified-v1" in catalog:
+            self.assertIsNotNone(distill_topic_world)
+            self.assertEqual(distill_topic_world.schema, "labeled_traces")
+        else:
+            self.assertIsNone(distill_topic_world)
         distill = infer_requirement(
             "agent trajectory distillation data pipeline for tool-use",
             "token-level loss masks on teacher tool-call trajectories",
         )
-        self.assertEqual(
-            match_world(distill, catalog).id, "live-swe-agent-verified-v1"
-        )
+        if "live-swe-agent-verified-v1" in catalog:
+            self.assertEqual(match_world(distill, catalog).id, "live-swe-agent-verified-v1")
+        else:
+            self.assertIsNone(match_world(distill, catalog))
         a2a_topic = (
             "A2A Agent2Agent protocol security: Agent Card authentication "
             "and JSON-RPC AUTH_REQUIRED"
@@ -278,18 +285,13 @@ class CatalogTests(unittest.TestCase):
             ),
             "a paper-title brand must not unbind a freeze that already shares A2A tags",
         )
-        swe = catalog["live-swe-agent-verified-v1"]
-        self.assertFalse(
-            instance_tokens(swe) & {"agent", "tool", "software", "swe", "execution"}
-        )
-        self.assertTrue(
-            lineage_conflicts(
-                swe,
-                named_instance="Pride and Prejudice agent-tool evaluation traces",
+        if "live-swe-agent-verified-v1" in catalog:
+            swe = catalog["live-swe-agent-verified-v1"]
+            self.assertFalse(instance_tokens(swe) & {"agent", "tool", "software", "swe", "execution"})
+            self.assertTrue(lineage_conflicts(
+                swe, named_instance="Pride and Prejudice agent-tool evaluation traces",
                 lineage_schema="labeled_traces",
-            ),
-            "a category word like 'agent' must not exempt a foreign named instance",
-        )
+            ))
         self.assertTrue(
             lineage_conflicts(
                 pride,

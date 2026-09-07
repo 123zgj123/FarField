@@ -1894,6 +1894,7 @@ def _run_mission_body(
     feed_concepts = feed_query_concepts(topic, object_labels, near)
     yield {
         "stage": "anchor",
+        "memory_anchor": near[0],
         "anchors": [
             {"concept": assets.label_of[nid], "distance": round(dist, 4)}
             for dist, nid in anchored[:NEAR_LABELS]

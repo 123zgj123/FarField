@@ -342,7 +342,7 @@ class MissionProgramTests(unittest.TestCase):
             )
             prog = next(e for e in first if e["stage"] == "program")
             self.assertTrue(prog["commit"])
-            anchor = next(e for e in first if e["stage"] == "anchor")["anchors"][0]["concept"]
+            anchor = next(e for e in first if e["stage"] == "anchor")["memory_anchor"]
             stored = program_for(load(shared["state_store"]), PRODUCTION_CORPUS, anchor)
             self.assertIsNone(stored)
             card = next(e for e in first if e["stage"] == "card")
@@ -400,7 +400,7 @@ class MissionProgramTests(unittest.TestCase):
             )
             prog = next(e for e in first if e["stage"] == "program")
             self.assertEqual(prog.get("probe_kind"), "WORLD")
-            anchor = next(e for e in first if e["stage"] == "anchor")["anchors"][0]["concept"]
+            anchor = next(e for e in first if e["stage"] == "anchor")["memory_anchor"]
             stored = program_for(load(shared["state_store"]), PRODUCTION_CORPUS, anchor)
             self.assertIsNotNone(stored)
             self.assertEqual(stored["commit"], prog["commit"])

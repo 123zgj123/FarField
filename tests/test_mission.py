@@ -1297,7 +1297,7 @@ class FailureMemoryTests(unittest.TestCase):
             )
             anchor = next(
                 e for e in probe if e["stage"] == "anchor"
-            )["anchors"][0]["concept"]
+            )["memory_anchor"]
             record_rejections(
                 store,
                 "ds-arxiv-concepts-2026",

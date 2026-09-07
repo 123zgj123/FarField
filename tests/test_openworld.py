@@ -348,7 +348,7 @@ class DryRunTests(unittest.TestCase):
             self.assertEqual(summary["world_id"], "W0")
             self.assertEqual(summary["harness_version"], "H1")
             self.assertIn("compare_validator_snapshots", summary["capabilities"])
-            self.assertIn("Q13", summary["resolved"])
+            self.assertNotIn("Q13", summary["resolved"], "generated comparison cannot settle acceptance hypothesis")
             observed = [row for row in events if row.get("stage") == "observe_after_h1"]
             self.assertTrue(observed)
             evidence = observed[0]["evidence"]

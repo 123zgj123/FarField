@@ -34,7 +34,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     research = subparsers.add_parser(
         "research",
-        help="OpenWorld research loop (default). --legacy-pipeline for fixed stages",
+        help="OpenWorld local observations (default); --legacy-pipeline for LLM research packets",
+        description=(
+            "Default OpenWorld writes SCIENTIFIC_STATE/EVENTS and RESEARCH_STATUS.md. "
+            "It does not yet run the LLM/literature pipeline or complete a research study. "
+            "Use --legacy-pipeline for generation, review, registered experiments and packets. "
+            "Model, API budget, review, paper, and state-store flags apply to legacy only."
+        ),
     )
     research.add_argument("project", type=Path)
     research.add_argument("--topic", required=True)
@@ -96,9 +102,9 @@ def build_parser() -> argparse.ArgumentParser:
         default="auto",
         help=(
             "explicit attested fixture id under worlds/; "
-            "auto = construct a GENERATED world from the topic and "
-            "retrieved papers (cannot corroborate); none = SYNTHETIC "
-            "coherence check when construction is impossible"
+            "OpenWorld auto/none = no external freeze; "
+            "legacy auto = construct GENERATED from topic/papers, "
+            "legacy none = SYNTHETIC coherence check (cannot corroborate)"
         ),
     )
     research.add_argument(

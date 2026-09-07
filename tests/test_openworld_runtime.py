@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import inspect
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -28,14 +29,14 @@ from farfield.extras.openworld.reducer import rebuild_state, state_digest
 from farfield.extras.openworld.runtime import bootstrap_research, run_research
 from farfield.extras.openworld.scheduler import schedule
 from farfield.extras.researchspace import ProblemDefinition, ResearchState
-from farfield.extras.world import digest_files
+from farfield.extras.world import digest_files, load_fixture
 
 
 def _write_w0(workspace: Path) -> Path:
     root = workspace / "worlds" / "W0"
     root.mkdir(parents=True, exist_ok=True)
     (root / "world.json").write_text(
-        '{"n": 2, "traces": ["ep-v1", "ep-v2"]}\n', encoding="utf-8"
+        '{"records": [{"validator_version":"v1","ok":true}, {"validator_version":"v2","ok":false}]}\n', encoding="utf-8"
     )
     return root
 
@@ -66,7 +67,7 @@ class EventSourcingTests(unittest.TestCase):
 
 
 class ScenarioATests(unittest.TestCase):
-    def test_world_grows_then_observe_resolves(self) -> None:
+    def test_generated_world_can_be_extracted_without_resolving_the_hypothesis(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             workspace = Path(tmp)
             _write_w0(workspace)
@@ -78,8 +79,11 @@ class ScenarioATests(unittest.TestCase):
             self.assertIsNotNone(parent)
             parent_digest = digest_files(parent, ["world.json"])
             harness0 = env.harness.version_id
+            # The operator explicitly selects the extractor for these records.
+            env.execute(ActionInstance(SPECS[ACQUIRE], target="Q1", extra={"gap": "validator_snapshots"}))
+            env.execute(ActionInstance(SPECS[OBSERVE], target="Q1", extra={"observable": "validator_snapshots"}))
             events = env.run(12, stop_on_exhaust=False)
-            types = [row.get("result", {}).get("action_type") for row in events if row.get("result")]
+            types = [row.get("action_type") for row in env.history]
             self.assertIn(ACQUIRE, types)
             self.assertIn(OBSERVE, types)
             self.assertEqual(env.harness.version_id, harness0)
@@ -96,14 +100,13 @@ class ScenarioATests(unittest.TestCase):
             ]
             child_digest = digest_files(child, child_files)
             self.assertNotEqual(child_digest, parent_digest)
-            self.assertTrue(env.state.resolved_questions)
-            self.assertEqual(env.state.resolved_questions[0]["id"], "Q1")
+            self.assertFalse(env.state.resolved_questions)
             world_ev = [
                 row
                 for row in env.state.evidence_records
                 if str(row.get("epistemic") or "") == "WORLD"
             ]
-            self.assertTrue(world_ev)
+            self.assertFalse(world_ev)
 
 
 class ScenarioBTests(unittest.TestCase):
@@ -243,9 +246,11 @@ class CompletenessTests(unittest.TestCase):
 
 class LongHorizonTests(unittest.TestCase):
     def _run(self, ticks: int, *, stop: bool = False) -> OpenWorld:
-        workspace = Path(tempfile.mkdtemp())
-        _write_w0(workspace)
-        env = bootstrap_research("does validator-version history change acceptance?", workspace)
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        workspace = Path(temporary.name)
+        fixture = load_fixture(Path(__file__).resolve().parents[1] / "worlds/fisher-iris")
+        env = bootstrap_research("does sepal geometry predict iris species?", workspace, world=fixture)
         env.run(ticks, stop_on_exhaust=stop)
         return env
 
@@ -256,7 +261,7 @@ class LongHorizonTests(unittest.TestCase):
         for env, n in ((env20, 20), (env50, 50), (env100, 100)):
             rebuilt = rebuild_state(env.log)
             self.assertEqual(state_digest(env.state), state_digest(rebuilt), n)
-            self.assertGreaterEqual(len(env.state.resolved_questions), 1, n)
+            self.assertFalse(env.state.resolved_questions, n)
             self.assertLessEqual(len(env.state.open_questions), 2, n)
             self.assertGreaterEqual(
                 len(
@@ -299,7 +304,7 @@ class LongHorizonTests(unittest.TestCase):
                 if not row.get("frontier_target_id")
             ]
             self.assertFalse(drifted, n)
-        self.assertGreaterEqual(len(env100.state.resolved_questions), 1)
+        self.assertFalse(env100.state.resolved_questions)
         self.assertGreaterEqual(
             len(env100.state.resolved_questions),
             len(env20.state.resolved_questions),

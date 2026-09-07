@@ -127,6 +127,19 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -
 
 ## 快速开始
 
+当前 CLI 有两条路径：默认 OpenWorld 运行本地控制器和探索性观测，输出 `SCIENTIFIC_STATE.json`、`SCIENTIFIC_EVENTS.json` 和 `RESEARCH_STATUS.md`。它尚未接通通用 LLM 检索、实验编译和研究包输出；结束事件中的 `research_complete: false` 表示研究未完成。模型、API 预算、评审和 `--state-store` 参数目前用于 `--legacy-pipeline`。
+
+无需 API 的真实数据检查：
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3.11 -m farfield research /tmp/farfield-iris \
+  --topic "萼片几何能否预测 Iris 类别？" --world fisher-iris --horizon 4
+```
+
+显式 world 会校验 manifest 和预先登记的摘要，并复制原始数据。不存在的 world 直接报错。默认 `auto/none` 不会制造对照观测；缺少采集配方时记录能力缺口。内置表格、图、序列等摘要是探索性结果，原始科学问题仍保持开放。构造数据及其派生版本不能晋升为 WORLD。
+
+要运行下文介绍的文献检索、候选生成、评审、预登记实验与研究包流程，请使用 `--legacy-pipeline` 并配置模型：
+
 ```bash
 mkdir -p ~/.config/farfield
 chmod 700 ~/.config/farfield
@@ -137,7 +150,7 @@ export FARFIELD_LLM_KEY_FILE=$HOME/.config/farfield/llm.key
 export FARFIELD_LLM_BASE_URL=https://api.deepseek.com/v1
 export FARFIELD_LLM_MODEL=deepseek-v4-pro
 
-PYTHONPATH=src python3 -m farfield research /tmp/farfield-research \
+PYTHONPATH=src python3.11 -m farfield research /tmp/farfield-research --legacy-pipeline \
   --topic "compress genomic sequence collections with succinct data structures"
 ```
 
@@ -160,6 +173,8 @@ PYTHONPATH=src python3 -m farfield execute /path/to/candidate-folder --on-slice
 `--on-slice` 重跑探针见过的字节（E1）。默认 `execute` 在冻结缓存存在时重建母数据（E2）。其他命令：`freeze`、`run`、`attest-run`、`campaign`、`world-sim`。见 `python3 -m farfield --help`。
 
 ## 输出
+
+以下为 `--legacy-pipeline` 的输出。默认 OpenWorld 的输出见“快速开始”。
 
 ```text
 RESEARCH_PACKET.md      完整研究方案（中文；含实验设计）

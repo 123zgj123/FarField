@@ -8,7 +8,7 @@ mission.py may bootstrap this environment. It must not own the next action.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
@@ -59,7 +59,8 @@ from .evolve import (
     propose_patch,
     save_pathologies,
 )
-from .executors import DEFAULT_EXECUTORS, maybe_gc
+from .executors import DEFAULT_EXECUTORS, maybe_gc, resolve_world_root, fixture_from_root
+from .worldio import is_attested
 from .frontier import SCIENTIFIC_ACTIONS, traces_to_root
 from .kernel import (
     MUTABLE_MODULES,
@@ -219,9 +220,25 @@ class OpenWorld:
 
     def _admit(self, action: ActionInstance, candidate: CandidateResult) -> CandidateResult:
         """TrustedKernel mutation boundary. Executors cannot write WORLD or state."""
+        def checked(row: Mapping[str, Any]) -> dict[str, Any]:
+            payload = dict(row)
+            if payload.get("epistemic") == "WORLD":
+                wid = str(payload.get("world_id") or "")
+                root = resolve_world_root(self.workspace, wid)
+                fixture = fixture_from_root(root, wid) if root else None
+                if not (fixture and is_attested(fixture)
+                        and (payload.get("world_digest") or payload.get("digest")) == fixture.digest):
+                    payload.update(epistemic="GENERATED", attested=False,
+                                   promotion_refused="WORLD evidence needs a matching attested freeze digest")
+            sanitized, _ = sanitize_evidence_candidate(payload)
+            return sanitized or payload
+
         world = None
-        events = list(candidate.events or [])
-        evidence, gap = sanitize_evidence_candidate(candidate.evidence, world=world)
+        events = [replace(event, payload=checked(event.payload))
+                  if event.event_type == "EvidenceAdded" else event
+                  for event in candidate.events or []]
+        evidence = checked(candidate.evidence) if candidate.evidence is not None else None
+        gap = str((evidence or {}).get("promotion_refused") or "")
         if evidence is not None:
             ok, gaps = can_promote_to_world(evidence, world=world)
             evidence["promotion_ok"] = ok
@@ -244,6 +261,12 @@ class OpenWorld:
                         frontier_target_id=action.frontier_target_id or action.target,
                     )
                 )
+        admitted_evidence = [event.payload for event in events if event.event_type == "EvidenceAdded"]
+        valid_ids = {row.get("evidence_id") for row in admitted_evidence
+                     if row.get("promotion_ok") and not row.get("cannot_corroborate")}
+        events = [event for event in events
+                  if event.event_type not in {"QuestionResolved", "QuestionPartiallyResolved"}
+                  or event.payload.get("evidence_id") in valid_ids]
         return CandidateResult(
             status=candidate.status,
             events=events,

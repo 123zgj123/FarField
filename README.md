@@ -127,6 +127,19 @@ Tests do not need an API key. A clone includes `concepts/attn-concepts-s1/` (~8 
 
 ## Quick start
 
+The CLI currently has two paths. Default OpenWorld runs the local controller and exploratory observations, writing `SCIENTIFIC_STATE.json`, `SCIENTIFIC_EVENTS.json`, and `RESEARCH_STATUS.md`. General LLM retrieval, experiment compilation, and research packets are not connected to this path yet. Its final event reports `research_complete: false`. Model, API budget, review, and `--state-store` options currently apply to `--legacy-pipeline`.
+
+Check real frozen data without an API:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3.11 -m farfield research /tmp/farfield-iris \
+  --topic "Does sepal geometry predict iris species?" --world fisher-iris --horizon 4
+```
+
+Explicit world ids load and validate the manifest and recorded digest, then copy the original bytes. Missing ids fail. Default `auto/none` does not invent contrast observations; unavailable acquisition recipes remain capability gaps. Builtin table, graph, and sequence summaries are exploratory and leave the scientific question open. Generated data and its descendants cannot become WORLD evidence.
+
+For the literature, candidate, review, registered experiment, and research packet workflow described below, use `--legacy-pipeline` with a configured model:
+
 ```bash
 mkdir -p ~/.config/farfield
 chmod 700 ~/.config/farfield
@@ -137,7 +150,7 @@ export FARFIELD_LLM_KEY_FILE=$HOME/.config/farfield/llm.key
 export FARFIELD_LLM_BASE_URL=https://api.deepseek.com/v1
 export FARFIELD_LLM_MODEL=deepseek-v4-pro
 
-PYTHONPATH=src python3 -m farfield research /tmp/farfield-research \
+PYTHONPATH=src python3.11 -m farfield research /tmp/farfield-research --legacy-pipeline \
   --topic "compress genomic sequence collections with succinct data structures"
 ```
 
@@ -160,6 +173,8 @@ PYTHONPATH=src python3 -m farfield execute /path/to/candidate-folder --on-slice
 `research` product defaults after the cwm-iclr2027 audit: `--min-ideas 3` (breadth floor: an executable plan does not stop the spray before three distinct landings), DV sanity (a measure of an oracle-relative quantity that does not move when the oracle field is permuted is `object_absent`, not `uninformative`), schema tier floors (`program_state` / `labeled_traces` → `host-heavy`, pre-registered before any probe), object-property binding (`object_properties` on manifests vs the claim's stated properties), builtin exploratory descriptives on any acquired world (`farfield analyze`, labelled `cannot_corroborate`), `--human-gate after_review` + `--approve`, and resume-by-replay (rerun the same command; recorded steps replay). `--on-slice` reruns the probe bytes (E1). Default `execute` rebuilds the attested parent (E2) when the freeze cache exists. Other commands: `freeze` (also `--derive-from <world>` and `--dir <run> --format dgm|openevolve`), `analyze`, `harvest` (run a harness under a pre-registered recipe and freeze its history as `provenance: harvested`), `paper` (write the paper-level `RESEARCH_PROPOSAL.md` / `EXPERIMENT_DESIGN.md` for an idea from its attested fact sheet, with one reviewer round; DRAFT, citations audited — also `research --paper-rounds`), `run`, `attest-run`, `campaign`, `world-sim`. See `python3 -m farfield --help`.
 
 ## Outputs
+
+These are `--legacy-pipeline` outputs. Default OpenWorld outputs are listed in Quick start.
 
 ```text
 RESEARCH_PACKET.md      complete research plan (Chinese; experiment design inlined)

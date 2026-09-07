@@ -1044,6 +1044,10 @@ def derive_world_version(
     """
     from .world import WorldFixture, digest_files
 
+    generated = (
+        str(getattr(parent, "provenance", "")).lower() in {"generated", "synthetic"}
+        or str(getattr(parent, "role", "")).lower() in {"generated", "synthetic", "placebo"}
+    )
     dest = Path(dest)
     dest.mkdir(parents=True, exist_ok=True)
     parent_root = Path(parent.root)
@@ -1073,6 +1077,7 @@ def derive_world_version(
         path.write_text(content, encoding="utf-8")
         if rel not in files:
             files.append(rel)
+    files = sorted(files)
     digest = digest_files(dest, files)
     version = next_world_label(parent_version)
     evidence = world_attestation_id(
@@ -1090,13 +1095,13 @@ def derive_world_version(
         files=tuple(files),
         root=dest,
         domains=tuple(parent.domains or ()),
-        role=str(parent.role or "world"),
+        role="generated" if generated else str(parent.role or "world"),
         schema=str(parent.schema or ""),
         load_hint=str(parent.load_hint or ""),
         source_url=str(getattr(parent, "source_url", "") or ""),
         source_digest=str(getattr(parent, "source_digest", "") or ""),
         slice_rule=getattr(parent, "slice_rule", None),
-        provenance="harvested",
+        provenance="generated" if generated else "derived",
         object_properties=dict(parent.object_properties or {})
         if getattr(parent, "object_properties", None)
         else None,

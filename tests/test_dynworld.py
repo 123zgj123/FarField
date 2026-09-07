@@ -40,8 +40,9 @@ FIXTURE_BY_SCHEMA = {
     "fasta": "phix174",
     "numeric_table": "fisher-iris",
     "symbolic_trace": "tcp-linux-server",
-    "labeled_traces": "live-swe-agent-verified-v1",
 }
+if "live-swe-agent-verified-v1" in CATALOG:
+    FIXTURE_BY_SCHEMA["labeled_traces"] = "live-swe-agent-verified-v1"
 
 
 class BridgeCoverageTests(unittest.TestCase):
@@ -237,6 +238,7 @@ class LeverVocabularyGateTests(unittest.TestCase):
 
 
 class LabeledTraceDynamicsTests(unittest.TestCase):
+    @unittest.skipUnless("live-swe-agent-verified-v1" in CATALOG, "optional Live-SWE trajectories are not shipped")
     def test_live_swe_exposes_object_native_levers_not_token_dropout(self) -> None:
         fixture = CATALOG["live-swe-agent-verified-v1"]
         self.assertTrue(has_dynamics(fixture))
@@ -250,6 +252,7 @@ class LabeledTraceDynamicsTests(unittest.TestCase):
         self.assertEqual(plan["origin"], "bound")
         self.assertEqual(plan["schema"], "labeled_traces")
 
+    @unittest.skipUnless("live-swe-agent-verified-v1" in CATALOG, "optional Live-SWE trajectories are not shipped")
     def test_mask_tools_moves_the_tooled_fraction(self) -> None:
         fixture = CATALOG["live-swe-agent-verified-v1"]
         trajectory = forward_simulate(fixture, "mask_tools", seed=0, horizon=3)
@@ -315,8 +318,11 @@ class LabeledTraceDynamicsTests(unittest.TestCase):
             "software engineering agents on Live-SWE execution trajectories",
             catalog,
         )
-        self.assertIsNotNone(chosen)
-        self.assertEqual(chosen.id, "live-swe-agent-verified-v1")
+        if "live-swe-agent-verified-v1" in catalog:
+            self.assertIsNotNone(chosen)
+            self.assertEqual(chosen.id, "live-swe-agent-verified-v1")
+        else:
+            self.assertIsNone(chosen, "missing trajectories must not bind unrelated bytes")
         pride_plan = compose_simulation(catalog["gutenberg-pride"])
         self.assertEqual(pride_plan["schema"], "text_stream")
         self.assertNotIn("mask_tools", pride_plan["levers"])

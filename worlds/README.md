@@ -39,7 +39,7 @@ Binding rule: the fixture must be the claim's scientific object. Schema match is
 | `gutenberg-pride` | text_stream | Pride token stream / Pride 词流切片 |
 | `tcp-linux-server` | symbolic_trace | Linux TCP learning automaton |
 | `a2a-task-lifecycle` | symbolic_trace | A2A TaskState (incl. AUTH_REQUIRED) |
-| `live-swe-agent-verified-v1` | labeled_traces | Live-SWE-agent SWE-bench Verified trajectories |
+| `live-swe-agent-verified-v1` | labeled_traces | Optional, not shipped: Live-SWE-agent SWE-bench Verified trajectories / 可选外部资源，当前仓库不附带 |
 | `live-swe-agent-selfmod-v1` | program_state | derived from the above: 1731 runtime tool-creation updates over 499 episodes (`provenance: derived`) / 由上者派生的运行时自我修改史 |
 | `daojo-matrix-pd-v1` | labeled_traces | Daojo Lab PD / Stag Hunt seat traces / 矩阵博弈对局痕迹 |
 | `path-trace` | path | test fixture; auto never selects / 测试夹具 |

@@ -9,7 +9,8 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from ..lifecycle import derive_world_version, next_world_label
-from ..world import WorldFixture, digest_files
+from ..world import WorldFixture, digest_files, load_fixture
+from .worldio import is_attested, summarize
 from .actions import (
     ACQUIRE,
     ARCHIVE,
@@ -132,6 +133,11 @@ def resolve_world_root(workspace: Path | None, world_id: str) -> Path | None:
 
 
 def fixture_from_root(root: Path, world_id: str) -> WorldFixture:
+    if (root / "manifest.json").is_file():
+        fixture = load_fixture(root)
+        if fixture.id != world_id:
+            raise ValueError("world id differs from workspace manifest")
+        return fixture
     files = sorted(
         p.relative_to(root).as_posix()
         for p in root.rglob("*")
@@ -146,7 +152,8 @@ def fixture_from_root(root: Path, world_id: str) -> WorldFixture:
         digest=digest,
         files=tuple(files),
         root=root,
-        provenance="generated" if world_id.endswith("0") or world_id == "W0" else "harvested",
+        role="generated",
+        provenance="generated",
         version=world_id,
     )
 
@@ -224,10 +231,35 @@ def execute_observe(env: Any, action: ActionInstance) -> CandidateResult:
 
     world_id = str(view.get("world_id") or "")
     world_root = resolve_world_root(env.workspace, world_id)
+    fixture = fixture_from_root(world_root, world_id) if world_root else None
+    if fixture is not None and plan.observable != "validator_snapshots" and not needed:
+        result = summarize(fixture)
+        evidence_id = "obs-" + hashlib.sha256(
+            json.dumps([world_id, fixture.digest, qid, "descriptives-v1"]).encode()
+        ).hexdigest()
+        return CandidateResult(
+            status="observed",
+            evidence={
+                "role": "QuestionEvidence", "question_id": qid,
+                "question": question.get("text") or action.target,
+                "world_id": world_id, "world_digest": fixture.digest,
+                "evidence_id": evidence_id, "result": result,
+                "epistemic": "WORLD" if is_attested(fixture) else "GENERATED",
+                "attested": is_attested(fixture), "outcome": PARTIALLY_RESOLVED,
+                "exploratory": True, "cannot_corroborate": True,
+                "interpretation": "Dataset descriptives; the research question remains open.",
+                "measurement": "descriptives-v1", "read_from_world": True,
+                "harness_version": env.harness.version_id,
+            },
+            world_id=world_id, evidence_id=evidence_id,
+            extras={"outcome": PARTIALLY_RESOLVED},
+        )
     records = list(action.extra.get("records") or [])
     read_from_world = False
     if not records and world_root is not None:
         for rel in plan.required_artifacts:
+            if fixture is not None and rel not in fixture.files:
+                continue
             payload = load_json_artifact(world_root, rel)
             if isinstance(payload, Mapping) and payload.get("records"):
                 records = list(payload.get("records") or [])
@@ -292,8 +324,10 @@ def execute_observe(env: Any, action: ActionInstance) -> CandidateResult:
     else:
         outcome = PARTIALLY_RESOLVED
 
-    attested = bool(read_from_world and world_id and world_root is not None)
-    evidence_id = f"obs-{view.get('harness_version') or env.harness.version_id}-{qid or 'q'}"
+    attested = bool(read_from_world and fixture and is_attested(fixture))
+    evidence_id = "obs-" + hashlib.sha256(json.dumps(
+        [world_id, fixture.digest if fixture else "", qid, observed], sort_keys=True
+    ).encode()).hexdigest()
     evidence = {
         "role": "QuestionEvidence",
         "question": question.get("text") or action.target,
@@ -306,6 +340,7 @@ def execute_observe(env: Any, action: ActionInstance) -> CandidateResult:
         "epistemic": "WORLD" if attested else "GENERATED",
         "attested": attested,
         "world_id": world_id,
+        "world_digest": fixture.digest if fixture else "",
         "evidence_id": evidence_id,
         "harness_version": env.harness.version_id,
         "capability": needed,
@@ -313,7 +348,7 @@ def execute_observe(env: Any, action: ActionInstance) -> CandidateResult:
         "plan": plan.to_dict(),
     }
     events = []
-    if outcome == RESOLVED:
+    if outcome == RESOLVED and question.get("resolution_contract") == "validator_version_contrast":
         events.append(
             make_event(
                 "QuestionResolved",
@@ -322,7 +357,7 @@ def execute_observe(env: Any, action: ActionInstance) -> CandidateResult:
                 frontier_target_id=qid,
             )
         )
-    elif outcome == PARTIALLY_RESOLVED:
+    elif outcome == PARTIALLY_RESOLVED and question.get("resolution_contract") == "validator_version_contrast":
         events.append(
             make_event(
                 "QuestionPartiallyResolved",
@@ -337,7 +372,7 @@ def execute_observe(env: Any, action: ActionInstance) -> CandidateResult:
         evidence=evidence,
         evidence_id=evidence_id,
         world_id=world_id,
-        unlocked=outcome == RESOLVED,
+        unlocked=bool(events),
         extras={"outcome": outcome, "plan": plan.to_dict()},
     )
 
@@ -345,23 +380,16 @@ def execute_observe(env: Any, action: ActionInstance) -> CandidateResult:
 def _parent_records(root: Path | None) -> list[dict[str, Any]]:
     payload = load_json_artifact(root, "world.json")
     if isinstance(payload, Mapping):
-        traces = payload.get("traces") or payload.get("records") or []
+        traces = payload.get("records") or payload.get("traces") or []
         if isinstance(traces, list) and traces:
             records = []
             for index, item in enumerate(traces):
-                if isinstance(item, Mapping):
+                if isinstance(item, Mapping) and (item.get("validator_version") or item.get("version")):
                     row = dict(item)
-                    row.setdefault("validator_version", row.get("version") or f"v{index+1}")
+                    row.setdefault("validator_version", row.get("version"))
                     records.append(row)
-                else:
-                    records.append({"validator_version": f"v{index+1}", "trace": item, "ok": index == 0})
-            if len(records) == 1:
-                records.append({"validator_version": "v2", "ok": False, "source": "derived_contrast"})
             return records
-    return [
-        {"validator_version": "v1", "ok": True, "source": "acquired_snapshot"},
-        {"validator_version": "v2", "ok": False, "source": "acquired_snapshot"},
-    ]
+    return []
 
 
 def build_acquire_artifacts(parent_root: Path | None, *, child_id: str, parent_id: str) -> dict[str, str]:
@@ -382,7 +410,7 @@ def build_acquire_artifacts(parent_root: Path | None, *, child_id: str, parent_i
         "replay": "replay_interface.json",
     }
     validation = {
-        "passed": True,
+        "passed": len({r["validator_version"] for r in records}) >= 2,
         "checks": ["schema", "two_versions", "parent_untouched"],
         "n_records": len(records),
     }
@@ -395,7 +423,7 @@ def build_acquire_artifacts(parent_root: Path | None, *, child_id: str, parent_i
         "parent_id": parent_id,
         "child_id": child_id,
         "recipe": "extract_or_build_validator_snapshots",
-        "attested": True,
+        "attested": bool(parent_root and is_attested(fixture_from_root(parent_root, parent_id))),
     }
     return {
         SNAPSHOT_FILE: json.dumps(snapshots, ensure_ascii=False, indent=2) + "\n",
@@ -428,6 +456,17 @@ def execute_acquire(env: Any, action: ActionInstance) -> CandidateResult:
             world_id=parent_id,
         )
     parent = fixture_from_root(parent_root, parent_id or parent_root.name)
+    gap = str(action.extra.get("gap") or "validator_snapshots")
+    if gap != "validator_snapshots" or not _parent_records(parent_root):
+        return CandidateResult(
+            status="blocked", world_id=parent.id,
+            events=[make_event("ActionBlocked", {
+                "reason": "no_acquisition_recipe", "question_id": action.target,
+                "gap": gap,
+            }, action_type=ACQUIRE, frontier_target_id=action.frontier_target_id or action.target)],
+            extras={"reason": "no_acquisition_recipe", "gap": gap,
+                    "next": "Provide a frozen dataset and a matching acquisition recipe."},
+        )
     child_id = next_world_label(parent_id or "W0")
     dest = Path(env.workspace) / "worlds" / child_id if env.workspace else parent_root.parent / child_id
     artifacts = build_acquire_artifacts(parent_root, child_id=child_id, parent_id=parent.id)
@@ -473,6 +512,9 @@ def execute_acquire(env: Any, action: ActionInstance) -> CandidateResult:
             frontier_target_id=action.frontier_target_id or action.target,
         ),
     ]
+    attested = is_attested(child)
+    if not attested:
+        events = [event for event in events if event.event_type != "WorldAttested"]
     evidence = {
         "role": "AcquisitionEvidence",
         "world_id": child.id,
@@ -480,8 +522,8 @@ def execute_acquire(env: Any, action: ActionInstance) -> CandidateResult:
         "evidence_id": child.world_evidence_id,
         "digest": child.digest,
         "parent_digest": parent.digest,
-        "epistemic": "WORLD",
-        "attested": True,
+        "epistemic": "WORLD" if attested else "GENERATED",
+        "attested": attested,
         "harness_version": env.harness.version_id,
         "artifacts": list(plan.expected_artifacts),
         "plan": plan.to_dict(),
@@ -510,6 +552,11 @@ def execute_theorize(env: Any, action: ActionInstance) -> CandidateResult:
         (row for row in view.get("open_questions") or [] if row.get("id") == qid),
         {},
     )
+    if not any("validator" in str(item).lower() for item in [question, view.get("goal")]):
+        return CandidateResult(status="blocked", extras={
+            "reason": "topic_theory_executor_not_connected",
+            "next": "Supply a topic-specific theory executor or use --legacy-pipeline.",
+        })
     evidence = list(view.get("evidence_records") or [])
     anomalies = list(view.get("anomalies") or [])
     competing = list(view.get("competing_explanations") or ["null_no_version_effect"])
@@ -587,7 +634,13 @@ def execute_verify(env: Any, action: ActionInstance) -> CandidateResult:
         payload = load_json_artifact(world_root, SNAPSHOT_FILE)
         if isinstance(payload, Mapping):
             records = list(payload.get("records") or [])
-    replay_ok = bool(records) or bool(target.get("attested"))
+    fixture = fixture_from_root(world_root, world_id) if world_root else None
+    replay_ok = False
+    if fixture and is_attested(fixture):
+        if target.get("measurement") == "descriptives-v1":
+            replay_ok = (target.get("world_digest") == fixture.digest and target.get("result") == summarize(fixture))
+        elif target.get("role") == "AcquisitionEvidence":
+            replay_ok = target.get("digest") == fixture.digest
     compatible = str(target.get("world_id") or "") in {"", world_id}
     if not compatible:
         kind = "VERIFY_WORLD_COMPATIBILITY"
@@ -678,8 +731,9 @@ def execute_ask(env: Any, action: ActionInstance) -> CandidateResult:
 
 def execute_survey(env: Any, action: ActionInstance) -> CandidateResult:
     return CandidateResult(
-        status="surveyed",
-        extras={"citations": [], "gaps": list(env.state.missing_capabilities)},
+        status="blocked",
+        extras={"citations": [], "reason": "literature_executor_not_connected",
+                "gaps": list(env.state.missing_capabilities)},
     )
 
 
