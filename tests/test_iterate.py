@@ -11,6 +11,7 @@ from farfield.extras.iterate import (
     decide_retry,
     pipeline_bottleneck,
     resolve_experiment_rounds,
+    switch_mechanism_now,
 )
 
 
@@ -109,10 +110,32 @@ class RetryRuleTests(unittest.TestCase):
         decision = decide_retry(attempt=0, cap=0, bottleneck="method")
         self.assertFalse(decision["continue"])
         self.assertEqual(decision["reason"], "hit_cap")
+        self.assertEqual(decision["bottleneck"], "method")
+
+    def test_a_spent_budget_is_never_booked_as_an_executable_plan(self) -> None:
+        # Three 0/0 probes on a constructed world used to close the
+        # mission as `plan_executable`; the budget says nothing about
+        # whether the registration can run.
+        for bottleneck in ("method", "implementation", "world_model", "host"):
+            decision = decide_retry(attempt=2, cap=2, bottleneck=bottleneck)
+            self.assertFalse(decision["continue"])
+            self.assertEqual(decision["reason"], "hit_cap", bottleneck)
+            self.assertNotIn("executable plan", decision["detail"])
 
     def test_the_cap_is_extra_attempts_after_the_first(self) -> None:
         self.assertTrue(decide_retry(attempt=1, cap=2, bottleneck="method")["continue"])
         self.assertFalse(decide_retry(attempt=2, cap=2, bottleneck="method")["continue"])
+
+    def test_no_handle_stops_the_experiment_loop(self) -> None:
+        self.assertEqual(classify_bottleneck(refused="no_handle"), "no_handle")
+        decision = decide_retry(attempt=0, cap=2, bottleneck="no_handle")
+        self.assertFalse(decision["continue"])
+        self.assertEqual(decision["reason"], "no_handle")
+        self.assertIn("lever table", decision["detail"])
+        self.assertEqual(
+            pipeline_bottleneck({"experiment_bottleneck": "no_handle"}),
+            "no_handle",
+        )
 
     def test_a_crash_on_a_constructed_world_adapts_it_in_place(self) -> None:
         self.assertEqual(
@@ -146,6 +169,37 @@ class RetryRuleTests(unittest.TestCase):
                 world_role="world",
             ),
             "implementation",
+        )
+
+
+    def test_a_second_world_uninformative_switches_the_lever_in_this_mission(self) -> None:
+        self.assertFalse(switch_mechanism_now(uninformative_runs=1, probe_kind="WORLD"))
+        self.assertTrue(switch_mechanism_now(uninformative_runs=2, probe_kind="WORLD"))
+        self.assertFalse(
+            switch_mechanism_now(uninformative_runs=2, probe_kind="SYNTHETIC")
+        )
+        self.assertTrue(
+            switch_mechanism_now(uninformative_runs=2, probe_kind="GENERATED")
+        )
+
+    def test_object_absent_on_a_generated_world_adapts_it(self) -> None:
+        self.assertEqual(
+            classify_bottleneck(
+                status="ran",
+                verdict="uninformative",
+                world_role="generated",
+                object_absent=True,
+            ),
+            "world_model",
+        )
+        self.assertEqual(
+            classify_bottleneck(
+                status="ran",
+                verdict="uninformative",
+                world_role="world",
+                object_absent=True,
+            ),
+            "method",
         )
 
 

@@ -19,8 +19,11 @@ The stop rule is the evaluation function:
 - a generated world that cannot execute is a *world_model* bottleneck:
   adapt the bound world in place for this same registration. Do not
   spawn a sidecar fixture. An attested freeze is never rewritten.
-- a cap (default two extra attempts) is the time budget. The model does
-  not vote for more experiments. Elo does not vote either.
+- a cap (default two extra attempts) is the time budget. Hitting it
+  with a registered diagnosis means the *plan is executable*: remaining
+  sharper tests are must-run rows for `farfield execute`, not a later
+  research generate. The model does not vote for more experiments. Elo
+  does not vote either.
 
 Self-evolution of a hypothesis is in-mission idea refine (`refine_card`).
 This module only iterates the test of a card that already entered.
@@ -33,6 +36,7 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from .explore import GRAPH_PAIR_MARKS
+from .world import is_world_kind
 
 
 EXPERIMENT_AUTO = -1
@@ -84,6 +88,7 @@ def classify_bottleneck(
     error: str | None = None,
     world_role: str | None = None,
     last_action: str | None = None,
+    object_absent: bool = False,
 ) -> str | None:
     """Attested bottleneck, never a model self-report.
 
@@ -91,12 +96,18 @@ def classify_bottleneck(
     script did not produce two arms. `method` means it ran and the arms
     did not separate, or the diagnosis itself could not be registered.
     `world_model` means the constructed experimental world failed to
-    execute; adapt it in place. An attested freeze never takes this path.
+    execute — or ran and never contained the claim's object (both arms
+    exactly zero on a GENERATED fixture): adapt it in place. An attested
+    freeze never takes this path; on a freeze an absent object is a
+    method problem (the design looked in the wrong place), not a license
+    to rewrite the world.
     """
     if verdict in INFORMATIVE:
         return None
     if refused == "diagnosis":
         return "method"
+    if refused == "no_handle":
+        return "no_handle"
     if refused == "world":
         return "world"
     generated = str(world_role or "") == "generated"
@@ -111,6 +122,8 @@ def classify_bottleneck(
     if refused == "probe" or crashed:
         return "implementation"
     if verdict == "uninformative":
+        if object_absent and generated and last_action != "adapt_world":
+            return "world_model"
         return "method"
     return "implementation"
 
@@ -122,7 +135,7 @@ def pipeline_bottleneck(record: Mapping[str, Any]) -> str:
     """Where this card stopped, for Verifier memory. Not a value score.
 
     Experiment bottlenecks stay `implementation` / `method` on the retry
-    loop. This name is the card-level attribution the next mission logs.
+    loop. This name is the card-level attribution this pair's H logs.
     """
     if record.get("prior_kills"):
         return "prior"
@@ -139,6 +152,8 @@ def pipeline_bottleneck(record: Mapping[str, Any]) -> str:
         return "probe_method"
     if experiment == "world_model":
         return "world_model"
+    if experiment == "no_handle":
+        return "no_handle"
     if record.get("world_incompatible") and not record.get("generated_world"):
         return "world"
     if record.get("host_ok") is False:
@@ -186,14 +201,34 @@ def decide_retry(
                 "constructing a substitute is not verification"
             ),
         }
+    if bottleneck == "no_handle":
+        return {
+            "continue": False,
+            "action": "stop",
+            "reason": "no_handle",
+            "bottleneck": "no_handle",
+            "detail": (
+                "the bound object is right but the mechanism has no "
+                "compiled lever; rewrite the same pair against the lever "
+                "table in this mission — do not spray a new far noun or "
+                "rebind Pride"
+            ),
+        }
     if attempt >= cap:
+        # Exhausting the redesign budget is a budget fact, not a plan
+        # fact. `plan_executable` is decided once, in `explore`, from the
+        # attested verdict/probe kind; booking a cap hit under that name
+        # let three 0/0 probes on a constructed world close a mission
+        # as "remaining work is execute".
         return {
             "continue": False,
             "action": "stop",
             "reason": "hit_cap",
             "bottleneck": bottleneck,
             "detail": (
-                f"attempt {attempt + 1} of {cap + 1} still {bottleneck}"
+                f"attempt {attempt + 1} of {cap + 1} still {bottleneck}; "
+                "the registration stands, whether it is executable is "
+                "read from the verdict, not from the spent budget"
             ),
         }
     if bottleneck == "world_model":
@@ -225,6 +260,22 @@ def decide_retry(
         "bottleneck": "method",
         "detail": (
             "the design did not discriminate; pre-register a sharper "
-            "experiment, not a new claim"
+            "experiment in this mission, not a new claim and not a "
+            "later research generate"
         ),
     }
+
+
+def switch_mechanism_now(*, uninformative_runs: int, probe_kind: Any = None) -> bool:
+    """Second uninformative on a real fixture switches the lever.
+
+    The first miss sharpens the same test. A later research run must not
+    be the place that switches the handle. GENERATED counts: a
+    constructed world has a scouted lever table too, and burning both
+    redesigns on the same dead handle is what welded a mission to three
+    0/0 probes. SYNTHETIC does not — there is no lever menu to switch on.
+    """
+    kind = str(probe_kind or "").upper()
+    return int(uninformative_runs) >= 2 and (
+        is_world_kind(kind) or kind == "GENERATED"
+    )

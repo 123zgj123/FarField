@@ -111,6 +111,14 @@ class VerdictTests(unittest.TestCase):
         self.assertEqual(supports["verdict"], "supports")
         self.assertEqual(weakens["verdict"], "weakens")
 
+    def test_world_sim_numbers_cannot_become_a_verdict(self) -> None:
+        from farfield.extras.worldsim import WorldSimError
+
+        with self.assertRaises(WorldSimError) as caught:
+            judge_probe(diagnosis(), treatment=0.9, control=0.1, kind="WORLD_SIM")
+        self.assertIn("WORLD_SIM", str(caught.exception))
+        self.assertIn("judge_probe", str(caught.exception))
+
 
 class ReplicatedVerdictTests(unittest.TestCase):
     """The confirmation tier: arithmetic over executor-owned reruns.
@@ -254,6 +262,39 @@ class FollowupTests(unittest.TestCase):
         self.assertIn("count comparisons on ten random instances", client.prompts[0])
         self.assertIn("Do not repeat that design", client.prompts[0])
         self.assertIn("chase a win", client.prompts[0])
+
+    def test_an_unnamed_competing_lever_is_quoted_back(self) -> None:
+        client = EchoClient()
+        write_diagnosis(
+            client,
+            CARD,
+            "a topic",
+            prior_probe={
+                "experiment": "count comparisons on ten random instances",
+                "verdict": "uninformative",
+                "alternative": "the speedup comes from caching",
+                "world_lever": "dropout",
+                "world_levers": ["dropout", "hub_removal"],
+            },
+        )
+        prompt = client.prompts[0]
+        self.assertIn("another declared lever of this world", prompt)
+        self.assertIn("hub_removal", prompt)
+        self.assertIn("the speedup comes from caching", prompt)
+        named = EchoClient()
+        write_diagnosis(
+            named,
+            CARD,
+            "a topic",
+            prior_probe={
+                "experiment": "count comparisons on ten random instances",
+                "verdict": "uninformative",
+                "alternative": "hub_removal would also shrink the giant component",
+                "world_lever": "dropout",
+                "world_levers": ["dropout", "hub_removal"],
+            },
+        )
+        self.assertNotIn("another declared lever of this world", named.prompts[0])
 
     def test_failed_experiments_are_quoted_without_arm_numbers(self) -> None:
         client = EchoClient()

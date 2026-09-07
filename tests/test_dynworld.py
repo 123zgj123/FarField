@@ -17,9 +17,11 @@ from pathlib import Path
 from farfield.extras.diagnose import DiagnosisRefused, diagnosis_from_payload
 from farfield.extras.dynworld import (
     DynamicsUnavailable,
+    compose_simulation,
     forward_simulate,
     has_dynamics,
     levers_of,
+    literature_phrases,
     materialize_placebo,
     response_card,
     scout_summary,
@@ -38,6 +40,7 @@ FIXTURE_BY_SCHEMA = {
     "fasta": "phix174",
     "numeric_table": "fisher-iris",
     "symbolic_trace": "tcp-linux-server",
+    "labeled_traces": "live-swe-agent-verified-v1",
 }
 
 
@@ -231,6 +234,246 @@ class LeverVocabularyGateTests(unittest.TestCase):
             "c1", _payload(world_lever="", world_observable="")
         )
         self.assertEqual(diagnosis.world_lever, "")
+
+
+class LabeledTraceDynamicsTests(unittest.TestCase):
+    def test_live_swe_exposes_object_native_levers_not_token_dropout(self) -> None:
+        fixture = CATALOG["live-swe-agent-verified-v1"]
+        self.assertTrue(has_dynamics(fixture))
+        levers = levers_of(fixture)
+        self.assertIn("dropout", levers)
+        self.assertIn("mask_tools", levers)
+        self.assertIn("drop_majority", levers)
+        self.assertNotIn("window_shuffle", levers)
+        plan = compose_simulation(fixture)
+        self.assertTrue(plan["available"])
+        self.assertEqual(plan["origin"], "bound")
+        self.assertEqual(plan["schema"], "labeled_traces")
+
+    def test_mask_tools_moves_the_tooled_fraction(self) -> None:
+        fixture = CATALOG["live-swe-agent-verified-v1"]
+        trajectory = forward_simulate(fixture, "mask_tools", seed=0, horizon=3)
+        self.assertLess(trajectory["response"]["tooled_fraction"], -0.03)
+        self.assertIn("mean_toolset_jaccard", trajectory["steps"][0]["observables"])
+        self.assertIn("mean_action_chars", trajectory["steps"][0]["observables"])
+        self.assertGreater(
+            abs(trajectory["response"]["mean_toolset_jaccard"]),
+            0.03,
+        )
+
+    def test_a_constructed_traces_payload_gets_the_traces_bridge(self) -> None:
+        import json
+        import tempfile
+
+        from farfield.extras.world import WorldFixture
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "traces.json").write_text(
+                json.dumps(
+                    {
+                        "traces": [
+                            {
+                                "id": "a",
+                                "label": "resolved",
+                                "steps": [{"t": 0, "returncode": 0}],
+                            },
+                            {
+                                "id": "b",
+                                "label": "unresolved",
+                                "steps": [{"t": 0, "returncode": 1}],
+                            },
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            fixture = WorldFixture(
+                id="constructed-traces",
+                title="same-family stub",
+                source="generated",
+                retrieved_at="2026-08-30",
+                digest="0" * 64,
+                files=("traces.json",),
+                root=root,
+                domains=("swe",),
+                role="generated",
+                schema="labeled_traces",
+            )
+            plan = compose_simulation(fixture)
+            self.assertTrue(plan["available"])
+            self.assertEqual(plan["origin"], "constructed")
+            self.assertIn("mask_failures", levers_of(fixture))
+            self.assertIn("drop_majority", levers_of(fixture))
+
+    def test_a_novel_is_not_a_simulation_playground_for_traces(self) -> None:
+        from farfield.extras.world import pick_world
+
+        catalog = CATALOG
+        chosen = pick_world(
+            "code world models for recursive self-improvement of "
+            "software engineering agents on Live-SWE execution trajectories",
+            catalog,
+        )
+        self.assertIsNotNone(chosen)
+        self.assertEqual(chosen.id, "live-swe-agent-verified-v1")
+        pride_plan = compose_simulation(catalog["gutenberg-pride"])
+        self.assertEqual(pride_plan["schema"], "text_stream")
+        self.assertNotIn("mask_tools", pride_plan["levers"])
+
+
+class GeneratedTableDynamicsTests(unittest.TestCase):
+    def test_list_rows_do_not_crash_the_numeric_table_bridge(self) -> None:
+        import json
+        import tempfile
+
+        from farfield.extras.world import WorldFixture
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "table.json").write_text(
+                json.dumps(
+                    {
+                        "columns": ["x", "y"],
+                        "rows": [[0.0, 1.0], [1.0, 0.0], [0.5, 0.5]],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            fixture = WorldFixture(
+                id="generated-table-lists",
+                title="scaffold numeric_table",
+                source="generated",
+                retrieved_at="2026-09-01",
+                digest="0" * 64,
+                files=("table.json",),
+                root=root,
+                domains=("representation",),
+                role="generated",
+                schema="numeric_table",
+            )
+            plan = compose_simulation(fixture)
+            self.assertTrue(plan["available"])
+            self.assertEqual(plan["origin"], "constructed")
+            self.assertIn("dropout", levers_of(fixture))
+
+
+class GeneratedGraphDynamicsTests(unittest.TestCase):
+    def test_dict_nodes_do_not_crash_the_graph_bridge(self) -> None:
+        import json
+        import tempfile
+
+        from farfield.extras.world import WorldFixture
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "graph.json").write_text(
+                json.dumps(
+                    {
+                        "nodes": [
+                            {"id": "n0", "label": "write"},
+                            {"id": "n1", "label": "read"},
+                            {"id": "n2", "label": "validate"},
+                        ],
+                        "edges": [
+                            {"src": "n0", "dst": "n1"},
+                            ["n1", "n2"],
+                            {"from": "n2", "to": "n0"},
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            fixture = WorldFixture(
+                id="generated-graph-dicts",
+                title="scaffold undirected_graph",
+                source="generated",
+                retrieved_at="2026-09-03",
+                digest="0" * 64,
+                files=("graph.json",),
+                root=root,
+                domains=("graph",),
+                role="generated",
+                schema="undirected_graph",
+            )
+            plan = compose_simulation(fixture)
+            self.assertTrue(plan["available"], plan)
+            self.assertEqual(plan["origin"], "constructed")
+            card = response_card(fixture, seed=0, horizon=2)
+            self.assertIn("dropout", card["levers"])
+            self.assertGreaterEqual(len(card["observables"]), 1)
+
+
+class BoundProgramStateLayoutTests(unittest.TestCase):
+    def test_data_world_json_exposes_replay_gate(self) -> None:
+        import json
+        import tempfile
+
+        from farfield.extras.world import WorldFixture
+
+        payload = {
+            "object_type": "executable",
+            "schema": "program_state",
+            "cells": ["cell_0", "cell_1", "cell_2"],
+            "validators": [{"id": "v_guard", "reads": ["cell_1", "cell_2"]}],
+            "updates": [
+                {
+                    "id": "u1",
+                    "epoch": 1,
+                    "writes": ["cell_1"],
+                    "reads": ["cell_2"],
+                    "validator_writes": ["v_guard"],
+                    "accepted": True,
+                    "divergent": True,
+                    "task_return": 0.8,
+                }
+            ],
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "data").mkdir()
+            (root / "world.json").write_text(
+                json.dumps({"id": "card", "schema": "program_state", "role": "generated"}),
+                encoding="utf-8",
+            )
+            (root / "data" / "world.json").write_text(
+                json.dumps(payload), encoding="utf-8"
+            )
+            fixture = WorldFixture(
+                id="generated-program_state",
+                title="executable stub",
+                source="generated",
+                retrieved_at="2026-09-05",
+                digest="0" * 64,
+                files=("world.json",),
+                root=root,
+                domains=("program",),
+                role="generated",
+                schema="program_state",
+            )
+            levers = levers_of(fixture)
+            self.assertIn("replay_gate", levers)
+            self.assertIn("freeze_validators", levers)
+            plan = compose_simulation(fixture)
+            self.assertTrue(plan["available"])
+
+
+class LiteraturePhraseTests(unittest.TestCase):
+    def test_truncate_on_traces_includes_code_world_models(self) -> None:
+        phrases = literature_phrases(
+            levers=("truncate",), schema="labeled_traces"
+        )
+        self.assertIn("truncate", phrases)
+        self.assertIn("code world model", phrases)
+        self.assertNotIn("rewire", phrases)
+
+    def test_a_graph_rewire_does_not_borrow_trace_literature(self) -> None:
+        phrases = literature_phrases(
+            levers=("rewire",), schema="undirected_graph"
+        )
+        self.assertIn("rewire", phrases)
+        self.assertNotIn("code world model", phrases)
+        self.assertNotIn("query budget", phrases)
 
 
 if __name__ == "__main__":

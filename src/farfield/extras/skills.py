@@ -269,6 +269,68 @@ def _is_general(skill: Skill) -> bool:
     )
 
 
+def skill_payload(skill: Skill) -> dict[str, Any]:
+    """Durable record for this pair's next round. Not neighbourhood catalog."""
+    return {
+        "name": skill.name,
+        "description": skill.description,
+        "body": skill.body[:2000],
+        "digest": skill.digest,
+        "stages": list(skill.stages),
+    }
+
+
+def skills_from_payloads(rows: Iterable[dict[str, Any]] | None) -> tuple[Skill, ...]:
+    """Rebuild distilled SKILL.md objects from the pair's stored program."""
+    found: list[Skill] = []
+    seen: set[str] = set()
+    for row in rows or []:
+        if not isinstance(row, dict):
+            continue
+        name = _slug(str(row.get("name") or ""))
+        description = str(row.get("description") or "").strip()
+        body = str(row.get("body") or "").strip()
+        if not name or not description or not body or name in seen:
+            continue
+        stages = tuple(
+            item
+            for item in (str(part).strip() for part in (row.get("stages") or []))
+            if item in STAGES
+        ) or ("generate", "diagnose", "probe")
+        seen.add(name)
+        found.append(
+            Skill(
+                name=name,
+                description=description,
+                body=body + ("\n" if not body.endswith("\n") else ""),
+                source="state",
+                digest=str(row.get("digest") or "")
+                or skill_digest(name, description, body),
+                stages=stages,
+                admitted=True,
+                audience="research",
+                entry="",
+            )
+        )
+    return tuple(found)
+
+
+def attach_idea_skills(
+    blocks: dict[str, str], extra: Iterable[Skill]
+) -> dict[str, str]:
+    """Prepend this pair's distilled procedures. Other ideas do not see them."""
+    extras = tuple(extra)
+    if not extras:
+        return blocks
+    merged = dict(blocks)
+    for stage in ("generate", "diagnose", "probe"):
+        staged = tuple(skill for skill in extras if stage in skill.stages)
+        block = skills_prompt_block(staged)
+        if block:
+            merged[stage] = block + (merged.get(stage) or "")
+    return merged
+
+
 def skills_prompt_block(skills: Iterable[Skill]) -> str:
     """Empty when nothing matches, so cached prompts keep their digest."""
     items = list(skills)

@@ -38,6 +38,10 @@ class SchemaSpec:
     slice_kinds: frozenset[str]
     load_hint: str
     freezable: bool = True
+    # Where named fields live on the freeze. Empty when the load_hint
+    # already names every key. A probe that looks a field up on the
+    # wrong object (created_tools on a step) is not measuring it.
+    attested_layout: str = ""
 
 
 _SPECS = (
@@ -104,27 +108,133 @@ _SPECS = (
         name="labeled_traces",
         object_type="trace",
         capabilities=frozenset(
-            {"trace", "traces", "steps", "labels", "order", "trajectory"}
+            {
+                "trace",
+                "traces",
+                "steps",
+                "labels",
+                "order",
+                "trajectory",
+                "execution",
+                "patch",
+                "tool",
+            }
         ),
         hints=frozenset(
             {
+                "trace",
+                "traces",
                 "trajectory",
                 "trajectories",
+                "execution",
+                "runtime",
+                "software",
+                "swe",
+                "patch",
+                "self-play",
                 "denoising",
                 "bypass",
                 "tool-call",
                 "toolcall",
                 "tool",
+                # "agent" stays out: bargaining-game and A2A topics say
+                # agent without being execution traces. harness / llm are
+                # the words that name the trace-producing runtime.
+                "harness",
+                "llm",
             }
         ),
-        default_domains=("trace", "trajectory", "authorization", "tool"),
-        slice_kinds=frozenset({"all"}),
+        default_domains=(
+            "trace",
+            "trajectory",
+            "software",
+            "swe",
+            "execution",
+            "agent",
+            "tool",
+        ),
+        slice_kinds=frozenset({"all", "first_traces"}),
         load_hint=(
             "payload = json.loads(Path('data/world.json').read_text(encoding='utf-8')); "
             "traces = payload['traces']  "
-            "# GENERATED labeled traces; not a freeze"
+            "# each trace: created_tools (list on the TRACE), steps, label; "
+            "# each step: t, action, returncode — not created_tools, not duration"
         ),
-        freezable=False,
+        attested_layout=(
+            "Each trace in payload['traces'] has id, label, created_tools "
+            "(a list on the TRACE, not on steps), steps, and derived."
+            "created_tool_count. Each step has t, action, returncode, "
+            "action_chars, output_chars, output_excerpt. Steps do not "
+            "carry created_tools or wall-clock duration. Read "
+            "trace['created_tools'] or derived['created_tool_count']; "
+            "step.get('created_tools') is always empty on this freeze."
+        ),
+    ),
+    SchemaSpec(
+        name="program_state",
+        object_type="executable",
+        capabilities=frozenset(
+            {
+                "program",
+                "cells",
+                "updates",
+                "validators",
+                "acceptance",
+                "replay",
+                "executable",
+            }
+        ),
+        # "state" and "model" stay out (language-model / everyday-CS
+        # collisions). "program" is admitted here because a topic that
+        # says program together with executable / validator / recursive
+        # is naming running code, not a linear program.
+        hints=frozenset(
+            {
+                "executable",
+                "program",
+                "interpreter",
+                "bytecode",
+                "validator",
+                "validators",
+                "acceptance",
+                "rollback",
+                "recursive",
+                "self-improvement",
+                "self-modifying",
+            }
+        ),
+        default_domains=(
+            "program",
+            "executable",
+            "update",
+            "validator",
+            "acceptance",
+        ),
+        slice_kinds=frozenset({"all", "first_updates"}),
+        load_hint=(
+            "payload = json.loads(Path('data/world.json').read_text(encoding='utf-8')); "
+            "cells = payload['cells']; validators = payload['validators']; "
+            "updates = payload['updates']  "
+            "# ordered self-modification epochs; each update: id, epoch, writes, "
+            "# reads, validator_writes, accepted, divergent, task_return"
+        ),
+        # Freezable since `freeze.parse_program_state_source`: a host
+        # exports a published self-modification history (JSON or JSONL)
+        # and slices `first_updates:<n>`. While this was False, the only
+        # freezable neighbour a lineage could name was symbolic_trace,
+        # and that neighbour leaked into construction.
+        attested_layout=(
+            "payload['cells'] is the mutable program state (list of cell ids). "
+            "payload['validators'] is a list of {id, reads} — each validator "
+            "reads named cells to accept an update. payload['updates'] is the "
+            "ordered self-modification history; each update has id, epoch, "
+            "writes (cell ids), reads (cell ids), validator_writes (validator "
+            "ids this update mutates), accepted (bool), divergent (bool: the "
+            "update's replayed state diverges from the pre-update baseline), "
+            "task_return (float). An update whose validator_writes names a "
+            "validator that reads one of the update's own written cells sits "
+            "on a write–read dependency cycle: it can approve itself."
+        ),
     ),
     SchemaSpec(
         name="symbolic_trace",
@@ -178,3 +288,9 @@ OBJECT_SCHEMA: dict[str, str] = {spec.object_type: spec.name for spec in _SPECS}
 FREEZABLE_SCHEMAS: tuple[str, ...] = tuple(
     sorted(spec.name for spec in _SPECS if spec.freezable)
 )
+
+
+def attested_layout(schema: str) -> str:
+    """Where named fields live on this freeze. Empty when unspecified."""
+    spec = SCHEMAS.get(str(schema or "").strip())
+    return spec.attested_layout if spec is not None else ""

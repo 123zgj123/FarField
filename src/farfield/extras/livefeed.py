@@ -1,25 +1,15 @@
-"""Live arXiv feed: the freshest knowledge, fetched at mission time.
+"""Live literature retrieve: today's indexes, frozen per mission.
 
-The concept corpus pins what "already combined" means up to its harvest end
-— that pin is what makes the oracle's verdicts replayable and its quantiles
-meaningful. But a production mission runs *today*, and the field kept
-publishing after the harvest. This module fills exactly that gap, live and
-narrow, with two queries against the public arXiv API:
+The concept corpus pins what "already combined" means up to its harvest
+end. Production still has to see papers published after that pin.
+`ArxivFeed` is the dated arXiv Export API. `CompositeFeed` asks arXiv,
+Semantic Scholar, and OpenAlex in parallel so a 429 on one index does
+not empty the field.
 
-- `recent_in_field`: the newest submissions near the mission's anchor
-  concepts, fed to the generator as grounding context (titles only; context,
-  never evidence).
-- `pair_recently_combined`: for a card that survived every judge, one last
-  freshness probe — has any submission newer than the corpus already used
-  both concepts? The answer downgrades nothing by itself; it is reported
-  next to the verdict so the caller knows whether the combination is still
-  open *as of right now* or was taken in the weeks the corpus cannot see.
-
-Network is a privilege, not an assumption: every failure (timeout, HTTP
-error, malformed feed) returns a `FeedBlocked` record naming what was
-attempted, and the mission reports it instead of pretending the check ran.
-Nothing here writes to the corpus, and nothing here can kill a card — a
-live web query is not a replayable fact, so it stays advisory.
+Retrieve is not admit. Rows from this module are candidates;
+`verifypapers` (arXiv id_list / CrossRef DOI / Scholar title) decides
+what may enter the Research Wiki. `verify_pending` (429 / 5xx) is
+reported, never cited.
 """
 
 from __future__ import annotations
@@ -59,6 +49,7 @@ class FreshWork:
     work_id: str = ""
     url: str = ""
     venue: str = ""
+    references: tuple[str, ...] = ()
 
     def cite_id(self) -> str:
         """The only id a briefing may copy into read_first."""
@@ -75,6 +66,11 @@ class FreshWork:
             work_id=str(row.get("work_id") or ""),
             url=str(row.get("url") or ""),
             venue=str(row.get("venue") or ""),
+            references=tuple(
+                str(item).strip()
+                for item in (row.get("references") or ())
+                if str(item).strip()
+            ),
         )
 
     def href(self) -> str:
@@ -100,7 +96,34 @@ class FreshWork:
             payload["url"] = self.url
         if self.venue:
             payload["venue"] = self.venue
+        if self.references:
+            payload["references"] = list(self.references)
         return payload
+
+
+def as_work(item: Any) -> FreshWork | None:
+    """Accept FreshWork or a retrieved dict. Other shapes are dropped."""
+    if isinstance(item, FreshWork):
+        return item
+    if isinstance(item, dict) and (
+        item.get("title") or item.get("cite_id") or item.get("arxiv_id")
+    ):
+        return FreshWork.from_dict(item)
+    return None
+
+
+def is_signature_typeerror(exc: BaseException) -> bool:
+    """True only for a call-signature TypeError, not 'unhashable type: dict'."""
+    if not isinstance(exc, TypeError):
+        return False
+    msg = str(exc).lower()
+    return (
+        "unexpected keyword" in msg
+        or "required positional argument" in msg
+        or "takes from" in msg
+        or "got an unexpected" in msg
+        or ("positional argument" in msg and "given" in msg)
+    )
 
 
 def _fetch(query: str, max_results: int) -> list[FreshWork] | FeedBlocked:
@@ -116,6 +139,11 @@ def _fetch(query: str, max_results: int) -> list[FreshWork] | FeedBlocked:
     try:
         with urllib.request.urlopen(request, timeout=TIMEOUT_S) as response:
             body = response.read()
+    except urllib.error.HTTPError as error:
+        reason = f"HTTP {error.code}"
+        if error.code == 429 or error.code >= 500:
+            reason += " (retryable)"
+        return FeedBlocked(attempted=query, reason=reason)
     except (urllib.error.URLError, OSError, TimeoutError) as error:
         return FeedBlocked(attempted=query, reason=str(error))
     try:
@@ -144,8 +172,54 @@ def _phrase(concept: str) -> str:
     return '"' + concept.replace('"', "") + '"'
 
 
+def object_survey_phrases(topic: str) -> tuple[str, ...]:
+    """Topic object bigrams for a survey. Far nouns are not objects."""
+    from .domain import topic_object_phrases
+
+    grams = tuple(gram for gram in topic_object_phrases(topic) if " " in gram)[:3]
+    if grams:
+        return grams
+    return tuple(topic_object_phrases(topic)[:3])
+
+
+def survey_queries(
+    concept_a: str,
+    concept_b: str,
+    *,
+    topic: str = "",
+) -> tuple[str, ...]:
+    """arXiv query strings for a pair survey.
+
+    With a topic, the far concept is never queried alone — that is how
+    a mechanism noun like 'stochastic reward' pulls knapsack papers.
+    """
+    a = str(concept_a or "").strip()
+    b = str(concept_b or "").strip()
+    if topic.strip():
+        phrases = object_survey_phrases(topic)
+        queries: list[str] = []
+        if phrases:
+            queries.append(" OR ".join(f"all:{_phrase(item)}" for item in phrases[:2]))
+            obj = phrases[0]
+            if a:
+                queries.append(f"all:{_phrase(obj)} AND all:{_phrase(a)}")
+            if b:
+                queries.append(f"all:{_phrase(obj)} AND all:{_phrase(b)}")
+        return tuple(queries) if queries else (f"all:{_phrase(topic.strip()[:80])}",)
+    queries = []
+    if a:
+        queries.append(" OR ".join(f"all:{_phrase(item)}" for item in (a,)))
+    if b:
+        queries.append(" OR ".join(f"all:{_phrase(item)}" for item in (b,)))
+    if a and b:
+        queries.append(f"all:{_phrase(a)} AND all:{_phrase(b)}")
+    return tuple(queries)
+
+
 class ArxivFeed:
-    """The live queries a mission is allowed to make, and nothing else."""
+    """Dated arXiv Export API. Live rows still need verify_papers."""
+
+    verify_literature = True
 
     def recent_in_field(
         self, concepts: tuple[str, ...], *, max_results: int = 6
@@ -191,15 +265,7 @@ class ArxivFeed:
         keeps the survey inside the researcher's object domain so a
         drifted pair cannot be briefed only against the distant field.
         """
-        queries = (
-            " OR ".join(f"all:{_phrase(c)}" for c in (concept_a,)),
-            " OR ".join(f"all:{_phrase(c)}" for c in (concept_b,)),
-            f"all:{_phrase(concept_a)} AND all:{_phrase(concept_b)}",
-        )
-        if topic.strip():
-            queries = queries + (
-                f"all:{_phrase(topic.strip()[:80])} AND all:{_phrase(concept_a)}",
-            )
+        queries = survey_queries(concept_a, concept_b, topic=topic)
         merged: dict[str, FreshWork] = {}
         last_block: FeedBlocked | None = None
         results = map_parallel(lambda q: _fetch(q, per_side), queries, workers=len(queries))
@@ -219,23 +285,87 @@ class ArxivFeed:
 class CompositeFeed:
     """arXiv plus Semantic Scholar plus OpenAlex, same methods as ArxivFeed.
 
-    Freshness (`recent_in_field`) stays on arXiv: it is dated. Pair probes
-    and surveys ask the other indexes too, so a combination that only
-    exists in a journal is not reported as open.
+    `recent_in_field` is multi-source: an arXiv 429 must not hide a
+    Semantic Scholar or OpenAlex hit on the same topic phrases. Pair
+    probes and surveys already asked the other indexes; freshness now
+    does too. Tests inject `scholar` / `openalex` callables and never
+    open a socket.
     """
 
-    def __init__(self, *, arxiv: ArxivFeed | None = None) -> None:
+    verify_literature = True
+
+    def __init__(
+        self,
+        *,
+        arxiv: ArxivFeed | None = None,
+        scholar: Any = None,
+        openalex: Any = None,
+    ) -> None:
         self.arxiv = arxiv or ArxivFeed()
+        self._search_scholar = scholar
+        self._search_openalex = openalex
+        self.last_sources_blocked: list[dict[str, Any]] = []
+
+    def _scholar(self, query: str, max_results: int) -> list[FreshWork] | FeedBlocked:
+        from .sources import search_scholar
+
+        fn = self._search_scholar or search_scholar
+        try:
+            return fn(query, max_results=max_results)
+        except TypeError as exc:
+            if not is_signature_typeerror(exc):
+                raise
+            return fn(query)
+
+    def _openalex(self, query: str, max_results: int) -> list[FreshWork] | FeedBlocked:
+        from .sources import search_openalex
+
+        fn = self._search_openalex or search_openalex
+        try:
+            return fn(query, max_results=max_results)
+        except TypeError as exc:
+            if not is_signature_typeerror(exc):
+                raise
+            return fn(query)
 
     def recent_in_field(
         self, concepts: tuple[str, ...], *, max_results: int = 6
     ) -> list[FreshWork] | FeedBlocked:
-        return self.arxiv.recent_in_field(concepts, max_results=max_results)
+        from .sources import merge_works, quoted_query
+
+        query = " ".join(str(c) for c in concepts[:3] if str(c).strip())
+        phrased = quoted_query(tuple(concepts)[:3])
+        jobs = (
+            lambda: self.arxiv.recent_in_field(concepts, max_results=max_results),
+            lambda: self._scholar(query, max_results=max_results),
+            lambda: self._openalex(phrased or query, max_results=max_results),
+        )
+        fetched = map_parallel(lambda job: job(), jobs, workers=3)
+        groups: list[list[FreshWork]] = []
+        blocked: list[dict[str, Any]] = []
+        last_block: FeedBlocked | None = None
+        for result in fetched:
+            if isinstance(result, FeedBlocked):
+                last_block = result
+                blocked.append(result.to_dict())
+                continue
+            if isinstance(result, list):
+                group = [work for item in result if (work := as_work(item)) is not None]
+                if group:
+                    groups.append(group)
+        self.last_sources_blocked = blocked
+        merged = merge_works(*groups)
+        if not merged:
+            return last_block or FeedBlocked(
+                attempted=query or "recent_in_field",
+                reason="empty feed",
+            )
+        return merged[:max_results]
 
     def pair_recently_combined(
         self, concept_a: str, concept_b: str, *, max_results: int = 5
     ) -> dict[str, Any] | FeedBlocked:
-        from .sources import merge_works, search_openalex, search_scholar
+        from .sources import merge_works
 
         def _arxiv():
             return self.arxiv.pair_recently_combined(
@@ -243,31 +373,36 @@ class CompositeFeed:
             )
 
         query = f"{concept_a} {concept_b}"
-        jobs = (_arxiv, lambda: search_scholar(query, max_results=max_results),
-                lambda: search_openalex(query, max_results=max_results))
+        jobs = (
+            _arxiv,
+            lambda: self._scholar(query, max_results=max_results),
+            lambda: self._openalex(query, max_results=max_results),
+        )
         fetched = map_parallel(lambda job: job(), jobs, workers=3)
         evidence: list[FreshWork] = []
         blocked: list[dict[str, Any]] = []
         arxiv = fetched[0]
         if isinstance(arxiv, FeedBlocked):
             blocked.append(arxiv.to_dict())
-        else:
+        elif isinstance(arxiv, dict):
             evidence.extend(
-                FreshWork(
-                    title=str(row.get("title") or ""),
-                    published=str(row.get("published") or ""),
-                    arxiv_id=str(row.get("arxiv_id") or ""),
-                    abstract=str(row.get("abstract") or ""),
-                    source="arxiv",
-                )
+                work
                 for row in arxiv.get("evidence") or []
-                if isinstance(row, dict)
+                if (work := as_work(row) if isinstance(row, dict) else None) is not None
             )
         for result in fetched[1:]:
             if isinstance(result, FeedBlocked):
                 blocked.append(result.to_dict())
-            else:
-                evidence.extend(result)
+                continue
+            if isinstance(result, list):
+                evidence.extend(work for item in result if (work := as_work(item)) is not None)
+            elif isinstance(result, dict):
+                rows = result.get("evidence") or result.get("works") or []
+                evidence.extend(
+                    work
+                    for row in rows
+                    if (work := as_work(row)) is not None
+                )
         works = merge_works(evidence)
         if not works and blocked and not evidence:
             return FeedBlocked(
@@ -289,33 +424,51 @@ class CompositeFeed:
         claim: str = "",
         topic: str = "",
     ) -> list[FreshWork] | FeedBlocked:
-        from .sources import merge_works, search_openalex, search_scholar
+        from .sources import merge_works, quoted_query
 
         groups: list[list[FreshWork]] = []
         last_block: FeedBlocked | None = None
-        pair_query = f'"{concept_a}" "{concept_b}"'
-        jobs = [
-            lambda: self.arxiv.survey_around(
-                concept_a, concept_b, per_side=per_side, topic=topic
-            ),
-            lambda: search_scholar(pair_query, max_results=per_side),
-            lambda: search_openalex(f"{concept_a} {concept_b}", max_results=per_side),
-        ]
-        if topic.strip():
-            jobs.append(
-                lambda: search_scholar(
-                    f"{topic.strip()[:80]} {concept_a}", max_results=per_side
+        phrases = object_survey_phrases(topic) if topic.strip() else ()
+        if phrases:
+            object_q = " ".join(phrases[:2])
+            jobs = [
+                lambda: self.arxiv.survey_around(
+                    concept_a, concept_b, per_side=per_side, topic=topic
+                ),
+                lambda: self._scholar(object_q, max_results=per_side),
+                lambda: self._openalex(
+                    quoted_query(phrases[:2]) or object_q, max_results=per_side
+                ),
+            ]
+            if str(concept_b or "").strip():
+                jobs.append(
+                    lambda: self._scholar(
+                        f"{phrases[0]} {concept_b}", max_results=per_side
+                    )
                 )
-            )
-        if claim.strip():
-            snippet = claim.strip()[:180]
-            jobs.append(lambda: search_scholar(snippet, max_results=per_side))
+        else:
+            pair_query = f'"{concept_a}" "{concept_b}"'
+            jobs = [
+                lambda: self.arxiv.survey_around(
+                    concept_a, concept_b, per_side=per_side, topic=topic
+                ),
+                lambda: self._scholar(pair_query, max_results=per_side),
+                lambda: self._openalex(f"{concept_a} {concept_b}", max_results=per_side),
+            ]
+            if claim.strip():
+                snippet = claim.strip()[:180]
+                jobs.append(lambda: self._scholar(snippet, max_results=per_side))
         fetched = map_parallel(lambda job: job(), jobs, workers=len(jobs))
+        blocked: list[dict[str, Any]] = []
         for result in fetched:
             if isinstance(result, FeedBlocked):
                 last_block = result
-            else:
-                groups.append(result)
+                blocked.append(result.to_dict())
+            elif isinstance(result, list):
+                group = [work for item in result if (work := as_work(item)) is not None]
+                if group:
+                    groups.append(group)
+        self.last_sources_blocked = blocked
         merged = merge_works(*groups)
         if not merged:
             return last_block or FeedBlocked(

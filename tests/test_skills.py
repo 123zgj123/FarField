@@ -137,5 +137,46 @@ class DistillTests(unittest.TestCase):
             self.assertFalse((skill_md.parent / "plugin.py").exists())
 
 
+class PairSkillTests(unittest.TestCase):
+    def test_stored_payloads_rebuild_and_attach_only_to_this_pair(self) -> None:
+        from farfield.extras.skills import (
+            attach_idea_skills,
+            skill_payload,
+            skills_from_payloads,
+        )
+
+        card = SimpleNamespace(
+            claim="succinct indexes compress genomic sequence collections",
+            mechanism="rank queries avoid a full scan",
+            pair=("succinct data structure", "wavelet tree"),
+        )
+        diagnosis = SimpleNamespace(
+            experiment="same log, mechanism on vs off",
+            treatment_arm="on",
+            control_arm="off",
+            expected_direction="treatment_lower",
+        )
+        minted = distill_skill(
+            topic="compress genomic sequence collections",
+            seed_label="succinct data structure",
+            card=card,
+            diagnosis=diagnosis,
+            probe={
+                "verdict": "supports",
+                "treatment": 1.0,
+                "control": 8.0,
+                "measure": "hops",
+                "kind": "WORLD",
+            },
+        )
+        self.assertIsNotNone(minted)
+        rebuilt = skills_from_payloads([skill_payload(minted)])
+        self.assertEqual(len(rebuilt), 1)
+        self.assertEqual(rebuilt[0].name, minted.name)
+        merged = attach_idea_skills({"generate": "", "diagnose": ""}, rebuilt)
+        self.assertIn(minted.name, merged["generate"])
+        self.assertIn("Admitted skills", merged["diagnose"])
+
+
 if __name__ == "__main__":
     unittest.main()

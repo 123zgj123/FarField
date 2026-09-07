@@ -36,6 +36,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from .world import WORLD_KINDS
+
 LOG_CAP = 200
 SMOOTHING = 1.0
 SCORE_TOLERANCE = 1e-9
@@ -46,11 +48,6 @@ PROMOTED = ("corroborated", "verified")
 # cannot vote in any settlement: a support that cannot prove it ran on
 # an attested world is not evidence for a routing (or judge) change.
 LOG_SCHEMA = 2
-
-# The only probe kinds that can attest a real-world run. A missing or
-# unknown kind earns nothing — absence of bookkeeping is not a WORLD.
-WORLD_KINDS = frozenset({"WORLD", "REAL", "FIXTURE"})
-
 
 class PolicyError(Exception):
     """The log or policy file refused to load: digest mismatch."""

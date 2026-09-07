@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import gzip
+import io
 import json
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
 from farfield.cli import main
@@ -64,6 +66,7 @@ class SliceRuleTests(unittest.TestCase):
         self.assertEqual(parse_slice_rule("first_tokens:50000"), {"kind": "first_tokens", "n": 50000})
         self.assertEqual(parse_slice_rule("first_rows:10000"), {"kind": "first_rows", "n": 10000})
         self.assertEqual(parse_slice_rule("first_states:16"), {"kind": "first_states", "n": 16})
+        self.assertEqual(parse_slice_rule("first_traces:50"), {"kind": "first_traces", "n": 50})
         with self.assertRaises(FreezeError):
             parse_slice_rule("biggest_clique")
         with self.assertRaises(FreezeError):
@@ -231,13 +234,11 @@ class ShippedMidbandTests(unittest.TestCase):
         self.assertEqual(table["n"], 10000)
         self.assertEqual(table["d"], 16)
         self.assertEqual(pick_world("compress genomic sequence collections", catalog).id, "phage-lambda")
-        self.assertEqual(
-            pick_world("learned index structures for high-dimensional similarity search", catalog).id,
-            "uci-letters",
+        self.assertIsNone(
+            pick_world("learned index structures for high-dimensional similarity search", catalog)
         )
-        self.assertEqual(
-            pick_world("space-efficient sketches for heavy hitters in adversarial streams", catalog).id,
-            "gutenberg-pride",
+        self.assertIsNone(
+            pick_world("space-efficient sketches for heavy hitters in adversarial streams", catalog)
         )
 
 
@@ -269,6 +270,270 @@ class OtherSchemaFreezeTests(unittest.TestCase):
             payload = json.loads((table.root / "table.json").read_text(encoding="utf-8"))
             self.assertEqual(payload["n"], 2)
             self.assertEqual(payload["columns"], ["a", "b"])
+
+
+def _live_swe_archive() -> bytes:
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w") as archive:
+        for model, instance, resolved, tool in (
+            ("model-a", "repo__repo-1", True, True),
+            ("model-a", "repo__repo-2", False, False),
+            ("model-b", "other__other-3", True, False),
+        ):
+            folder = f"swebench_verified/{model}/{instance}"
+            trajectory = {
+                "instance_id": instance,
+                "trajectory_format": "mini-swe-agent-1",
+                "messages": [
+                    {"role": "system", "content": "system"},
+                    {"role": "user", "content": "issue"},
+                    {
+                        "role": "assistant",
+                        "content": "THOUGHT: inspect\n```bash\npytest -q\n```",
+                        "extra": {"response": {"model": f"{model}@date"}},
+                    },
+                    {
+                        "role": "user",
+                        "content": "<returncode>0</returncode>\n<output>ok</output>",
+                    },
+                ],
+                "info": {
+                    "mini_version": "1.14.2",
+                    "submission": "diff --git a/x b/x",
+                    "model_stats": {"instance_cost": 1.5, "api_calls": 2},
+                },
+            }
+            archive.writestr(
+                f"{folder}/{instance}.traj.json", json.dumps(trajectory)
+            )
+            archive.writestr(
+                f"{folder}/created_tools.json",
+                json.dumps({"helper.py": "print('x')"}) if tool else "{}",
+            )
+        archive.writestr(
+            "swebench_verified/model-a/eval_result.json",
+            json.dumps(
+                {
+                    "resolved_ids": ["repo__repo-1"],
+                    "unresolved_ids": ["repo__repo-2"],
+                    "error_ids": [],
+                    "empty_patch_ids": [],
+                }
+            ),
+        )
+        archive.writestr(
+            "swebench_verified/model-b/eval_result.json",
+            json.dumps(
+                {
+                    "resolved_ids": ["other__other-3"],
+                    "unresolved_ids": [],
+                    "error_ids": [],
+                    "empty_patch_ids": [],
+                }
+            ),
+        )
+    return buffer.getvalue()
+
+
+def _program_history(n: int = 8) -> dict:
+    cells = ["cell_0", "cell_1", "cell_2"]
+    validators = [
+        {"id": "v_guard", "reads": ["cell_1"]},
+        {"id": "v_frozen", "reads": ["cell_0"]},
+    ]
+    updates = []
+    for i in range(n):
+        on_cycle = i % 3 == 1
+        updates.append(
+            {
+                "id": f"u{i}",
+                "epoch": i,
+                "writes": ["cell_1" if on_cycle else f"cell_{i % 3}"],
+                "reads": [f"cell_{(i + 1) % 3}"],
+                "validator_writes": ["v_guard"] if on_cycle else [],
+                "accepted": bool(on_cycle or i % 2 == 0),
+                "divergent": i % 3 != 0,
+                "task_return": 0.5,
+            }
+        )
+    return {
+        "cells": cells,
+        "validators": validators,
+        "invariant": "an update may not approve itself",
+        "updates": updates,
+    }
+
+
+class ProgramStateFreezeTests(unittest.TestCase):
+    """program_state is freezable: a host exports a self-modification history."""
+
+    def test_program_state_is_on_the_freezable_list(self) -> None:
+        from farfield.extras.schemas import FREEZABLE_SCHEMAS
+
+        self.assertIn("program_state", FREEZABLE_SCHEMAS)
+        self.assertEqual(parse_slice_rule("first_updates:6"), {"kind": "first_updates", "n": 6})
+
+    def test_json_history_freezes_and_slices_first_updates(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "dgm-archive.json"
+            source.write_text(json.dumps(_program_history(10)), encoding="utf-8")
+            fixture = freeze_world(
+                world_id="dgm-archive-test",
+                schema="program_state",
+                slice_rule="first_updates:6",
+                catalog=root / "worlds",
+                source_file=source,
+                url="https://example.invalid/dgm-archive.json",
+            )
+            world = json.loads((fixture.root / "world.json").read_text(encoding="utf-8"))
+            origin = json.loads((fixture.root / "origin.json").read_text(encoding="utf-8"))
+            self.assertEqual(fixture.schema, "program_state")
+            self.assertEqual(world["n"], 6)
+            self.assertEqual([row["id"] for row in world["updates"]], [f"u{i}" for i in range(6)])
+            self.assertEqual(world["cells"], ["cell_0", "cell_1", "cell_2"])
+            self.assertEqual(origin["parent"]["updates"], 10)
+            self.assertEqual(origin["parent"]["format"], "json_program_state")
+            self.assertEqual(load_fixture(fixture.root).digest, fixture.digest)
+            self.assertNotEqual(fixture.role, "generated")
+
+    def test_jsonl_history_with_header_freezes(self) -> None:
+        history = _program_history(6)
+        header = {
+            "cells": history["cells"],
+            "validators": history["validators"],
+            "invariant": history["invariant"],
+        }
+        lines = [json.dumps(header)] + [json.dumps(row) for row in history["updates"]]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "history.jsonl"
+            source.write_text("\n".join(lines) + "\n", encoding="utf-8")
+            fixture = freeze_world(
+                world_id="dgm-jsonl-test",
+                schema="program_state",
+                slice_rule="all",
+                catalog=root / "worlds",
+                source_file=source,
+                url="https://example.invalid/history.jsonl",
+            )
+            origin = json.loads((fixture.root / "origin.json").read_text(encoding="utf-8"))
+            self.assertEqual(origin["parent"]["format"], "jsonl_program_state")
+            self.assertEqual(origin["slice"]["updates"], 6)
+
+    def test_a_history_that_cannot_replay_is_refused(self) -> None:
+        broken = _program_history(6)
+        broken["updates"][2]["writes"] = ["cell_99"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "broken.json"
+            source.write_text(json.dumps(broken), encoding="utf-8")
+            with self.assertRaises(FreezeError) as caught:
+                freeze_world(
+                    world_id="dgm-broken-test",
+                    schema="program_state",
+                    slice_rule="all",
+                    catalog=root / "worlds",
+                    source_file=source,
+                    url="https://example.invalid/broken.json",
+                )
+            self.assertIn("cell_99", str(caught.exception))
+
+    def test_a_missing_update_field_is_refused(self) -> None:
+        broken = _program_history(6)
+        del broken["updates"][0]["divergent"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "broken.json"
+            source.write_text(json.dumps(broken), encoding="utf-8")
+            with self.assertRaises(FreezeError) as caught:
+                freeze_world(
+                    world_id="dgm-missing-test",
+                    schema="program_state",
+                    slice_rule="all",
+                    catalog=root / "worlds",
+                    source_file=source,
+                    url="https://example.invalid/broken.json",
+                )
+            self.assertIn("divergent", str(caught.exception))
+
+
+class LabeledTraceFreezeTests(unittest.TestCase):
+    def test_live_swe_zip_freezes_and_slices_in_stable_member_order(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "live-swe.zip"
+            source.write_bytes(_live_swe_archive())
+            fixture = freeze_world(
+                world_id="live-swe-test",
+                schema="labeled_traces",
+                slice_rule="first_traces:2",
+                catalog=root / "worlds",
+                source_file=source,
+                url="https://example.invalid/live-swe.zip",
+                domains=("swe", "agent", "execution"),
+            )
+            world = json.loads(
+                (fixture.root / "world.json").read_text(encoding="utf-8")
+            )
+            origin = json.loads(
+                (fixture.root / "origin.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(world["n"], 2)
+            self.assertEqual(world["steps"], 2)
+            self.assertEqual(
+                [trace["id"] for trace in world["traces"]],
+                ["model-a/repo__repo-1", "model-a/repo__repo-2"],
+            )
+            self.assertEqual(world["traces"][0]["label"], "resolved")
+            self.assertEqual(world["traces"][1]["label"], "unresolved")
+            self.assertEqual(world["traces"][0]["created_tools"][0]["name"], "helper.py")
+            self.assertFalse(
+                world["traces"][0]["derived"]["has_structured_predicted_state"]
+            )
+            self.assertEqual(origin["parent"]["n"], 3)
+            self.assertEqual(origin["parent"]["format"], "live_swe_agent_release_zip")
+            self.assertEqual(load_fixture(fixture.root).digest, fixture.digest)
+
+    def test_trace_json_rejects_unlabeled_or_single_outcome_worlds(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "traces.json"
+            source.write_text(
+                json.dumps(
+                    {
+                        "traces": [
+                            {"id": "a", "label": "same", "steps": [{"t": 0}]},
+                            {"id": "b", "label": "same", "steps": [{"t": 0}]},
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            with self.assertRaises(FreezeError):
+                freeze_world(
+                    world_id="bad-traces",
+                    schema="labeled_traces",
+                    slice_rule="all",
+                    catalog=root / "worlds",
+                    source_file=source,
+                )
+
+    def test_html_cannot_be_frozen_as_labeled_traces(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "paper.html"
+            source.write_text(
+                "<html><body>trajectory results</body></html>", encoding="utf-8"
+            )
+            with self.assertRaises(FreezeError):
+                freeze_world(
+                    world_id="not-a-trace",
+                    schema="labeled_traces",
+                    slice_rule="all",
+                    catalog=root / "worlds",
+                    source_file=source,
+                )
 
 
 TINY_MEALY_DOT = (

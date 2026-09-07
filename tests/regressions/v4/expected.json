@@ -1,0 +1,8 @@
+{
+  "run": "cwm-iclr2027-v4",
+  "note": "Refine moved a contrast card onto dropout and probed the wrong handle.",
+  "expected": {
+    "handle_identity_survives_refine": true,
+    "compile_duty_required_for_lever_switch": true
+  }
+}

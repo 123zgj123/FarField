@@ -7,7 +7,7 @@ import unittest
 import urllib.error
 from unittest import mock
 
-from farfield.extras.livefeed import ArxivFeed, FeedBlocked
+from farfield.extras.livefeed import ArxivFeed, FeedBlocked, survey_queries
 
 ATOM_PAGE = b"""<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
@@ -72,6 +72,23 @@ class RecentInFieldTests(unittest.TestCase):
         self.assertIsInstance(result, FeedBlocked)
         self.assertIn("malformed", result.reason)
 
+    def test_http_429_names_the_code_as_retryable(self) -> None:
+        err = urllib.error.HTTPError(
+            "https://export.arxiv.org/api/query",
+            429,
+            "Too Many Requests",
+            hdrs={},
+            fp=None,
+        )
+        with mock.patch(
+            "farfield.extras.livefeed.urllib.request.urlopen",
+            side_effect=err,
+        ):
+            result = ArxivFeed().recent_in_field(("succinct data structure",))
+        self.assertIsInstance(result, FeedBlocked)
+        self.assertIn("429", result.reason)
+        self.assertIn("retryable", result.reason)
+
 
 class PairProbeTests(unittest.TestCase):
     def test_a_hit_reports_combined_with_evidence(self) -> None:
@@ -88,6 +105,32 @@ class PairProbeTests(unittest.TestCase):
         with serving(empty):
             probe = ArxivFeed().pair_recently_combined("a", "b")
         self.assertEqual(probe, {"combined": False, "evidence": []})
+
+
+class SurveyQueryTests(unittest.TestCase):
+    def test_a_topic_does_not_query_the_far_concept_alone(self) -> None:
+        topic = "code world models of executable program state"
+        queries = survey_queries(
+            "recursive algorithm",
+            "stochastic reward",
+            topic=topic,
+        )
+        joined = " ".join(queries)
+        self.assertTrue(queries)
+        self.assertFalse(
+            any(
+                "stochastic reward" in item and "code world" not in item.lower()
+                and "program state" not in item.lower()
+                and "executable" not in item.lower()
+                for item in queries
+            )
+        )
+        self.assertIn("stochastic reward", joined)
+
+    def test_no_topic_keeps_the_pair_queries(self) -> None:
+        queries = survey_queries("succinct data structure", "pivot rule")
+        self.assertEqual(len(queries), 3)
+        self.assertTrue(any("succinct data structure" in item and "pivot rule" not in item for item in queries))
 
 
 if __name__ == "__main__":

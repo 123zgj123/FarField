@@ -18,7 +18,9 @@ from farfield.extras.state import (
     migrate_identities,
     next_status,
     probe_history,
+    program_for,
     prompt_lines,
+    record_program,
     record_rejections,
     rejections_for,
     summary,
@@ -194,6 +196,23 @@ class LadderTests(unittest.TestCase):
         self.assertEqual(status, "verified")
         self.assertIn("confidence interval", reason)
 
+    def test_a_harvested_world_is_one_seed_and_cannot_verify_alone(self) -> None:
+        # The full heavy confirmation on the same harvested bytes stays
+        # corroborated: reruns replicate the measurement, not the harness
+        # observation. A supports on a sibling seed lifts the cap.
+        outcome = world_support(heavy_confirmed=True, heavy=heavy_confirmation())
+        outcome["world_provenance"] = "harvested"
+        status, reason = next_status("corroborated", outcome)
+        self.assertEqual(status, "corroborated")
+        self.assertIn("sibling harvest", reason)
+        outcome["second_seed_confirmed"] = True
+        status, _reason = next_status("corroborated", outcome)
+        self.assertEqual(status, "verified")
+        # Derived and published worlds are not capped this way.
+        outcome = world_support(heavy_confirmed=True, heavy=heavy_confirmation())
+        outcome["world_provenance"] = "derived"
+        self.assertEqual(next_status("corroborated", outcome)[0], "verified")
+
     def test_a_heavy_flag_without_the_statistics_cannot_verify(self) -> None:
         # The rung above corroborated is strictly harder: a bare
         # `supports` boolean with no replicates, no interval, and no
@@ -347,10 +366,10 @@ class StoreTests(unittest.TestCase):
             self.assertEqual(len(report["contradictions"]), 1)
             self.assertIn("weakened by a later probe", report["contradictions"][0])
 
-    def test_identity_is_the_anchor_domain_and_the_far_concept(self) -> None:
+    def test_identity_folds_seed_phrasing_but_not_a_different_near_concept(self) -> None:
         # A live batch watched "succinct data" vs "succinct data structure"
         # split one research line in two and break the promotion ladder.
-        # The near side is phrasing; the far concept is the bet.
+        # Seed phrasing still merges. A different near concept does not.
         self.assertEqual(
             hypothesis_id(ANCHOR, ["succinct data", "Pivot Rule"]),
             hypothesis_id(ANCHOR, ["succinct data structure", "pivot rule"]),
@@ -358,6 +377,15 @@ class StoreTests(unittest.TestCase):
         self.assertNotEqual(
             hypothesis_id(ANCHOR, ["succinct data", "pivot rule"]),
             hypothesis_id("another domain", ["succinct data", "pivot rule"]),
+        )
+        self.assertNotEqual(
+            hypothesis_id(ANCHOR, ["error bounded", "unknown subset"]),
+            hypothesis_id(ANCHOR, ["conflict graph", "unknown subset"]),
+        )
+        self.assertNotEqual(
+            hypothesis_id("storage", ["rag", "unknown subset"]),
+            hypothesis_id("storage", ["storage", "unknown subset"]),
+            "substring folding would collapse a different near concept",
         )
 
     def test_near_side_synonyms_climb_the_same_ladder(self) -> None:
@@ -378,8 +406,14 @@ class StoreTests(unittest.TestCase):
             self.assertEqual(events[0]["status"], "verified")
             self.assertEqual(
                 line_status(load(path), CORPUS, ANCHOR,
-                            ["any phrasing at all", "pivot rule"]),
+                            ["succinct data", "pivot rule"]),
                 "verified",
+            )
+            self.assertIsNone(
+                line_status(
+                    load(path), CORPUS, ANCHOR,
+                    ["conflict graph", "pivot rule"],
+                )
             )
 
     def test_migration_merges_lines_split_by_old_identity(self) -> None:
@@ -411,6 +445,42 @@ class StoreTests(unittest.TestCase):
             self.assertEqual(len(entry["evidence"]), 2)
             self.assertEqual(migrate_identities(path), 0, "idempotent")
 
+    def test_load_rekeys_an_old_identity_without_a_migrate_command(self) -> None:
+        # Stores written under (anchor, far) sit under a different hash.
+        # load itself must canonicalize, or probe_history / line_status
+        # look up a key that is not in the file and the line restarts.
+        import hashlib
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "state.json"
+            apply_outcomes(path, CORPUS, ANCHOR, [outcome(verdict="supports")])
+            topics = load(path)
+            bucket = topics[f"{CORPUS}::{ANCHOR}"]
+            entry = next(iter(bucket["hypotheses"].values()))
+            pair = list(entry["pair"])
+            old_key = hashlib.sha256(
+                f"{ANCHOR.lower()}::{pair[-1].lower()}".encode()
+            ).hexdigest()[:16]
+            current = hypothesis_id(ANCHOR, pair)
+            self.assertNotEqual(old_key, current)
+            bucket["hypotheses"] = {old_key: entry}
+            import farfield.extras.state as state_module
+
+            state_module._save(path, topics)
+            raw = json.loads(path.read_text(encoding="utf-8"))
+            self.assertIn(old_key, raw["topics"][f"{CORPUS}::{ANCHOR}"]["hypotheses"])
+            loaded = load(path)
+            self.assertIn(
+                current, loaded[f"{CORPUS}::{ANCHOR}"]["hypotheses"]
+            )
+            self.assertNotIn(
+                old_key, loaded[f"{CORPUS}::{ANCHOR}"]["hypotheses"]
+            )
+            self.assertEqual(
+                line_status(loaded, CORPUS, ANCHOR, pair),
+                "speculative",
+            )
+
     def test_the_last_probe_design_is_kept_for_the_next_diagnosis(self) -> None:
         # An uninformative design must be retrievable by the hypothesis's
         # next mission, so the follow-up experiment can sharpen it.
@@ -419,6 +489,7 @@ class StoreTests(unittest.TestCase):
             apply_outcomes(path, CORPUS, ANCHOR, [
                 outcome(
                     verdict="uninformative",
+                    probe_kind="WORLD",
                     experiment="count comparisons on ten random instances",
                 )
             ])
@@ -431,6 +502,7 @@ class StoreTests(unittest.TestCase):
             apply_outcomes(path, CORPUS, ANCHOR, [
                 outcome(
                     verdict="uninformative",
+                    probe_kind="WORLD",
                     experiment="count comparisons on a larger instance",
                 )
             ])
@@ -442,6 +514,22 @@ class StoreTests(unittest.TestCase):
             self.assertIsNone(
                 probe_history(load(path), CORPUS, ANCHOR, ["never", "seen"])
             )
+
+    def test_synthetic_uninformative_is_not_neighbourhood_debt(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "state.json"
+            pair = ["succinct data structure", "pivot rule"]
+            apply_outcomes(
+                path,
+                CORPUS,
+                ANCHOR,
+                [
+                    outcome(verdict="uninformative", experiment="first"),
+                    outcome(verdict="uninformative", experiment="second"),
+                ],
+            )
+            history = probe_history(load(path), CORPUS, ANCHOR, pair)
+            self.assertFalse(history.get("must_switch_mechanism"))
 
     def test_a_supported_but_low_value_claim_banks_an_open_question(self) -> None:
         # The probe held but the reviewer scored every dimension low: the
@@ -496,6 +584,23 @@ class StoreTests(unittest.TestCase):
             capsules = rejections_for(load(path), CORPUS, ANCHOR)
             self.assertEqual(capsules[0]["context"], "alpha x beta")
             self.assertIn("already_combined", capsules[0]["mechanism"])
+            record_rejections(
+                path,
+                CORPUS,
+                ANCHOR,
+                [
+                    {
+                        "pair": ["alpha", "beta"],
+                        "killed_by": ["uninformative"],
+                        "why": "no tampering labels on the constructed world",
+                        "lesson": "measure hidden-seed rewards on the same object",
+                    }
+                ],
+            )
+            capsules = rejections_for(load(path), CORPUS, ANCHOR)
+            self.assertEqual(len(capsules), 1, "the same pair stays one lesson")
+            self.assertIn("tampering labels", capsules[0]["why"])
+            self.assertIn("hidden-seed", capsules[0]["lesson"])
             report = summary(load(path), CORPUS, ANCHOR)
             self.assertEqual(report["hypotheses"], 0,
                              "a rejected card never entered research")
@@ -632,6 +737,148 @@ class StoreTests(unittest.TestCase):
                 apply_outcomes(
                     path, CORPUS, ANCHOR, [outcome(verdict="weakens")]
                 )
+
+    def test_a_discriminant_clears_mechanism_switch_debt(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "state.json"
+            pair = ["succinct data structure", "pivot rule"]
+            apply_outcomes(
+                path,
+                CORPUS,
+                ANCHOR,
+                [
+                    outcome(
+                        verdict="uninformative",
+                        probe_kind="WORLD",
+                        experiment="first",
+                    ),
+                    outcome(
+                        verdict="uninformative",
+                        probe_kind="WORLD",
+                        experiment="second",
+                    ),
+                ],
+            )
+            history = probe_history(load(path), CORPUS, ANCHOR, pair)
+            self.assertTrue(history["must_switch_mechanism"])
+            apply_outcomes(
+                path, CORPUS, ANCHOR, [outcome(verdict="supports", experiment="third")]
+            )
+            history = probe_history(load(path), CORPUS, ANCHOR, pair)
+            self.assertFalse(history.get("must_switch_mechanism"))
+
+    def test_neighbourhood_continue_slot_is_world_only(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "state.json"
+            pair = ["succinct data structure", "pivot rule"]
+            other = ["succinct data structure", "wavelet tree"]
+            live = {
+                "commit": "dynamic connectivity on an attested collaboration graph",
+                "pair": pair,
+                "verdict": "supports",
+                "probe_kind": "WORLD",
+                "world_id": "snap-ca-grqc",
+            }
+            switch = {
+                "commit": "the last two WORLD tests did not discriminate",
+                "pair": other,
+                "verdict": "uninformative",
+                "probe_kind": "WORLD",
+                "must_switch_mechanism": True,
+                "world_id": "snap-ca-grqc",
+            }
+            synthetic = {
+                "commit": "invented instances always separate",
+                "pair": pair,
+                "verdict": "supports",
+                "probe_kind": "SYNTHETIC",
+            }
+            self.assertIsNotNone(record_program(path, CORPUS, ANCHOR, synthetic))
+            self.assertIsNone(program_for(load(path), CORPUS, ANCHOR))
+            self.assertEqual(
+                program_for(load(path), CORPUS, ANCHOR, pair=pair)["commit"],
+                synthetic["commit"],
+            )
+            record_program(
+                path,
+                CORPUS,
+                ANCHOR,
+                {
+                    "commit": "one uninformative WORLD test occupies the continue seat",
+                    "pair": other,
+                    "verdict": "uninformative",
+                    "probe_kind": "WORLD",
+                },
+            )
+            self.assertEqual(program_for(load(path), CORPUS, ANCHOR)["pair"], other)
+            seated = record_program(path, CORPUS, ANCHOR, switch)
+            self.assertIsNotNone(seated)
+            self.assertEqual(program_for(load(path), CORPUS, ANCHOR)["pair"], other)
+            record_program(path, CORPUS, ANCHOR, live)
+            self.assertEqual(program_for(load(path), CORPUS, ANCHOR)["pair"], pair)
+            record_program(path, CORPUS, ANCHOR, switch)
+            self.assertEqual(
+                program_for(load(path), CORPUS, ANCHOR)["pair"],
+                pair,
+                "a continue debt must not evict a live WORLD support",
+            )
+            record_program(
+                path,
+                CORPUS,
+                ANCHOR,
+                {
+                    "commit": "the object refuted the line",
+                    "pair": pair,
+                    "verdict": "weakens",
+                    "probe_kind": "WORLD",
+                },
+            )
+            restored = program_for(load(path), CORPUS, ANCHOR)
+            self.assertIsNotNone(restored)
+            self.assertEqual(restored["pair"], other)
+            self.assertEqual(restored["verdict"], "uninformative")
+            self.assertEqual(
+                program_for(load(path), CORPUS, ANCHOR, pair=pair)["verdict"],
+                "weakens",
+            )
+
+    def test_hypothesis_mechanism_debt_seats_the_compiled_program(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "state.json"
+            pair = ["succinct data structure", "pivot rule"]
+            apply_outcomes(
+                path,
+                CORPUS,
+                ANCHOR,
+                [
+                    outcome(
+                        verdict="uninformative",
+                        probe_kind="WORLD",
+                        experiment="first",
+                    ),
+                    outcome(
+                        verdict="uninformative",
+                        probe_kind="WORLD",
+                        experiment="second",
+                    ),
+                ],
+            )
+            record_program(
+                path,
+                CORPUS,
+                ANCHOR,
+                {
+                    "commit": "dynamic connectivity on an attested collaboration graph",
+                    "pair": pair,
+                    "verdict": "uninformative",
+                    "probe_kind": "WORLD",
+                    "world_id": "snap-ca-grqc",
+                },
+            )
+            stored = program_for(load(path), CORPUS, ANCHOR)
+            self.assertIsNotNone(stored)
+            self.assertTrue(stored["must_switch_mechanism"])
+            self.assertEqual(stored["verdict"], "uninformative")
 
     def test_a_hand_edited_store_refuses_to_load(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

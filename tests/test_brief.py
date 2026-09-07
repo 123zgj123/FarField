@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import unittest
 
-from farfield.extras.brief import write_brief
+from farfield.extras.brief import compile_brief, write_brief
 from farfield.extras.generate import GeneratedCard, GenerationRefused
 from farfield.extras.livefeed import FreshWork
 from farfield.extras.llm import Completion
@@ -57,6 +57,9 @@ class FakeClient:
 def answer(**overrides) -> str:
     payload = {
         "title": "Pivot-history compression for the simplex method",
+        "plain_title": "单纯形法的转轴历史能压缩吗",
+        "one_liner": "单纯形法每一步的转轴记录，能否用线性空间存下并快速查询？",
+        "why_it_matters": "如果可行，防循环检查就不必保留完整日志，求解器的内存占用可以明显下降。",
         "gap": "2608.01234v1 compresses pivot histories but never measures query time at n=10^6",
         "idea": "Build a succinct pivot log that answers anticycling queries in sublinear time",
         "approach": "Encode the pivot sequence as a wavelet tree and benchmark against a plain log",
@@ -131,6 +134,80 @@ class BriefSchemaTests(unittest.TestCase):
                 [PAPER],
             )
         self.assertIn("field", caught.exception.record.unlock_condition)
+
+
+class PlainLanguageLayerTests(unittest.TestCase):
+    def test_a_missing_plain_layer_does_not_refuse_the_brief(self) -> None:
+        brief = write_brief(
+            FakeClient(answer(plain_title="", one_liner="", why_it_matters="")),
+            CARD,
+            "topic",
+            [PAPER],
+        )
+        self.assertEqual(brief.title.startswith("Pivot-history"), True)
+        self.assertEqual(brief.plain_title, "")
+        self.assertEqual(brief.one_liner, "")
+        self.assertEqual(brief.why_it_matters, "")
+
+    def test_english_plain_fields_are_dropped_not_refused(self) -> None:
+        brief = write_brief(
+            FakeClient(
+                answer(
+                    plain_title="Pivot history compression",
+                    one_liner="Can the simplex log be stored in linear space?",
+                    why_it_matters="Memory use of anticycling checks would drop.",
+                )
+            ),
+            CARD,
+            "topic",
+            [PAPER],
+        )
+        self.assertEqual(brief.plain_title, "")
+        self.assertTrue(brief.gap)
+
+    def test_an_overlong_plain_title_is_dropped(self) -> None:
+        brief = write_brief(
+            FakeClient(answer(plain_title="这" * 40)),
+            CARD,
+            "topic",
+            [PAPER],
+        )
+        self.assertEqual(brief.plain_title, "")
+
+    def test_a_plain_title_copied_from_the_title_is_dropped(self) -> None:
+        brief = write_brief(
+            FakeClient(
+                answer(
+                    title="转轴 Pivot-history compression",
+                    plain_title="转轴 Pivot-history",
+                )
+            ),
+            CARD,
+            "topic",
+            [PAPER],
+        )
+        self.assertEqual(brief.plain_title, "")
+        self.assertIn("Pivot-history", brief.title)
+
+    def test_the_plain_layer_survives_the_round_trip(self) -> None:
+        brief = write_brief(
+            FakeClient(answer()), CARD, "compress simplex traces", [PAPER]
+        )
+        self.assertEqual(brief.plain_title, "单纯形法的转轴历史能压缩吗")
+        row = brief.to_dict()
+        self.assertEqual(row["one_liner"], brief.one_liner)
+        self.assertEqual(row["why_it_matters"], brief.why_it_matters)
+
+
+class CompiledFallbackTests(unittest.TestCase):
+    def test_the_fallback_title_is_the_claim_not_a_pair_shell(self) -> None:
+        brief = compile_brief(CARD)
+        self.assertIn("succinct", brief.title.lower())
+        self.assertNotIn("两臂对照", brief.plain_title)
+        self.assertNotIn("A two-arm test of succinct data structure", brief.title)
+        self.assertTrue(brief.plain_title)
+        self.assertIn(CARD.claim, brief.one_liner)
+        self.assertIn(CARD.prediction, brief.why_it_matters)
 
 
 if __name__ == "__main__":

@@ -90,6 +90,25 @@ class SnapshotTests(unittest.TestCase):
             self.assertIsInstance(answer, FeedBlocked)
             self.assertEqual(answer.reason, "no route")
 
+    def test_a_list_of_dicts_serializes_without_to_dict(self) -> None:
+        class DictFeed:
+            def recent_in_field(self, concepts, *, max_results=6):
+                return [{"title": "Dict paper", "published": "2026", "arxiv_id": "2601.1"}]
+
+            def pair_recently_combined(self, a, b, *, max_results=5):
+                return {"combined": True, "evidence": [{"title": "Hit"}]}
+
+        with tempfile.TemporaryDirectory() as tmp:
+            snap = Path(tmp) / "evidence_snapshot"
+            recording = RecordingFeed(DictFeed(), snap)
+            works = recording.recent_in_field(("a",))
+            probe = recording.pair_recently_combined("a", "b")
+            self.assertEqual(works[0].title, "Dict paper")
+            self.assertTrue(probe["combined"])
+            replay = ReplayFeed(snap)
+            replayed = replay.recent_in_field(("a",))
+            self.assertEqual(replayed[0].title, "Dict paper")
+
 
 if __name__ == "__main__":
     unittest.main()

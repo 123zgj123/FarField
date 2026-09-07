@@ -1,0 +1,38 @@
+{
+  "id": "live-swe-agent-selfmod-v1",
+  "title": "Live-SWE-agent runtime self-modification history (tool creation) v1",
+  "source": "derived from catalog world live-swe-agent-verified-v1 (digest 5632f91a94d1…) by rule labeled_traces.created_tools→program_state.v1; parent source: OpenAutoCoder/live-swe-agent v1.0.0 release, MIT; SHA-256 16d6cbe722636872d89a1914c5c798b960b00300add195257119a10d4a0b5cdd",
+  "source_url": "https://github.com/OpenAutoCoder/live-swe-agent/releases/download/v1.0.0/swebench_verified.zip",
+  "source_digest": "efee6b0720077c4b1fba8b27a856b602670414a5531fcb245b5abdf688dc9a43",
+  "retrieved_at": "2026-08-29",
+  "domains": [
+    "program",
+    "executable",
+    "update",
+    "validator",
+    "acceptance",
+    "agent",
+    "harness",
+    "self-improvement"
+  ],
+  "files": [
+    "origin.json",
+    "world.json"
+  ],
+  "role": "world",
+  "schema": "program_state",
+  "load_hint": "payload = json.loads(Path('data/world.json').read_text(encoding='utf-8')); cells = payload['cells']; validators = payload['validators']; updates = payload['updates']  # ordered self-modification epochs; each update: id, epoch, writes, # reads, validator_writes, accepted, divergent, task_return",
+  "slice_rule": {
+    "kind": "all"
+  },
+  "digest": "0167e27c8902b293f9c7a502c8244543e2afd23a362d424248ab7f28af13e4e8",
+  "provenance": "derived",
+  "object_properties": {
+    "has_oracle": true,
+    "validators_mutable": true,
+    "gate_endogenous": true,
+    "acceptance_varies": true,
+    "self_modifying": true
+  },
+  "derived_from": "live-swe-agent-verified-v1"
+}

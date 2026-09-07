@@ -22,13 +22,14 @@ from .iterate import pipeline_bottleneck
 from .parallel import map_parallel
 from .score import score_pool
 from .wiki import aimed_gap
+from .world import is_world_kind
 
 DEFAULT_BETA = 1.0
-WORLD_KINDS = frozenset({"WORLD", "REAL", "FIXTURE"})
 
 # Shown to the generator (cannot kill). Empty-tuple callers keep prompt bytes.
 # These are process constraints, not a novelty-as-value rubric.
 VALUE_RUBRIC: tuple[str, ...] = (
+    "prefer a question this freeze can score now, or an acquire recipe for a world it cannot feel, over inventing a 0.08 dropout effect",
     "prefer a claim whose two-arm test would separate on the bound attested world, not an invented dataset",
     "prefer aiming at a literature-gap sentence from the wiki; do not write the limitation as a solved claim",
     "prefer a prediction whose either-outcome would discriminate the mechanism from the strongest alternative",
@@ -42,8 +43,44 @@ def value_lines(rubric: tuple[str, ...] | None = None) -> tuple[str, ...]:
     return tuple(rubric or VALUE_RUBRIC)
 
 
-def is_world_kind(kind: Any) -> bool:
-    return str(kind or "").upper() in WORLD_KINDS
+def idea_usefulness(row: Mapping[str, Any]) -> int:
+    """Higher means more worth iterating THIS pair. Cannot kill.
+
+    Attested process readout for the idea landscape and the next
+    far-jump notebook. Not Dream v0, not Elo, not a selection key.
+    """
+    if row.get("killed") and pair_graph_dead(row):
+        return 0
+    if row.get("prior_kills"):
+        return 1
+    if row.get("verdict") == "weakens":
+        return 2
+    holes = [
+        item
+        for item in (row.get("world_sim_issues") or [])
+        if isinstance(item, dict) and item.get("type") == "structural"
+    ]
+    missing = []
+    world = row.get("idea_world")
+    if isinstance(world, dict):
+        missing = list(world.get("missing") or [])
+    if row.get("verdict") == "uninformative" and (holes or missing):
+        return 8
+    if row.get("verdict") == "supports":
+        return 7
+    if row.get("has_brief") or row.get("verdict") == "uninformative":
+        return 6
+    if not row.get("killed"):
+        return 5
+    if row.get("killed"):
+        return 4
+    return 3
+
+
+def pair_graph_dead(row: Mapping[str, Any]) -> bool:
+    from .explore import pair_structurally_dead
+
+    return pair_structurally_dead(row.get("killed_by") or row.get("graph_killed_by"))
 
 
 def evidence_class(row: Mapping[str, Any]) -> int:
@@ -79,7 +116,11 @@ def host_rank(row: Mapping[str, Any]) -> int:
 
 
 def selection_key(row: Mapping[str, Any]) -> tuple:
-    """Lexicographic process control. Elo is the last numeric tie-break."""
+    """Lexicographic process control. Elo is the last numeric tie-break.
+
+    World-sim review scores are diagnostic and are never keys.
+    Imagined rehearsal cannot pick the lead.
+    """
     openness = {True: 0, None: 1, False: 2}
     return (
         1 if row.get("prior_kills") else 0,
@@ -123,6 +164,7 @@ def attach_observations(
         row["wiki_gap"] = gap
         row["wiki_gap_hit"] = bool(gap)
         row["pipeline_bottleneck"] = pipeline_bottleneck(row)
+        row["idea_usefulness"] = idea_usefulness(row)
 
 
 def tournament_pool(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:

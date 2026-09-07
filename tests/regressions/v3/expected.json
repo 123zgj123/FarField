@@ -1,0 +1,8 @@
+{
+  "run": "cwm-iclr2027-v3",
+  "note": "Host reruns booked as supports when the handle was observational.",
+  "expected": {
+    "handle_type": "must_be_declared",
+    "observational_cannot_confirm_mechanism": true
+  }
+}

@@ -37,27 +37,39 @@ def validate_probe(
     claim: str = "",
     mechanism: str = "",
     topic: str = "",
+    source: str = "",
+    schema: str = "",
     **_: Any,
 ) -> str | None:
     from farfield.extras.domain import measure_stays_on_object
+    from farfield.extras.worldfields import probe_reads_attested_fields
 
     if not measure_stays_on_object(measure, claim, mechanism=mechanism, topic=topic):
         return (
             "the probe measure names the far-field mechanism's cost, not"
             " the claim's scientific object"
         )
-    return None
+    return probe_reads_attested_fields(
+        source, claim=claim, mechanism=mechanism, schema=schema
+    )
 
 
 def validate_diagnosis(
     experiment: str = "",
     treatment_arm: str = "",
+    control_arm: str = "",
     claim: str = "",
     mechanism: str = "",
     topic: str = "",
+    schema: str = "",
+    world_lever: str = "",
     **_: Any,
 ) -> str | None:
     from farfield.extras.domain import experiment_stays_on_object
+    from farfield.extras.worldfields import (
+        diagnosis_names_claimed_fields,
+        missing_attested_field,
+    )
 
     if not experiment_stays_on_object(
         experiment, treatment_arm, claim, mechanism=mechanism, topic=topic
@@ -66,7 +78,22 @@ def validate_diagnosis(
             "the diagnosis measures the distant mechanism instead of the"
             " claim's object"
         )
-    return None
+    missing = missing_attested_field(
+        claim,
+        mechanism,
+        schema,
+        world_lever,
+    )
+    if missing:
+        return missing
+    return diagnosis_names_claimed_fields(
+        experiment=experiment,
+        treatment=treatment_arm,
+        control=control_arm,
+        claim=claim,
+        mechanism=mechanism,
+        schema=schema,
+    )
 
 
 def lock_writeup(

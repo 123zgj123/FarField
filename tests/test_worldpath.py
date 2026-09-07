@@ -110,6 +110,41 @@ class PathGateTests(unittest.TestCase):
         self.assertIsNotNone(path)
         self.assertEqual(path.freeze_url, "")
 
+    def test_the_prompt_placeholder_is_not_an_object_type(self) -> None:
+        # With no requirement the template says "the claim's object"; the
+        # model echoed it verbatim and it was stored as object_type.
+        path = path_from_payload(
+            "c1",
+            _valid_brief(object_type="the claim's object", schema="program_state"),
+            allowed_ids={"2601.00001v1"},
+            allowed_urls=set(),
+        )
+        self.assertIsNotNone(path)
+        self.assertEqual(path.object_type, "executable")
+        self.assertEqual(path.schema, "program_state")
+
+    def test_freeze_schema_never_votes_for_the_construction_schema(self) -> None:
+        # program_state used to be unfreezable, so the model was forced to
+        # name a freezable neighbour (symbolic_trace) as freeze_schema —
+        # and wishlist_fields promoted that neighbour to `schema`, turning
+        # the mission world into a protocol automaton.
+        path = path_from_payload(
+            "c1",
+            _valid_brief(
+                object_type="executable",
+                schema="program_state",
+                freeze_schema="symbolic_trace",
+            ),
+            allowed_ids={"2601.00001v1"},
+            allowed_urls={"https://arxiv.org/abs/2601.00001"},
+            required_object="executable",
+        )
+        self.assertIsNotNone(path)
+        fields = path.wishlist_fields()
+        self.assertNotIn("schema", fields)
+        self.assertEqual(fields["freeze_schema"], "symbolic_trace")
+        self.assertIn("named_instance", fields)
+
 
 class WritePathTests(unittest.TestCase):
     def test_no_papers_means_no_lineage(self) -> None:

@@ -18,7 +18,7 @@ audience: research
 ## Procedure
 
 1. `farfield compile-artifact <card>` → `artifact/attested.json` + `artifact/WRITING.md`.
-2. Point the writing skill at that JSON, `RESEARCH_PACKET.md`, and `protocol.md`. Fetch the venue template from the skill's official-source manifest.
+2. Point the writing skill at that JSON, `ideas/<card_id>/idea-stage/RESEARCH_BRIEF.md`, `ideas/<card_id>/refine-logs/EXPERIMENT_PLAN.md`, and `candidates/<card_id>/protocol.md`. Fetch the venue template from the skill's official-source manifest. Do not feed sibling idea folders into the same writing context.
 3. Results status is `empty` until a host/external run exists. Do not paste 20s probe metrics into a results table. Do not let the writing model invent a verdict.
 4. A compiled PDF is a submission shape, not a discovery, and does not climb the ladder.
 

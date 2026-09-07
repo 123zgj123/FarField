@@ -220,15 +220,43 @@ def generate_reframe(
         system=SYSTEM,
     )
     completion.assert_usable()
-    card = card_from_payload(
-        _parse(completion),
-        seed_label=seed_label,
-        operator=operator,
-        model=completion.model,
-        artifact_digest=completion.digest,
-        artifact_uri=completion.artifact_uri,
-        replay_mode=completion.mode,
-    )
+    try:
+        card = card_from_payload(
+            _parse(completion),
+            seed_label=seed_label,
+            operator=operator,
+            model=completion.model,
+            artifact_digest=completion.digest,
+            artifact_uri=completion.artifact_uri,
+            replay_mode=completion.mode,
+        )
+    except GenerationRefused as first:
+        # cwm-iclr2027-v3 lost an importance-5 reframe to one empty field.
+        # A schema slip gets one retry that quotes the refusal; a second
+        # slip is the refusal.
+        if first.record.missing_capability != "model_card_schema":
+            raise
+        retry_prompt = (
+            prompt
+            + "\nYOUR PREVIOUS ANSWER WAS REFUSED: "
+            + str(first.record.unlock_condition)[:300]
+            + ". Fill every field of the JSON schema; an empty claim is refused.\n"
+        )
+        completion = client.complete(
+            retry_prompt,
+            purpose=f"reframe:{operator}:{seed_label}:retry",
+            system=SYSTEM,
+        )
+        completion.assert_usable()
+        card = card_from_payload(
+            _parse(completion),
+            seed_label=seed_label,
+            operator=operator,
+            model=completion.model,
+            artifact_digest=completion.digest,
+            artifact_uri=completion.artifact_uri,
+            replay_mode=completion.mode,
+        )
     locked = refuse_claim(card.claim, card.mechanism, topic, seed_label)
     if locked:
         raise _refuse(

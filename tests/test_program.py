@@ -8,10 +8,15 @@ from pathlib import Path
 
 from farfield.extras.generate import generate_card
 from farfield.extras.mission import PRODUCTION_CORPUS
-from farfield.extras.program import compile_program, prompt_lines, target_line
+from farfield.extras.program import (
+    compile_program,
+    continue_duty_lines,
+    prompt_lines,
+    target_line,
+)
 from farfield.extras.state import load, program_for
 from tests.test_generate import FakeClient, LABELS, answer
-from tests.test_mission import TOPIC, SchemingClient, run_mission
+from tests.test_mission import TOPIC, FakeFeed, SchemingClient, run_mission
 
 
 class CompileProgramTests(unittest.TestCase):
@@ -30,15 +35,22 @@ class CompileProgramTests(unittest.TestCase):
                     "probe_kind": "WORLD",
                     "pair": ["succinct data structure", "pivot rule"],
                     "has_brief": True,
+                    "idea_world": {
+                        "objects": ["pivot history", "rank query"],
+                        "iterate": "measure rank on the attested log, not a new graph noun",
+                    },
                 }
             ],
             kills=[{"pair": ["succinct data structure", "hash table"], "killed_by": ["endpoint_is_not_a_concept_hub"]}],
         )
         self.assertIsNotNone(program)
         self.assertIn("linear space", program["commit"])
-        self.assertIn("public trace", program["next_card_must"])
+        self.assertIn("farfield execute", program["next_card_must"])
+        self.assertIn("Do not generate", program["next_card_must"])
         self.assertIn("hub", program["do_not_generate"])
         self.assertIn("this-mission probes: supports/WORLD", program["h"]["verifiers"])
+        self.assertIn("idea-world objects", program["h"]["tools"])
+        self.assertIn("idea-world iterate", program["h"]["verifiers"])
         self.assertTrue(prompt_lines(program))
         self.assertIn("committed program", target_line(program) or "")
 
@@ -87,8 +99,29 @@ class CompileProgramTests(unittest.TestCase):
             ],
         )
         self.assertIn("SYNTHETIC", program["next_card_must"])
-        self.assertIn("attested world", program["next_card_must"])
+        self.assertIn("attested fixture", program["next_card_must"])
+        self.assertIn("farfield execute", program["next_card_must"])
         self.assertIn("no attested world bound", program["h"]["tools"])
+
+    def test_a_generated_support_does_not_forbid_spray(self) -> None:
+        program = compile_program(
+            "succinct pivots",
+            ranked=[{"rank": 1, "card_id": "live", "verdict": "supports"}],
+            found=[
+                {
+                    "card_id": "live",
+                    "claim": "store pivot history in linear space",
+                    "verdict": "supports",
+                    "probe_kind": "GENERATED",
+                    "experiment": "two-arm on a constructed stream",
+                    "has_brief": True,
+                }
+            ],
+        )
+        self.assertIn("constructed world", program["next_card_must"])
+        self.assertIn("farfield freeze", program["next_card_must"])
+        self.assertIn("cannot occupy the continue seat", program["next_card_must"])
+        self.assertIn("corroborate", program["next_card_must"])
 
     def test_runtime_h_is_compiled_and_a_blocked_host_is_not_a_discovery(self) -> None:
         program = compile_program(
@@ -111,7 +144,8 @@ class CompileProgramTests(unittest.TestCase):
             ],
             kills=[{"pair": ["graph", "transformer"], "killed_by": ["endpoint_is_not_a_concept_hub"]}],
         )
-        self.assertIn("parent was not executed", program["next_card_must"])
+        self.assertIn("farfield execute", program["next_card_must"])
+        self.assertIn("20s slice is a filter", program["next_card_must"])
         self.assertIn("snap-ca-grqc", program["h"]["tools"])
         self.assertIn("undirected_graph", program["h"]["tools"])
         self.assertNotIn("WORLD-supported", program["h"]["routing"])
@@ -164,9 +198,92 @@ class CompileProgramTests(unittest.TestCase):
             ],
         )
         self.assertIn("attested collaboration graph", program["commit"])
-        self.assertIn("UNINFORMATIVE", program["next_card_must"])
-        self.assertIn("switch the mechanism", program["next_card_must"])
+        self.assertIn("execute", program["next_card_must"])
+        self.assertIn("EXPERIMENT_PLAN.md", program["next_card_must"])
         self.assertIn("pipeline probe_method", program["h"]["verifiers"])
+        self.assertIn("pipeline probe_method", program["h"]["verifiers"])
+
+    def test_ablation_debt_is_the_next_card_constraint(self) -> None:
+        program = compile_program(
+            "graphs",
+            ranked=[{"rank": 1, "card_id": "live", "verdict": "supports"}],
+            found=[
+                {
+                    "card_id": "live",
+                    "claim": "dynamic connectivity on an attested collaboration graph",
+                    "verdict": "supports",
+                    "probe_kind": "WORLD",
+                    "host_ok": True,
+                    "ablation_required": True,
+                    "mechanism_identified": False,
+                    "experiment": "cut vs random on ca-GrQc",
+                    "pair": ["graph connectivity", "min cut"],
+                    "has_brief": True,
+                    "world_id": "snap-ca-grqc",
+                }
+            ],
+        )
+        self.assertIn("execute 实验块 2", program["next_card_must"])
+        self.assertIn("THIS freeze", program["next_card_must"])
+        self.assertIn("ablation_required", program["h"]["verifiers"])
+        self.assertEqual(program["world_id"], "snap-ca-grqc")
+        self.assertIn("skills=", " ".join(prompt_lines(program)))
+
+    def test_a_mechanism_switch_debt_rides_with_the_compiled_program(self) -> None:
+        program = compile_program(
+            "graphs",
+            ranked=[{"rank": 1, "card_id": "world", "verdict": "uninformative"}],
+            found=[
+                {
+                    "card_id": "world",
+                    "claim": "dynamic connectivity on an attested collaboration graph",
+                    "verdict": "uninformative",
+                    "probe_kind": "WORLD",
+                    "must_switch_mechanism": True,
+                    "pair": ["graph connectivity", "min cut"],
+                    "has_brief": True,
+                }
+            ],
+        )
+        self.assertTrue(program["must_switch_mechanism"])
+        self.assertEqual(program["verdict"], "uninformative")
+        self.assertEqual(program["probe_kind"], "WORLD")
+        duty = continue_duty_lines(program)
+        self.assertTrue(any("Keep pair" in line for line in duty))
+        self.assertTrue(any("executable" in line for line in duty))
+        self.assertFalse(any("Deepen THIS line" in line for line in duty))
+        retry = compile_program(
+            "graphs",
+            found=[
+                {
+                    "card_id": "once",
+                    "claim": "dynamic connectivity on an attested collaboration graph",
+                    "verdict": "uninformative",
+                    "probe_kind": "WORLD",
+                    "pair": ["graph connectivity", "min cut"],
+                    "has_brief": True,
+                }
+            ],
+        )
+        retry_duty = continue_duty_lines(retry)
+        self.assertTrue(any("executable" in line for line in retry_duty))
+        self.assertFalse(any("Stagnation rule" in line for line in retry_duty))
+        synthetic = compile_program(
+            "graphs",
+            found=[
+                {
+                    "card_id": "synth",
+                    "claim": "invented instances always separate",
+                    "verdict": "uninformative",
+                    "probe_kind": "SYNTHETIC",
+                    "must_switch_mechanism": True,
+                    "pair": ["graph connectivity", "hash table"],
+                    "has_brief": True,
+                }
+            ],
+        )
+        self.assertFalse(synthetic.get("must_switch_mechanism"))
+        self.assertEqual(continue_duty_lines(synthetic), ())
 
 
 class PromptSlotTests(unittest.TestCase):
@@ -215,7 +332,12 @@ class MissionProgramTests(unittest.TestCase):
             }
             first = list(
                 run_mission(
-                    TOPIC, jumps=2, candidates=1, client=SchemingClient(), **shared
+                    TOPIC,
+                    jumps=2,
+                    candidates=1,
+                    client=SchemingClient(),
+                    feed=FakeFeed(),
+                    **shared,
                 )
             )
             prog = next(e for e in first if e["stage"] == "program")
@@ -239,6 +361,7 @@ class MissionProgramTests(unittest.TestCase):
                     jumps=4,
                     candidates=1,
                     client=client,
+                    feed=FakeFeed(),
                     **shared,
                 )
             )
@@ -246,11 +369,14 @@ class MissionProgramTests(unittest.TestCase):
             self.assertFalse(agenda["deepen"])
             far = [s for s in agenda["slots"] if s["track"] == "farfield"]
             self.assertTrue(all(s.get("role") != "exploit" for s in far))
+            self.assertEqual(agenda["explore_jumps"], 0)
+            self.assertEqual(agenda["continue_reason"], "plan_executable")
+            self.assertFalse(any(e["stage"] == "card" for e in second))
             self.assertFalse(
                 any("Committed research program" in p for p in client.prompts),
             )
 
-    def test_a_world_support_commits_the_neighbourhood_exploit_slot(self) -> None:
+    def test_a_world_support_closes_spray_because_the_plan_is_executable(self) -> None:
         from tests.test_mission import FakeFeed, WorldProbeClient
 
         with tempfile.TemporaryDirectory() as tmp:
@@ -291,16 +417,248 @@ class MissionProgramTests(unittest.TestCase):
                 )
             )
             agenda = next(e for e in second if e["stage"] == "agenda")
-            self.assertTrue(agenda["deepen"])
+            self.assertFalse(agenda["deepen"])
+            self.assertTrue(agenda["continue"])
+            self.assertEqual(agenda["continue_reason"], "plan_executable")
+            self.assertEqual(agenda["explore_jumps"], 0)
             far = [s for s in agenda["slots"] if s["track"] == "farfield"]
-            self.assertEqual(far[0].get("role"), "exploit")
-            self.assertTrue(
-                str(far[0].get("target") or "").startswith("committed program:"),
-                far[0].get("target"),
+            self.assertEqual(far, [])
+            self.assertFalse(any(e["stage"] == "card" for e in second))
+            decision = next(
+                e
+                for e in second
+                if e["stage"] == "explore_decision" and e.get("track") == "farfield"
             )
-            self.assertTrue(
-                any("Committed research program" in p for p in client.prompts),
-                client.prompts[0][:200] if client.prompts else "no prompts",
+            self.assertFalse(decision["continue"])
+            self.assertEqual(decision["reason"], "plan_executable")
+
+    def test_auto_explore_does_not_spray_over_an_executable_plan(self) -> None:
+        from tests.test_mission import FakeFeed, WorldProbeClient
+
+        with tempfile.TemporaryDirectory() as tmp:
+            shared = {
+                "state_store": Path(tmp) / "state.json",
+                "policy_log": Path(tmp) / "log.json",
+                "policy_file": Path(tmp) / "policy.json",
+                "polish_rounds": 0,
+                "explore": "auto",
+            }
+            first = list(
+                run_mission(
+                    TOPIC,
+                    jumps=1,
+                    candidates=1,
+                    client=WorldProbeClient(),
+                    feed=FakeFeed(),
+                    world="path-trace",
+                    **shared,
+                )
+            )
+            self.assertTrue(any(e["stage"] == "card" for e in first))
+            client = WorldProbeClient()
+            second = list(
+                run_mission(
+                    TOPIC,
+                    jumps=4,
+                    candidates=1,
+                    client=client,
+                    feed=FakeFeed(),
+                    world="path-trace",
+                    **shared,
+                )
+            )
+            far_decisions = [
+                e
+                for e in second
+                if e["stage"] == "explore_decision" and e.get("track") == "farfield"
+            ]
+            self.assertEqual(len(far_decisions), 1)
+            self.assertFalse(far_decisions[0]["continue"])
+            self.assertEqual(far_decisions[0]["reason"], "plan_executable")
+            self.assertFalse(any(e["stage"] == "jump" for e in second))
+            self.assertFalse(any(e["stage"] == "card" for e in second))
+
+    def test_a_world_uninformative_closes_spray_because_the_plan_is_executable(self) -> None:
+        from farfield.extras.state import record_program
+
+        with tempfile.TemporaryDirectory() as tmp:
+            shared = {
+                "state_store": Path(tmp) / "state.json",
+                "policy_log": Path(tmp) / "log.json",
+                "policy_file": Path(tmp) / "policy.json",
+                "polish_rounds": 0,
+                "explore": "auto",
+            }
+            first = list(
+                run_mission(
+                    TOPIC,
+                    jumps=1,
+                    candidates=1,
+                    client=SchemingClient(),
+                    feed=FakeFeed(),
+                    **shared,
+                )
+            )
+            card = next(e for e in first if e["stage"] == "card")
+            anchor = next(e for e in first if e["stage"] == "anchor")["anchors"][0][
+                "concept"
+            ]
+            record_program(
+                shared["state_store"],
+                PRODUCTION_CORPUS,
+                anchor,
+                {
+                    "commit": "the last two WORLD tests did not discriminate",
+                    "pair": list(card["pair"]),
+                    "verdict": "uninformative",
+                    "probe_kind": "WORLD",
+                    "must_switch_mechanism": True,
+                    "world_id": "path-trace",
+                },
+            )
+            client = SchemingClient()
+            second = list(
+                run_mission(
+                    TOPIC,
+                    jumps=4,
+                    candidates=1,
+                    client=client,
+                    feed=FakeFeed(),
+                    **shared,
+                )
+            )
+            agenda = next(e for e in second if e["stage"] == "agenda")
+            self.assertFalse(agenda["deepen"])
+            self.assertTrue(agenda["continue"])
+            self.assertEqual(agenda["continue_reason"], "plan_executable")
+            self.assertEqual(agenda["explore_jumps"], 0)
+            self.assertFalse(any(e["stage"] == "card" for e in second))
+            joined = "\n".join(client.prompts)
+            self.assertNotIn("Continue THIS line", joined)
+            self.assertNotIn("Deepen THIS line", joined)
+            self.assertNotIn("Stagnation rule", joined)
+            far_decisions = [
+                e
+                for e in second
+                if e["stage"] == "explore_decision" and e.get("track") == "farfield"
+            ]
+            self.assertEqual(len(far_decisions), 1)
+            self.assertFalse(far_decisions[0]["continue"])
+            self.assertEqual(far_decisions[0]["reason"], "plan_executable")
+
+    def test_the_first_world_uninformative_closes_spray_because_the_plan_is_executable(
+        self,
+    ) -> None:
+        from farfield.extras.state import record_program
+
+        with tempfile.TemporaryDirectory() as tmp:
+            shared = {
+                "state_store": Path(tmp) / "state.json",
+                "policy_log": Path(tmp) / "log.json",
+                "policy_file": Path(tmp) / "policy.json",
+                "polish_rounds": 0,
+                "explore": "auto",
+            }
+            first = list(
+                run_mission(
+                    TOPIC,
+                    jumps=1,
+                    candidates=1,
+                    client=SchemingClient(),
+                    feed=FakeFeed(),
+                    **shared,
+                )
+            )
+            card = next(e for e in first if e["stage"] == "card")
+            anchor = next(e for e in first if e["stage"] == "anchor")["anchors"][0][
+                "concept"
+            ]
+            record_program(
+                shared["state_store"],
+                PRODUCTION_CORPUS,
+                anchor,
+                {
+                    "commit": "the first WORLD test did not discriminate",
+                    "pair": list(card["pair"]),
+                    "verdict": "uninformative",
+                    "probe_kind": "WORLD",
+                    "world_id": "path-trace",
+                },
+            )
+            client = SchemingClient()
+            second = list(
+                run_mission(
+                    TOPIC,
+                    jumps=4,
+                    candidates=1,
+                    client=client,
+                    feed=FakeFeed(),
+                    **shared,
+                )
+            )
+            agenda = next(e for e in second if e["stage"] == "agenda")
+            self.assertFalse(agenda["deepen"])
+            self.assertTrue(agenda["continue"])
+            self.assertEqual(agenda["continue_reason"], "plan_executable")
+            self.assertEqual(agenda["explore_jumps"], 0)
+            self.assertFalse(any(e["stage"] == "jump" for e in second))
+            joined = "\n".join(client.prompts)
+            self.assertNotIn("Continue THIS line", joined)
+            self.assertNotIn("Sharpen the experiment", joined)
+
+    def test_a_missing_far_does_not_spray_over_an_executable_plan(self) -> None:
+        from farfield.extras.state import record_program
+
+        with tempfile.TemporaryDirectory() as tmp:
+            shared = {
+                "state_store": Path(tmp) / "state.json",
+                "policy_log": Path(tmp) / "log.json",
+                "policy_file": Path(tmp) / "policy.json",
+                "polish_rounds": 0,
+                "explore": "fixed",
+            }
+            first = list(
+                run_mission(
+                    TOPIC,
+                    jumps=1,
+                    candidates=1,
+                    client=SchemingClient(),
+                    feed=FakeFeed(),
+                    **shared,
+                )
+            )
+            anchor = next(e for e in first if e["stage"] == "anchor")["anchors"][0][
+                "concept"
+            ]
+            record_program(
+                shared["state_store"],
+                PRODUCTION_CORPUS,
+                anchor,
+                {
+                    "commit": "continue a pair the graph no longer names",
+                    "pair": [anchor, "__far_not_in_this_graph__"],
+                    "verdict": "uninformative",
+                    "probe_kind": "WORLD",
+                },
+            )
+            client = SchemingClient()
+            second = list(
+                run_mission(
+                    TOPIC,
+                    jumps=1,
+                    candidates=1,
+                    client=client,
+                    feed=FakeFeed(),
+                    **shared,
+                )
+            )
+            agenda = next(e for e in second if e["stage"] == "agenda")
+            self.assertEqual(agenda["explore_jumps"], 0)
+            self.assertEqual(agenda["continue_reason"], "plan_executable")
+            self.assertFalse(any(e["stage"] == "jump" for e in second))
+            self.assertFalse(any(e["stage"] == "refused" for e in second))
+            self.assertFalse(
+                any("Continue THIS line" in p for p in client.prompts),
             )
 
 

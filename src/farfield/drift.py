@@ -27,7 +27,6 @@ from .graph import (
     path_from_tree,
     path_length,
     seed_neighborhood,
-    shortest_path,
     shortest_path_tree,
 )
 from .models import WAVE_A_PLACEHOLDERS, ConjectureCard, new_id

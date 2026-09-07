@@ -1,0 +1,26 @@
+{
+  "url": "var/ideas/daojo-matrix-pd-v1.json",
+  "retrieved_at": "2026-08-31",
+  "source_digest": "940e7db5e58b62148a1c4c3c99129bc701d61e5358f0490f5b2b54e4a0c6e146",
+  "text_digest": "940e7db5e58b62148a1c4c3c99129bc701d61e5358f0490f5b2b54e4a0c6e146",
+  "slice_rule": {
+    "kind": "all"
+  },
+  "parent": {
+    "n": 8,
+    "steps": 186,
+    "labels": [
+      "always_cooperate",
+      "always_defect"
+    ],
+    "format": "json_or_jsonl"
+  },
+  "slice": {
+    "n": 8,
+    "steps": 186,
+    "labels": [
+      "always_cooperate",
+      "always_defect"
+    ]
+  }
+}

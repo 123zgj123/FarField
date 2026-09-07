@@ -12,9 +12,9 @@ of fact — and keeping them apart, because they answer different questions:
   killed, distilled to capsules and fed back into generation prompts as
   directions that already failed. This absorbs the old failure store;
   there is one memory now, not two.
-- **program**: the one committed generation brief for the next
-  mission — why this line, what the next card must do, what not to
-  propose. This is self-evolution of generation, not a polish of a card.
+- **program**: the neighbourhood WORLD seat (pair lock against spray).
+  Per-pair H lives in `idea_programs`. SYNTHETIC H never occupies the
+  WORLD seat, but an executable SYNTHETIC plan still stops far jumps.
 - **unknowns**: questions the evidence failed to settle, written
   explicitly so the next mission can target them instead of jumping at
   random.
@@ -55,8 +55,9 @@ from .evidence import (
     hypothesis_revision_id,
 )
 from .livefeed import FreshWork
+from .prior import content_tokens
 from .wiki import as_works as wiki_as_works, compile_entry as compile_wiki_entry, upsert as upsert_wiki
-from .world import KIND_SYNTHETIC, world_attested
+from .world import KIND_SYNTHETIC, is_world_kind, world_attested
 
 LIST_CAP = 12
 HYPOTHESIS_CAP = 40
@@ -88,22 +89,62 @@ def _digest(topics: dict[str, Any]) -> str:
     ).hexdigest()
 
 
-def hypothesis_id(anchor: str, pair: tuple[str, str] | list[str]) -> str:
-    """Stable across missions: (anchor domain, far concept) is the line.
+def _fold_near(anchor: str, near: str) -> str:
+    """Seed phrasing collapses; a different near concept does not.
 
-    The near side of a card is always drawn from inside the anchor's
-    neighbourhood, so which synonym the model picked ("succinct data" vs
-    "succinct data structure") is phrasing, not identity — a live batch
-    watched exactly that split one research line in two and break the
-    promotion ladder. The far concept is the actual bet; the anchor is a
-    deterministic property of the mission, so no fuzzy matching needed.
+    "succinct data" vs "succinct data structure" is the same neighbourhood
+    label. "error bounded" vs "conflict graph" is a different scientific
+    near side and must not inherit the other line's evidence. The test is
+    content-token containment, not raw substrings, so "rag" does not fold
+    into "storage".
     """
-    far = str(pair[-1]).strip().lower()
-    normal = f"{str(anchor).strip().lower()}::{far}"
+    a = str(anchor or "").strip().lower()
+    n = str(near or "").strip().lower()
+    if not n:
+        return a
+    if n == a:
+        return a
+    anchor_terms = content_tokens(a)
+    near_terms = content_tokens(n)
+    if (
+        anchor_terms
+        and near_terms
+        and (near_terms <= anchor_terms or anchor_terms <= near_terms)
+    ):
+        return a
+    return n
+
+
+def hypothesis_id(anchor: str, pair: tuple[str, str] | list[str]) -> str:
+    """Stable across missions: (anchor, near concept, far concept).
+
+    Near-side synonyms of the seed still share a line; a distinct near
+    concept with the same far concept is a different line. Identity is a
+    pure function of the pair *labels*: card pairs are exact copies of
+    graph labels (generation refuses paraphrases), and labels outlive
+    graph node ids across corpus rebuilds. Keying by node id was tried
+    and rejected — the same line got two ids depending on whether node
+    ids happened to be in hand at the call site.
+    """
+    items = [str(item).strip() for item in (pair or [])]
+    near = items[0] if items else ""
+    far = items[-1] if items else ""
+    folded = _fold_near(anchor, near)
+    anchor_key = str(anchor).strip().lower()
+    normal = f"{anchor_key}::{folded}::{far.strip().lower()}"
     return hashlib.sha256(normal.encode()).hexdigest()[:16]
 
 
 def load(path: Path) -> dict[str, Any]:
+    """Load, verify the digest, and canonicalize hypothesis identities.
+
+    Rekeying happens here — on every load, not in a one-time script —
+    because the identity scheme is a property of the code, not of the
+    file. A store written under an older scheme is silently unreachable
+    otherwise: lookups compute new-format ids while the entries sit under
+    old keys, and every line restarts its ladder from nothing. The rekey
+    is idempotent; the canonical keys reach the file on the next write.
+    """
     if not Path(path).is_file():
         return {}
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
@@ -113,6 +154,7 @@ def load(path: Path) -> dict[str, Any]:
             f"{path} does not match its own digest; refusing to feed missions"
             " a research state that was edited outside this module"
         )
+    _rekey_hypotheses(topics)
     return topics
 
 
@@ -191,7 +233,10 @@ def summary(
 
 
 def probe_history(
-    topics: dict[str, Any], corpus_id: str, anchor: str, pair: tuple[str, str] | list[str]
+    topics: dict[str, Any],
+    corpus_id: str,
+    anchor: str,
+    pair: tuple[str, str] | list[str],
 ) -> dict[str, Any] | None:
     """This hypothesis line's last probe design and verdict, or None."""
     bucket = topics.get(topic_key(corpus_id, anchor)) or {}
@@ -201,7 +246,10 @@ def probe_history(
 
 
 def line_status(
-    topics: dict[str, Any], corpus_id: str, anchor: str, pair: tuple[str, str] | list[str]
+    topics: dict[str, Any],
+    corpus_id: str,
+    anchor: str,
+    pair: tuple[str, str] | list[str],
 ) -> str | None:
     """This hypothesis line's current ladder status, or None if unseen."""
     bucket = topics.get(topic_key(corpus_id, anchor)) or {}
@@ -247,15 +295,35 @@ def record_rejections(
         for kill in kills:
             pair = list(kill.get("pair") or ["", ""])
             context = f"{pair[0]} x {pair[1]}"
-            if context in known:
-                continue
-            bucket["rejected"].append(
-                {
-                    "context": context,
-                    "mechanism": ", ".join(kill.get("killed_by") or [])
-                    or "text discipline",
-                }
+            why = str(
+                kill.get("why") or kill.get("why_failed") or ""
+            ).strip()[:240]
+            lesson = str(kill.get("lesson") or "").strip()[:240]
+            mechanism = (
+                ", ".join(kill.get("killed_by") or [])
+                or why
+                or "text discipline"
             )
+            if context in known:
+                for capsule in bucket["rejected"]:
+                    if not isinstance(capsule, dict):
+                        continue
+                    if capsule.get("context") != context:
+                        continue
+                    if why and not capsule.get("why"):
+                        capsule["why"] = why
+                    if lesson and not capsule.get("lesson"):
+                        capsule["lesson"] = lesson
+                continue
+            payload = {
+                "context": context,
+                "mechanism": mechanism,
+            }
+            if why:
+                payload["why"] = why
+            if lesson:
+                payload["lesson"] = lesson
+            bucket["rejected"].append(payload)
             known.add(context)
             added += 1
         bucket["rejected"] = bucket["rejected"][-LIST_CAP:]
@@ -312,22 +380,43 @@ def _pair_key(pair: list[str] | tuple[str, ...] | None) -> str:
     return " × ".join(items) if len(items) == 2 else ""
 
 
+def _idea_store_key(program: dict[str, Any]) -> str:
+    idea_id = str(program.get("idea_id") or "").strip()
+    if idea_id:
+        return idea_id
+    pairk = _pair_key(program.get("pair"))
+    kind = str(program.get("idea_kind") or "").strip().lower()
+    if kind in {"question", "acquire", "theory", "probe"}:
+        return f"{pairk}::{kind}" if pairk else ""
+    return pairk
+
+
 def program_for(
     topics: dict[str, Any],
     corpus_id: str,
     anchor: str,
     pair: list[str] | tuple[str, ...] | None = None,
 ) -> dict[str, Any] | None:
-    """This idea's program, or the neighbourhood's WORLD-committed line.
+    """This idea's program, or the neighbourhood continue commit.
 
-    `pair` selects one idea's stored H. Without `pair`, only a WORLD
-    support may occupy the neighbourhood exploit slot — SYNTHETIC H
-    stays on its own pair and does not leak into a new landing.
+    `pair` selects one idea's stored H. Without `pair`, the neighbourhood
+    slot is the highest-priority WORLD continue: a support, then a
+    mechanism-switch debt, then a first uninformative. SYNTHETIC H
+    stays on its own pair.
     """
     bucket = topics.get(topic_key(corpus_id, anchor)) or {}
     if pair is not None:
         key = _pair_key(pair)
         ideas = bucket.get("idea_programs") or {}
+        matches = [
+            dict(row)
+            for row in ideas.values()
+            if isinstance(row, dict)
+            and str(row.get("commit") or "").strip()
+            and _pair_key(row.get("pair")) == key
+        ]
+        if matches:
+            return matches[0]
         idea = ideas.get(key) if key else None
         if isinstance(idea, dict) and str(idea.get("commit") or "").strip():
             return dict(idea)
@@ -345,29 +434,124 @@ def program_for(
     return None
 
 
+def programs_for_pair(
+    topics: dict[str, Any],
+    corpus_id: str,
+    anchor: str,
+    pair: list[str] | tuple[str, ...] | None,
+) -> list[dict[str, Any]]:
+    """Every stored program that shares this pair as provenance."""
+    bucket = topics.get(topic_key(corpus_id, anchor)) or {}
+    ideas = bucket.get("idea_programs") or {}
+    if not isinstance(ideas, dict):
+        return []
+    key = _pair_key(pair)
+    rows: list[dict[str, Any]] = []
+    for prog in ideas.values():
+        if isinstance(prog, dict) and _pair_key(prog.get("pair")) == key:
+            rows.append(dict(prog))
+    return rows
+
+
+def idea_programs_for(
+    topics: dict[str, Any],
+    corpus_id: str,
+    anchor: str,
+) -> list[dict[str, Any]]:
+    """Every stored pair program in this neighbourhood, including SYNTHETIC."""
+    bucket = topics.get(topic_key(corpus_id, anchor)) or {}
+    ideas = bucket.get("idea_programs") or {}
+    if not isinstance(ideas, dict):
+        return []
+    rows: list[dict[str, Any]] = []
+    for prog in ideas.values():
+        if isinstance(prog, dict) and str(prog.get("commit") or "").strip():
+            rows.append(dict(prog))
+    return rows
+
+
+def _seat_neighbourhood(bucket: dict[str, Any]) -> dict[str, Any] | None:
+    """One seat, chosen from idea_programs. Not a second memory."""
+    from .explore import neighbourhood_priority
+
+    ideas = bucket.get("idea_programs") or {}
+    if not isinstance(ideas, dict):
+        ideas = {}
+        bucket["idea_programs"] = ideas
+    incumbent = (
+        bucket.get("program") if isinstance(bucket.get("program"), dict) else None
+    )
+    inc_key = _pair_key(list((incumbent or {}).get("pair") or [])[:2])
+    best: dict[str, Any] | None = None
+    best_pri: int | None = None
+    best_key = ""
+    for key, prog in ideas.items():
+        if not isinstance(prog, dict) or not str(prog.get("commit") or "").strip():
+            continue
+        pri = neighbourhood_priority(prog)
+        if pri is None:
+            continue
+        pairk = _pair_key(list(prog.get("pair") or [])[:2]) or str(key)
+        if best is None or pri < int(best_pri):
+            best, best_pri, best_key = prog, pri, pairk
+            continue
+        if pri == best_pri:
+            if pairk == inc_key and best_key != inc_key:
+                best, best_key = prog, pairk
+            elif best_key != inc_key and pairk < best_key:
+                best, best_key = prog, pairk
+    bucket["program"] = dict(best) if best else None
+    return bucket["program"]
+
+
 def record_program(
     path: Path,
     corpus_id: str,
     anchor: str,
     program: dict[str, Any] | None,
-) -> None:
-    """Store this idea's H. Neighbourhood exploit only on WORLD supports."""
+) -> dict[str, Any] | None:
+    """Store this idea's H. Neighbourhood continue is WORLD-only.
+
+    Every pair keeps its H in `idea_programs`. After each write the
+    neighbourhood slot is reseated from those programs: live support
+    first, then WORLD-uninformative (switch debt before a first miss).
+    A weaken drops that pair out of the continue set so a leftover
+    WORLD-uninformative can sit again. SYNTHETIC H never occupies it.
+    """
     if not program or not str(program.get("commit") or "").strip():
-        return
+        return None
+    stored: dict[str, Any] | None = None
     with _mutating(path) as topics:
         bucket = _bucket(topics, topic_key(corpus_id, anchor))
+        pair = list(program.get("pair") or [])[:2]
+        hid = hypothesis_id(anchor, pair) if len(pair) >= 2 else ""
+        entry = (bucket.get("hypotheses") or {}).get(hid) or {}
         payload = {
             "commit": str(program.get("commit") or "")[:400],
             "why": str(program.get("why") or "")[:400],
             "stakes": str(program.get("stakes") or "")[:240],
-            "next_card_must": str(program.get("next_card_must") or "")[:400],
+            "next_card_must": str(program.get("next_card_must") or "")[:600],
             "do_not_generate": str(program.get("do_not_generate") or "")[:600],
             "card_id": str(program.get("card_id") or ""),
-            "pair": list(program.get("pair") or [])[:2],
+            "pair": pair,
             "verdict": program.get("verdict"),
             "probe_kind": str(program.get("probe_kind") or ""),
             "source": str(program.get("source") or "compiled"),
+            "prior_kills": bool(program.get("prior_kills") or program.get("killed")),
+            "must_switch_mechanism": bool(
+                str(program.get("verdict") or "") == "uninformative"
+                and is_world_kind(program.get("probe_kind"))
+                and (
+                    program.get("must_switch_mechanism")
+                    or entry.get("must_switch_mechanism")
+                )
+            ),
         }
+        nodes = [
+            str(item) for item in (program.get("pair_nodes") or []) if item
+        ][:2]
+        if len(nodes) == 2:
+            payload["pair_nodes"] = nodes
         raw_h = program.get("h")
         if isinstance(raw_h, dict) and raw_h:
             payload["h"] = {
@@ -375,16 +559,56 @@ def record_program(
                 for key, value in raw_h.items()
                 if str(value or "").strip()
             }
-        key = _pair_key(payload["pair"])
+        skills = program.get("skills")
+        if isinstance(skills, list) and skills:
+            payload["skills"] = [
+                {
+                    "name": str(row.get("name") or "")[:80],
+                    "description": str(row.get("description") or "")[:400],
+                    "body": str(row.get("body") or "")[:2000],
+                    "digest": str(row.get("digest") or "")[:32],
+                    "stages": [
+                        str(stage)
+                        for stage in (row.get("stages") or [])
+                        if str(stage) in {"generate", "diagnose", "probe", "writeup", "intern"}
+                    ][:5],
+                }
+                for row in skills
+                if isinstance(row, dict) and str(row.get("name") or "").strip()
+            ][:4]
+        notes = [
+            str(item).strip()
+            for item in (program.get("design_notes") or [])
+            if str(item or "").strip()
+        ]
+        if notes:
+            payload["design_notes"] = notes[:6]
+        world_id = str(program.get("world_id") or "").strip()
+        if world_id:
+            payload["world_id"] = world_id[:80]
+        if program.get("ablation_required") or entry.get("ablation_required"):
+            payload["ablation_required"] = True
+        if program.get("idea_id"):
+            payload["idea_id"] = str(program.get("idea_id") or "")
+        if program.get("lineage_id"):
+            payload["lineage_id"] = str(program.get("lineage_id") or "")
+        if program.get("idea_kind"):
+            payload["idea_kind"] = str(program.get("idea_kind") or "")
+        key = _idea_store_key(payload) or _pair_key(payload["pair"])
         if key:
             ideas = bucket.setdefault("idea_programs", {})
             if not isinstance(ideas, dict):
                 ideas = {}
                 bucket["idea_programs"] = ideas
             ideas[key] = payload
-        kind = str(payload.get("probe_kind") or "").upper()
-        if kind in {"WORLD", "REAL", "FIXTURE"} and payload.get("verdict") == "supports":
-            bucket["program"] = payload
+        _seat_neighbourhood(bucket)
+        stored = dict(payload)
+        program.update(
+            {
+                "must_switch_mechanism": payload["must_switch_mechanism"],
+            }
+        )
+    return stored
 
 
 def wiki_for(
@@ -425,6 +649,8 @@ def record_wiki(
         for work in works:
             if isinstance(work, FreshWork):
                 incoming.append(compile_wiki_entry(work, pair=pair, seen_at=seen_at))
+                continue
+            if isinstance(work, dict) and work.get("verified") is False:
                 continue
             if isinstance(work, dict) and (work.get("title") or work.get("cite_id")):
                 payload = dict(work)
@@ -529,6 +755,20 @@ def next_status(previous: str | None, outcome: dict[str, Any]) -> tuple[str, str
             # interval clears the pre-registered margin. Fail-closed —
             # a bare `supports` flag without the statistics is a refusal.
             heavy_gaps = heavy_confirmation_gaps(outcome)
+            # A harvested world is one seed of one recipe. Reruns on its
+            # bytes replicate the measurement, not the observation; the
+            # confirmation that earns `verified` is a supports on a sibling
+            # harvest (same recipe body, another seed).
+            if (
+                not heavy_gaps
+                and str(outcome.get("world_provenance") or "") == "harvested"
+                and not outcome.get("second_seed_confirmed")
+            ):
+                return "corroborated", (
+                    "verified is fail-closed on a harvested world: one seed; "
+                    "a supports on a sibling harvest of the same recipe with "
+                    "another seed (harvest.sibling_seeds) is the confirmation"
+                )
             if not heavy_gaps:
                 return "verified", (
                     "supported on an attested world in two missions and the"
@@ -768,13 +1008,24 @@ def apply_outcomes(
             if outcome.get("prior_kills"):
                 pass
             elif scientific == SCIENTIFIC_UNINFORMATIVE:
-                entry["uninformative_streak"] = int(
-                    entry.get("uninformative_streak") or 0
-                ) + 1
+                if world_attested(outcome):
+                    entry["uninformative_streak"] = int(
+                        entry.get("uninformative_streak") or 0
+                    ) + 1
             elif scientific in (SCIENTIFIC_SUPPORTS, SCIENTIFIC_REFUTES):
                 entry["uninformative_streak"] = 0
+                entry.pop("must_switch_mechanism", None)
+                last = entry.get("last_probe")
+                if isinstance(last, dict):
+                    last["must_switch_mechanism"] = False
             if int(entry.get("uninformative_streak") or 0) >= 2:
                 entry["must_switch_mechanism"] = True
+            if outcome.get("ablation_required"):
+                entry["ablation_required"] = True
+            elif scientific in (SCIENTIFIC_SUPPORTS, SCIENTIFIC_REFUTES) and (
+                outcome.get("ablation_ran") or outcome.get("mechanism_identified") is True
+            ):
+                entry.pop("ablation_required", None)
             verdict = outcome.get("verdict")
             if verdict:
                 evidence_item = {
@@ -804,10 +1055,19 @@ def apply_outcomes(
                         for item in (outcome.get("failed_experiments") or [])
                         if str(item or "").strip()
                     ]
+                    notes = [
+                        str(item).strip()
+                        for item in (outcome.get("design_notes") or [])
+                        if str(item or "").strip()
+                    ]
                     entry["last_probe"] = {
                         "experiment": experiment,
                         "verdict": verdict,
+                        "alternative": str(outcome.get("alternative") or "").strip(),
                         "discarded": discarded[:8],
+                        "design_notes": notes[:6],
+                        "world_id": str(outcome.get("world_id") or ""),
+                        "probe_kind": str(outcome.get("probe_kind") or ""),
                         "ledger": labels["ledger"],
                         "scientific": scientific,
                         "evidence_id": str(outcome.get("evidence_id") or ""),
@@ -841,6 +1101,18 @@ def apply_outcomes(
                     )
                     if line not in bucket["unknowns"]:
                         bucket["unknowns"].append(line)
+            for note in (outcome.get("design_notes") or []):
+                text = str(note or "").strip()
+                if not text:
+                    continue
+                line = f"next design on this line must: {text[:160]}"
+                if line not in bucket["unknowns"]:
+                    bucket["unknowns"].append(line)
+            entry["pair"] = pair
+            if outcome.get("pair_nodes"):
+                entry["pair_nodes"] = [
+                    str(item) for item in outcome.get("pair_nodes") or []
+                ][:2]
             hypotheses[hid] = entry
             events.append(
                 {
@@ -897,56 +1169,102 @@ def _entry_revision(entry: dict[str, Any], hid: str) -> str:
     return hypothesis_revision_id(hid, claim) if claim else ""
 
 
-def migrate_identities(path: Path) -> int:
-    """One-time rekey of an existing store to (anchor, far concept) identity.
+def _rekey_hypotheses(topics: dict[str, Any]) -> int:
+    """Rekey every bucket to the current (anchor, near, far) identity.
 
+    Seed-phrasing near labels still merge. Distinct near concepts do not.
     Research *lines* may merge; hypothesis *revisions* never silently do.
     When two entries collapse onto one key, the survivor is the
     highest-ranked (then most-travelled) entry, and it keeps only its own
     truth status. The other entry's evidence rides along as context, but
     unless its claim revision provably matches the survivor's, every item
     is quarantined as `legacy_unresolved` — losing old evidence is
-    acceptable, inheriting an unearned truth status is not. Returns how
-    many entries were merged away. Idempotent.
+    acceptable, inheriting an unearned truth status is not.
+
+    Revision ids embed the line id. When an entry moves to a new key and
+    its stored revision provably belongs to its stored claim under the
+    *old* key, the revision is recomputed under the new key — otherwise
+    the first settlement after a rekey would read the mismatch as a claim
+    rewrite and reset the ladder. A stored revision that cannot be proven
+    (the claim changed since it was written) is left alone; the honest
+    reset it triggers is the designed behaviour. Chain PROMOTE payloads
+    are immutable history, so host-grounding continuity does not survive
+    a rekey: a conservative loss, never an unearned inheritance.
+
+    Returns how many entries were merged away. Idempotent.
+    """
+    merged = 0
+    for key, bucket in topics.items():
+        if not isinstance(bucket, dict):
+            continue
+        anchor = key.split("::", 1)[1] if "::" in key else key
+        hypotheses = bucket.get("hypotheses") or {}
+        rekeyed: dict[str, dict[str, Any]] = {}
+        for old_hid, entry in hypotheses.items():
+            hid = hypothesis_id(anchor, entry.get("pair") or ["", ""])
+            if hid != str(old_hid):
+                claim = str(entry.get("claim") or "").strip()
+                stored = str(entry.get("revision_id") or "")
+                if (
+                    claim
+                    and stored
+                    and stored == hypothesis_revision_id(str(old_hid), claim)
+                ):
+                    entry["revision_id"] = hypothesis_revision_id(hid, claim)
+            existing = rekeyed.get(hid)
+            if existing is None:
+                rekeyed[hid] = entry
+                continue
+            merged += 1
+            ordered = sorted(
+                (existing, entry),
+                key=lambda e: (RANK.get(e.get("status"), 0), e.get("missions", 0)),
+                reverse=True,
+            )
+            base, other = ordered
+            base_revision = _entry_revision(base, hid)
+            other_revision = _entry_revision(other, hid)
+            same_revision = bool(base_revision) and base_revision == other_revision
+            inherited = [dict(item) for item in (other.get("evidence") or [])]
+            if not same_revision:
+                for item in inherited:
+                    item["validity"] = VALIDITY_LEGACY
+            base["evidence"] = (
+                (base.get("evidence") or []) + inherited
+            )[-LIST_CAP:]
+            base["missions"] = int(base.get("missions") or 0) + int(
+                other.get("missions") or 0
+            )
+            if same_revision and not base.get("last_probe") and other.get(
+                "last_probe"
+            ):
+                base["last_probe"] = other["last_probe"]
+            rekeyed[hid] = base
+        bucket["hypotheses"] = rekeyed
+    return merged
+
+
+def migrate_identities(path: Path) -> int:
+    """Rekey a store file in place and persist the canonical keys.
+
+    `load` already rekeys in memory on every read, so missions never see
+    stale identities; this entry point writes the canonical keys back
+    without waiting for the next mission's write. Returns how many
+    entries were merged away. Idempotent.
     """
     if not Path(path).is_file():
         return 0
-    merged = 0
-    with _mutating(path) as topics:
-        for key, bucket in topics.items():
-            anchor = key.split("::", 1)[1] if "::" in key else key
-            hypotheses = bucket.get("hypotheses") or {}
-            rekeyed: dict[str, dict[str, Any]] = {}
-            for entry in hypotheses.values():
-                hid = hypothesis_id(anchor, entry.get("pair") or ["", ""])
-                existing = rekeyed.get(hid)
-                if existing is None:
-                    rekeyed[hid] = entry
-                    continue
-                merged += 1
-                ordered = sorted(
-                    (existing, entry),
-                    key=lambda e: (RANK.get(e.get("status"), 0), e.get("missions", 0)),
-                    reverse=True,
-                )
-                base, other = ordered
-                base_revision = _entry_revision(base, hid)
-                other_revision = _entry_revision(other, hid)
-                same_revision = bool(base_revision) and base_revision == other_revision
-                inherited = [dict(item) for item in (other.get("evidence") or [])]
-                if not same_revision:
-                    for item in inherited:
-                        item["validity"] = VALIDITY_LEGACY
-                base["evidence"] = (
-                    (base.get("evidence") or []) + inherited
-                )[-LIST_CAP:]
-                base["missions"] = int(base.get("missions") or 0) + int(
-                    other.get("missions") or 0
-                )
-                if same_revision and not base.get("last_probe") and other.get(
-                    "last_probe"
-                ):
-                    base["last_probe"] = other["last_probe"]
-                rekeyed[hid] = base
-            bucket["hypotheses"] = rekeyed
+    from .filelock import file_lock
+
+    path = Path(path)
+    with file_lock(path):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        topics = payload.get("topics")
+        if not isinstance(topics, dict) or payload.get("digest") != _digest(topics):
+            raise StateError(
+                f"{path} does not match its own digest; refusing to migrate"
+                " a research state that was edited outside this module"
+            )
+        merged = _rekey_hypotheses(topics)
+        _save(path, topics)
     return merged

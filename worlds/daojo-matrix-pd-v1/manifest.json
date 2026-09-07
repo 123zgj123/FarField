@@ -1,0 +1,27 @@
+{
+  "id": "daojo-matrix-pd-v1",
+  "title": "Daojo Lab iterated PD and Stag Hunt seat traces",
+  "source": "Daojo-lab matrixgames built-in AlwaysCooperate/AlwaysDefect matches; host-compiled before any FarField claim. Local teaching repo, not a SWE-agent zip.",
+  "source_url": "var/ideas/daojo-matrix-pd-v1.json",
+  "source_digest": "940e7db5e58b62148a1c4c3c99129bc701d61e5358f0490f5b2b54e4a0c6e146",
+  "retrieved_at": "2026-08-31",
+  "domains": [
+    "daojo",
+    "matrixgames",
+    "prisoners",
+    "payoff",
+    "observation",
+    "stag"
+  ],
+  "files": [
+    "origin.json",
+    "world.json"
+  ],
+  "role": "world",
+  "schema": "labeled_traces",
+  "load_hint": "payload = json.loads(Path('data/world.json').read_text(encoding='utf-8')); traces = payload['traces']  # each trace: created_tools (list on the TRACE), steps, label; # each step: t, action, returncode — not created_tools, not duration",
+  "slice_rule": {
+    "kind": "all"
+  },
+  "digest": "cce5f6210bb2369914df03d5feb3efef3fbdd32ac2b1636d5080979ddfbfda4c"
+}

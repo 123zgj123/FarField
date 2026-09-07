@@ -1,0 +1,39 @@
+{
+  "id": "openevolve-fnmin-s11",
+  "title": "OpenEvolve function_minimization, gpt-5.6-sol, 40 iterations, seed 11",
+  "source": "harvested: openevolve-0.3.2/function_minimization run under recipe 343d6342be7d… (seed 11, 40 iterations)",
+  "source_url": "/home/ubuntu/Guijia_Zhang/FarField/runs/cwm-iclr2027/harvest/fnmin/openevolve_output/checkpoints/checkpoint_40",
+  "source_digest": "30020539f38ff9bf8ffa6069a9a7ce3043b305b22157c209e663c4095db7b5d3",
+  "retrieved_at": "2026-09-05",
+  "domains": [
+    "program",
+    "executable",
+    "update",
+    "validator",
+    "acceptance"
+  ],
+  "files": [
+    "origin.json",
+    "world.json"
+  ],
+  "role": "world",
+  "schema": "program_state",
+  "load_hint": "payload = json.loads(Path('data/world.json').read_text(encoding='utf-8')); cells = payload['cells']; validators = payload['validators']; updates = payload['updates']  # ordered self-modification epochs; each update: id, epoch, writes, # reads, validator_writes, accepted, divergent, task_return",
+  "slice_rule": {
+    "kind": "all"
+  },
+  "digest": "2430ba076e553be451ae3c140710c77fb912e329cd72713dcf52090ae2de67f4",
+  "provenance": "harvested",
+  "object_properties": {
+    "has_oracle": false,
+    "validators_mutable": false,
+    "gate_endogenous": false,
+    "acceptance_varies": true,
+    "self_modifying": true
+  },
+  "history_format": "openevolve",
+  "recipe_digest": "343d6342be7da64459a1df19ff9edececbc7446e075d5aa63d660c516a1927b7",
+  "recipe_body": "c8198e9cd324156a5906ac32e0170e6fff80a47ba22ebdead83b9480bc94179d",
+  "harness": "openevolve-0.3.2/function_minimization",
+  "seed": 11
+}

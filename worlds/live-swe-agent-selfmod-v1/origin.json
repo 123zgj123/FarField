@@ -1,0 +1,29 @@
+{
+  "url": "https://github.com/OpenAutoCoder/live-swe-agent/releases/download/v1.0.0/swebench_verified.zip",
+  "retrieved_at": "2026-08-29",
+  "source_digest": "efee6b0720077c4b1fba8b27a856b602670414a5531fcb245b5abdf688dc9a43",
+  "text_digest": "6bd52898ac4f7a8cc6527313e2560fc2bb0e479b10182b1fe961884bcdfa5605",
+  "slice_rule": {
+    "kind": "all"
+  },
+  "parent": {
+    "cells": 722,
+    "validators": 574,
+    "updates": 1731,
+    "accepted": 1117,
+    "format": "json_program_state"
+  },
+  "slice": {
+    "updates": 1731,
+    "accepted": 1117
+  },
+  "derived_from": {
+    "world_id": "live-swe-agent-verified-v1",
+    "digest": "5632f91a94d1c21ea976b4e284eb4cf7a019d9c151f2466eb3b0cdc9ce70641e",
+    "schema": "labeled_traces",
+    "rule": "labeled_traces.created_tools→program_state.v1",
+    "parent_schema": "labeled_traces",
+    "episodes": 499,
+    "parent_traces": 1500
+  }
+}

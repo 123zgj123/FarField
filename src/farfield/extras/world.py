@@ -36,6 +36,7 @@ from pathlib import Path
 from typing import Any
 
 from .prior import content_tokens
+from .objectprops import properties_compatible, property_overlap, required_properties
 from .schemas import OBJECT_SCHEMA, SCHEMAS
 
 # Claim families that no schema can attest yet. Auto must not substitute
@@ -60,6 +61,11 @@ _INCOMPATIBLE_FAMILIES = {
 KIND_SYNTHETIC = "SYNTHETIC"
 KIND_WORLD = "WORLD"
 WORLD_KINDS = frozenset({KIND_WORLD, "REAL", "FIXTURE"})
+
+
+def is_world_kind(kind: Any) -> bool:
+    """True for an attested-freeze probe kind. Missing kind is not WORLD."""
+    return str(kind or "").upper() in WORLD_KINDS
 
 _DATA_REF = re.compile(
     r"""['\"]data/|Path\(\s*['\"]data['\"]|Path\(\s*['\"]data/"""
@@ -87,11 +93,15 @@ class WorldRequirement:
     # object. Empty means "no claim-side tokens yet" and is not a license
     # to bind by schema alone when the fixture itself has domain tags.
     anchors: tuple[str, ...] = ()
+    # Property requirements the claim states (objectprops.required_properties):
+    # e.g. {"validators_mutable": False} for "a fixed evaluator ranks ...".
+    properties: tuple[tuple[str, bool], ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "object_type": self.object_type,
             "schema": self.schema,
+            "properties": dict(self.properties),
             "operations": list(self.operations),
             "metrics": list(self.metrics),
             "scale": self.scale,
@@ -116,6 +126,17 @@ class WorldFixture:
     source_url: str = ""
     source_digest: str = ""
     slice_rule: dict[str, Any] | None = None
+    # "" for shipped fixtures; "derived" | "harvested" | "wishlist" for
+    # worlds the host produced under a recorded rule or recipe.
+    provenance: str = ""
+    # What the bytes are, beyond the schema (objectprops.object_properties):
+    # read off the manifest when written there, else computed from world.json.
+    object_properties: dict[str, bool] | None = None
+    # Versioned lineage. Empty parent/version is W0, the mission's first freeze.
+    parent_id: str = ""
+    version: str = ""
+    acquisition_event: str = ""
+    world_evidence_id: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         payload = {
@@ -136,7 +157,20 @@ class WorldFixture:
             payload["source_digest"] = self.source_digest
         if self.slice_rule:
             payload["slice_rule"] = dict(self.slice_rule)
+        if self.provenance:
+            payload["provenance"] = self.provenance
+        props = fixture_properties(self)
+        if props:
+            payload["object_properties"] = dict(props)
         payload["capabilities"] = sorted(fixture_capabilities(self))
+        if self.parent_id:
+            payload["parent_id"] = self.parent_id
+        if self.version:
+            payload["version"] = self.version
+        if self.acquisition_event:
+            payload["acquisition_event"] = self.acquisition_event
+        if self.world_evidence_id:
+            payload["world_evidence_id"] = self.world_evidence_id
         return payload
 
 
@@ -182,8 +216,7 @@ def attested_freeze(world: Any) -> bool:
 
 def world_attested(outcome: dict[str, Any] | None) -> bool:
     """Whether this outcome may climb. Missing kind is SYNTHETIC."""
-    kind = str((outcome or {}).get("probe_kind") or KIND_SYNTHETIC).upper()
-    return kind in WORLD_KINDS
+    return is_world_kind((outcome or {}).get("probe_kind"))
 
 
 def digest_files(root: Path, files: list[str]) -> str:
@@ -247,7 +280,31 @@ def load_fixture(directory: Path) -> WorldFixture:
         source_url=str(payload.get("source_url") or "").strip(),
         source_digest=str(payload.get("source_digest") or "").strip(),
         slice_rule=_slice_rule(payload.get("slice_rule")),
+        provenance=str(payload.get("provenance") or "").strip().lower(),
+        object_properties=(
+            {str(k): bool(v) for k, v in payload["object_properties"].items()}
+            if isinstance(payload.get("object_properties"), dict)
+            else None
+        ),
+        parent_id=str(payload.get("parent_id") or "").strip(),
+        version=str(payload.get("version") or "").strip(),
+        acquisition_event=str(payload.get("acquisition_event") or "").strip(),
+        world_evidence_id=str(payload.get("world_evidence_id") or "").strip(),
     )
+
+
+def fixture_properties(fixture: WorldFixture) -> dict[str, bool]:
+    """Manifest properties, else computed once from the frozen payload."""
+    if fixture.object_properties is not None:
+        return dict(fixture.object_properties)
+    from .objectprops import properties_of_path
+
+    props = properties_of_path(fixture.schema, Path(fixture.root) / "world.json")
+    try:
+        object.__setattr__(fixture, "object_properties", dict(props))
+    except Exception:
+        pass
+    return dict(props)
 
 
 def _slice_rule(raw: Any) -> dict[str, Any] | None:
@@ -280,7 +337,7 @@ def load_wishlist(root: Path) -> dict[str, Any]:
     return payload if isinstance(payload, dict) else {"entries": []}
 
 
-def in_mission_constructable(req: WorldRequirement | None) -> bool:
+def in_mission_constructable(req: WorldRequirement | dict[str, Any] | None) -> bool:
     """True when this object has a same-family in-mission constructor.
 
     A registered schema may be built as GENERATED for simulation.
@@ -289,11 +346,17 @@ def in_mission_constructable(req: WorldRequirement | None) -> bool:
     """
     if req is None:
         return False
-    if incompatible_family(req.object_type):
+    if isinstance(req, dict):
+        object_type = str(req.get("object_type") or "")
+        schema = str(req.get("schema") or "")
+    else:
+        object_type = str(req.object_type or "")
+        schema = str(req.schema or "")
+    if incompatible_family(object_type):
         return False
-    schema = req.schema or OBJECT_SCHEMA.get(req.object_type, "")
+    schema = schema or OBJECT_SCHEMA.get(object_type, "")
     family = schema_family(schema) or schema
-    return family in SCHEMAS or req.object_type in OBJECT_SCHEMA
+    return family in SCHEMAS or object_type in OBJECT_SCHEMA
 
 
 def refine_requirement(
@@ -337,10 +400,11 @@ def record_world_wishlist(
     topic: str = "",
     seen_at: str = "",
 ) -> Path | None:
-    """Merge this mission's unmatched `WorldRequirement`s into the wishlist.
+    """Merge this mission's freeze recipes into the wishlist.
 
-    Runtime file under `var/`. The next mission may freeze a named
-    public source. Finished WORLD_INCOMPATIBLE verdicts stay as recorded.
+    Runtime file under `var/`. Unmatched `WORLD_INCOMPATIBLE` requirements
+    and constructed GENERATED worlds both qualify. The next mission may
+    freeze a named public source. Finished verdicts stay as recorded.
     """
     rows = [req for req in requirements if isinstance(req, dict)]
     if not rows:
@@ -386,6 +450,8 @@ def record_world_wishlist(
             value = str(req.get(field) or "").strip()
             if value:
                 entry[field] = value[:400]
+        if req.get("generated") is True:
+            entry["generated"] = True
         cites = [
             str(item).strip()
             for item in (req.get("lineage_cite_ids") or [])
@@ -411,6 +477,99 @@ def record_world_wishlist(
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
     return path
+
+
+_WISHLIST_EXTRAS = (
+    "named_instance",
+    "lineage",
+    "freeze_source",
+    "freeze_url",
+    "freeze_schema",
+    "lineage_cite_ids",
+)
+
+
+def wishlist_requirement(
+    record: dict[str, Any] | None,
+    *,
+    topic: str = "",
+) -> dict[str, Any] | None:
+    """WorldRequirement a later `farfield freeze` can bind. Not constructed bytes.
+
+    `WORLD_INCOMPATIBLE` unmatched rows always qualify. A constructed
+    GENERATED world also qualifies — that probe cannot occupy the continue
+    slot, distill, or stop spray. The constructed bytes are not a freeze.
+    Finished cards are not reopened.
+    """
+    row = record if isinstance(record, dict) else None
+    if row is None:
+        return None
+    incompatible = bool(row.get("world_incompatible"))
+    generated = bool(row.get("generated_world")) or str(
+        row.get("probe_kind") or ""
+    ).upper() == "GENERATED"
+    if not incompatible and not generated:
+        return None
+    raw = row.get("world_requirement") if isinstance(row.get("world_requirement"), dict) else {}
+    path_extra = row.get("world_path") if isinstance(row.get("world_path"), dict) else {}
+    payload = dict(raw)
+    schema = str(
+        payload.get("schema") or payload.get("freeze_schema") or row.get("world_schema") or ""
+    ).strip()
+    object_type = str(payload.get("object_type") or "").strip()
+    if not object_type and not schema:
+        inferred = infer_requirement(
+            topic,
+            str(row.get("claim") or ""),
+            str(row.get("prediction") or ""),
+        )
+        if inferred is None:
+            return None
+        payload = {**inferred.to_dict(), **payload}
+        object_type = str(payload.get("object_type") or "").strip()
+        schema = str(payload.get("schema") or "").strip()
+    if schema:
+        payload["schema"] = schema
+        if not object_type:
+            spec = SCHEMAS.get(schema_family(schema) or schema)
+            if spec is not None:
+                payload["object_type"] = spec.object_type
+                object_type = spec.object_type
+    if not object_type and not schema:
+        return None
+    for field in _WISHLIST_EXTRAS:
+        value = payload.get(field) or path_extra.get(field)
+        if value:
+            payload[field] = value
+    if generated:
+        payload["generated"] = True
+    return payload
+
+
+def wishlist_requirements(
+    found: list[dict[str, Any]] | None,
+    *,
+    topic: str = "",
+) -> list[dict[str, Any]]:
+    """Deduped freeze recipes from this mission's survivor records."""
+    rows: list[dict[str, Any]] = []
+    seen: dict[str, dict[str, Any]] = {}
+    for record in found or []:
+        req = wishlist_requirement(record, topic=topic)
+        if req is None:
+            continue
+        key = f"{req.get('object_type') or ''}|{req.get('schema') or ''}"
+        existing = seen.get(key)
+        if existing is None:
+            seen[key] = req
+            rows.append(req)
+            continue
+        for field in _WISHLIST_EXTRAS:
+            if req.get(field) and not existing.get(field):
+                existing[field] = req[field]
+        if req.get("generated"):
+            existing["generated"] = True
+    return rows
 
 
 def load_catalog(root: Path) -> dict[str, WorldFixture]:
@@ -489,6 +648,15 @@ _FOREIGN_OBJECTS = {
             "genome",
         }
     ),
+    "program_state": frozenset(
+        {
+            "pride",
+            "austen",
+            "phage",
+            "fasta",
+            "genome",
+        }
+    ),
     "symbolic_trace": frozenset(
         {
             "agent",
@@ -529,6 +697,27 @@ def _anchors_of(wanted: frozenset[str]) -> tuple[str, ...]:
     return tuple(sorted(wanted))[:64]
 
 
+def hint_hits(wanted: frozenset[str], hints: frozenset[str]) -> int:
+    """Count schema hints in the same token space as `content_tokens`.
+
+    Registry hints such as `self-improvement` and `tool-call` never appear
+    as a single token in `wanted` — hyphens become spaces. A multi-word
+    hint counts once when every part is present, so `self assembly` does
+    not score `self-improvement`.
+    """
+    hits = 0
+    for hint in hints:
+        parts = content_tokens(hint)
+        if len(parts) > 1:
+            if parts <= wanted:
+                hits += 1
+            continue
+        token = next(iter(parts), hint)
+        if token in wanted or hint in wanted:
+            hits += 1
+    return hits
+
+
 def infer_requirement(*texts: str) -> WorldRequirement | None:
     """Read object type off the claim and topic. The mechanism does not vote.
 
@@ -553,6 +742,7 @@ def infer_requirement(*texts: str) -> WorldRequirement | None:
             object_type="io",
             environment=("io",),
             anchors=_anchors_of(wanted),
+            properties=tuple(sorted(required_properties(blob).items())),
         )
     if any(
         needle in blob
@@ -572,9 +762,11 @@ def infer_requirement(*texts: str) -> WorldRequirement | None:
             operations=tuple(sorted(trace.capabilities & wanted)),
             environment=("formula",),
             anchors=_anchors_of(wanted),
+            properties=tuple(sorted(required_properties(blob).items())),
         )
     scores = {
-        spec.object_type: len(wanted & spec.hints) for spec in SCHEMAS.values()
+        spec.object_type: hint_hits(wanted, spec.hints)
+        for spec in SCHEMAS.values()
     }
     best = max(scores, key=lambda key: (scores[key], key))
     if scores[best] <= 0:
@@ -586,6 +778,7 @@ def infer_requirement(*texts: str) -> WorldRequirement | None:
         schema=schema,
         operations=tuple(sorted(spec.capabilities & wanted)),
         anchors=_anchors_of(wanted),
+        properties=tuple(sorted(required_properties(blob).items())),
     )
 
 
@@ -644,6 +837,31 @@ def domain_compatible(fixture: WorldFixture, wanted: frozenset[str]) -> bool:
     return not foreign_conflict(fixture, wanted)
 
 
+def instance_tokens(fixture: WorldFixture) -> frozenset[str]:
+    """Domain tags that identify this *instance*, not its schema category.
+
+    `swe`, `agent`, or `tool` on a trace world describe what every world
+    of that schema is; sharing one of them cannot make a foreign named
+    instance a sibling of this freeze. The schema registry already owns
+    the category vocabulary (name, object family, default domains,
+    capabilities, hints), so it is subtracted here instead of maintaining
+    a second hand-written list of generic words.
+    """
+    own = content_tokens(" ".join(fixture.domains))
+    spec = SCHEMAS.get(fixture.schema)
+    if spec is None:
+        return own
+    generic = content_tokens(
+        " ".join(
+            (spec.name, spec.object_type)
+            + tuple(spec.default_domains)
+            + tuple(sorted(spec.capabilities))
+            + tuple(sorted(spec.hints))
+        )
+    )
+    return own - generic
+
+
 def lineage_conflicts(
     fixture: WorldFixture,
     *,
@@ -656,13 +874,19 @@ def lineage_conflicts(
     binds by instance tags. If the papers name an object, that object
     decides — Pride vs agent-tool traces unbinds; an A2A automaton vs a
     lineage that says labeled_traces does not, because the named instance
-    is not foreign to this freeze. Schema family is only consulted when
-    the lineage did not name an instance.
+    is not foreign to this freeze. A named instance that shares one of
+    this freeze's *instance* tags is a sibling — a paper title brand
+    (distillation, SFT on the same object) is not a different object.
+    Category tags do not vote here: "agent" or "tool" in a paper title
+    must not exempt a foreign dataset from the check. Schema family is
+    only consulted when the lineage did not name an instance.
     """
     named = content_tokens(named_instance)
-    if named and foreign_conflict(fixture, named):
-        return "the named instance is a different scientific object than this freeze"
     if named:
+        if named & instance_tokens(fixture):
+            return ""
+        if foreign_conflict(fixture, named):
+            return "the named instance is a different scientific object than this freeze"
         return ""
     if lineage_schema and schema_family(lineage_schema) != schema_family(
         fixture.schema
@@ -692,6 +916,12 @@ def requirement_compatible(req: WorldRequirement, fixture: WorldFixture) -> bool
     tokens = requirement_tokens(req)
     if tokens and not domain_compatible(fixture, tokens):
         return False
+    # Words are not the object: a claim that says its validators are fixed
+    # does not bind a history whose agent rewrites them, whatever the
+    # schema and the domain tags say.
+    ok, _conflicts = properties_compatible(dict(req.properties), fixture_properties(fixture))
+    if not ok:
+        return False
     return True
 
 
@@ -715,6 +945,11 @@ def match_world(
     if not eligible:
         return None
     tokens = requirement_tokens(req)
+    if tokens:
+        tagged = [item for item in eligible if domain_hits(item, tokens) > 0]
+        if not tagged:
+            return None
+        eligible = tagged
     eligible.sort(
         key=lambda item: (-domain_hits(item, tokens), -_fixture_scale(item), item.id)
     )
@@ -727,18 +962,19 @@ def pick_world(topic: str, catalog: dict[str, WorldFixture]) -> WorldFixture | N
     Domain tags on the manifest are the scientific bind. Schema hints
     may rank among tagged fixtures; they cannot create eligibility on
     their own — otherwise a distillation claim that says "token" binds
-    Pride and Prejudice. Title/id prose still cannot bind. A graph topic
+    Pride and Prejudice, or a sketch/stream topic binds Austen because
+    both mention tokens. Title/id prose still cannot bind. A graph topic
     binds a graph (medium SNAP slices beat the toy clubs when the topic
-    names connectivity); a genomic/succinct topic binds a sequence; an
-    index/text topic binds prose; a protocol-security topic binds the
-    matching `symbolic_trace`, not whichever automaton sorts first. No
-    positive domain match is WORLD_INCOMPATIBLE — auto never falls back
-    to Zachary karate or any other substitute schema. `path-trace` is a
-    test fixture and is never auto-picked. External-memory claims still
-    have no schema and must not run as WORLD on a social graph.
+    names connectivity); a genomic/succinct topic binds a sequence; a
+    public-prose topic binds Pride; a protocol-security topic binds the
+    matching `symbolic_trace`. No positive domain match is a catalog
+    miss — the mission constructs a task-level GENERATED world from the
+    topic object rather than borrowing a schema cousin. `path-trace` is
+    a test fixture and is never auto-picked. External-memory claims
+    still have no schema and must not run as WORLD on a social graph.
     """
     req = infer_requirement(topic)
-    if req is not None and req.object_type in _INCOMPATIBLE_FAMILIES:
+    if req is None or req.object_type in _INCOMPATIBLE_FAMILIES:
         return None
     eligible = [
         fixture
@@ -750,7 +986,7 @@ def pick_world(topic: str, catalog: dict[str, WorldFixture]) -> WorldFixture | N
     wanted = content_tokens(topic)
     ranked: list[tuple[int, str, WorldFixture]] = []
     for fixture in eligible:
-        if req is not None and not requirement_compatible(req, fixture):
+        if not requirement_compatible(req, fixture):
             continue
         extra = content_tokens(
             " ".join(fixture.domains) + " " + fixture.title + " " + fixture.id
@@ -763,10 +999,9 @@ def pick_world(topic: str, catalog: dict[str, WorldFixture]) -> WorldFixture | N
             # Schema hints and title prose only rank; they do not bind
             # an agent-tool claim to a novel.
             continue
-        if hits <= 0 and not schema_hits:
-            # Title/id prose must not create eligibility — otherwise
-            # "language model training" binds a TCP automaton because
-            # the title says "learned model".
+        if hits <= 0:
+            # Schema cousins ("token" on Pride, "similarity" on UCI
+            # letters) are not this task's object. Construct instead.
             continue
         score = 2 * hits + len(schema_hits) + len(wanted & extra)
         ranked.append((score, fixture.id, fixture))
@@ -797,14 +1032,76 @@ def resolve_world(
     *,
     topic: str = "",
 ) -> WorldFixture | None:
+    """Named catalog freeze, or None.
+
+    ``auto`` / ``none`` do not pick Pride, phage, A2A, or any other
+    shipped fixture. The mission constructs a GENERATED world from the
+    topic and retrieved papers. ``pick_world`` stays for explicit
+    freeze recipes and operator ``--world <id>``.
+    """
+    del topic
     text = str(name or "").strip()
-    if not text or text.lower() in {"none", "synthetic", "off", "0"}:
+    if not text or text.lower() in {"none", "synthetic", "off", "0", "auto"}:
         return None
-    if text.lower() == "auto":
-        return pick_world(topic, catalog)
     if text not in catalog:
         raise KeyError(text)
     return catalog[text]
+
+
+# Worlds the host produced under a recorded rule or recipe, for this
+# object family. `auto` may bind these and only these.
+ACQUIRED_PROVENANCE = frozenset({"derived", "harvested", "wishlist"})
+
+
+def pick_acquired_world(
+    topic: str,
+    catalog: dict[str, WorldFixture],
+) -> WorldFixture | None:
+    """`--world auto` binding, restricted to acquired freezes.
+
+    Shipped fixtures (Pride, phage, A2A, SNAP, …) stay out: schema match
+    on them is not scientific match, which is why `resolve_world` never
+    picks them. A world the host derived, harvested, or acquired from a
+    wishlist recipe is different in kind: it was produced *for* this
+    object family, and its manifest says so. It still has to pass the
+    same domain-tag test as an explicit pick — a `program_state` freeze
+    of one harness does not bind a topic about a different object.
+    """
+    acquired = {
+        key: fixture
+        for key, fixture in catalog.items()
+        if fixture.provenance in ACQUIRED_PROVENANCE
+        and fixture.role not in {"test", "fixture", "synthetic"}
+    }
+    if not acquired:
+        return None
+    req = infer_requirement(topic)
+    if req is None:
+        return None
+    required = dict(req.properties)
+    # Object properties first: a world that contradicts what the claim
+    # says about its object is out before any word is counted. Among the
+    # rest, the world that positively satisfies more of the claim's stated
+    # properties wins; the domain-tag pick breaks ties.
+    eligible = {
+        key: fixture
+        for key, fixture in acquired.items()
+        if fixture.schema == req.schema
+        and properties_compatible(required, fixture_properties(fixture))[0]
+    }
+    if not eligible:
+        return None
+    if required:
+        best = max(property_overlap(required, fixture_properties(f)) for f in eligible.values())
+        eligible = {
+            key: fixture
+            for key, fixture in eligible.items()
+            if property_overlap(required, fixture_properties(fixture)) == best
+        }
+    picked = pick_world(topic, eligible)
+    if picked is None or picked.schema != req.schema:
+        return None
+    return picked
 
 
 def bind_world(work_dir: Path, fixture: WorldFixture) -> Path:

@@ -42,6 +42,15 @@ SIMULATE_WORLD = "SIMULATE_WORLD"
 EXECUTE_PLACEBO = "EXECUTE_PLACEBO"
 EXTERNAL_REPLICATION = "EXTERNAL_REPLICATION"
 PROMOTE = "PROMOTE"
+# A harvest recipe (harness, command, seed, iterations) written down
+# before the harness runs, and the run that followed it. The recipe
+# digest on the FREEZE_WORLD payload must match a prior REGISTER_HARVEST.
+REGISTER_HARVEST = "REGISTER_HARVEST"
+EXECUTE_HARVEST = "EXECUTE_HARVEST"
+# A post hoc, labelled analysis on attested bytes (exploratory.py). It is
+# recorded so the paper stage can cite what motivated a hypothesis; no
+# promotion gate ever counts it.
+EXPLORATORY_ANALYSIS = "EXPLORATORY_ANALYSIS"
 
 
 class ChainError(Exception):

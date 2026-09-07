@@ -24,31 +24,48 @@ from __future__ import annotations
 import json
 import math
 import statistics
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any
 
 from ..models import BlockedRecord
-from .evidence import MIN_HEAVY_REPLICATES
+from .evidence import MIN_HEAVY_REPLICATES, competing_explanation_missing
 from .generate import GeneratedCard, GenerationRefused
-from .llm import Completion
+from .ideakind import idea_kind_of, parse_idea_kind
+from .lifecycle import diagnose_goal, runs_two_arm
+from .llm import Completion, complete_call
 from .probeexp import COMPUTE_TIERS, DEFAULT_TIER
+from .world import world_attested
+from .worldfields import layout_prompt_block
+
+
+def _layout_block(schema: Any) -> str:
+    # Spliced into a template that is still `.format()`-ed afterwards, so
+    # the literal `{id, reads, ...}` record shapes must be escaped here.
+    return layout_prompt_block(str(schema or "")).replace("{", "{{").replace("}", "}}")
 
 DIRECTIONS = ("treatment_lower", "treatment_higher")
 DEFAULT_MARGIN = 0.05
 
 SYSTEM = (
-    "You are designing the cheapest experiment that discriminates between"
-    " two explanations. Answer with one JSON object and nothing else."
+    "You are designing the cheapest next scientific action that"
+    " discriminates between explanations. The idea_kind decides the"
+    " product: probe is a fair two-arm; question is an observation;"
+    " acquire is a harvest plan; theory is a prediction derivation."
+    " Answer with one JSON object and nothing else."
 )
 
-TEMPLATE = """A research hypothesis survived the novelty gates. Before any experiment and before any write-up, name what would change our mind about it.
+HEADER = """A research idea survived the novelty gates. Before any experiment and before any write-up, name what would change our mind about it.
 
 Researcher's topic: {topic}
 Claim: {claim}
 Proposed mechanism: {mechanism}
 Prediction: {prediction}
+idea_kind: {idea_kind}
+diagnose_goal: {diagnose_goal}
 
-Answer with JSON:
+"""
+
+PROBE_TEMPLATE = """Answer with JSON:
 {{"alternative": "<=50 words: the strongest COMPETING explanation for the same predicted effect — not a restatement of the mechanism",
  "experiment": "<=60 words: the smallest two-arm experiment that separates mechanism from alternative; the treatment arm isolates the mechanism, the control arm removes exactly it",
  "treatment_arm": "<=25 words: what the treatment arm does",
@@ -64,12 +81,58 @@ Answer with JSON:
 `expected_direction` and `alternative_direction` are pre-registered: after the probe runs, the verdict is computed from the two numbers and these fields, with no further judgment. A design where mechanism and alternative predict the SAME direction has no discriminating power and will be rejected — find a regime where they predict opposite signs. `margin` is the minimum relative separation (0.01 to 0.5) that counts as a real difference; pick it for this experiment, do not copy a default. Both arms must share one measure and differ by a single mechanism flag; a treatment that always wins by construction is not a diagnosis. The measured quantity is a property of the CLAIM's object, not the distant mechanism's internal cost.
 """
 
+QUESTION_TEMPLATE = """Answer with JSON:
+{{"alternative": "<=50 words: the competing reading of the same contrast",
+ "experiment": "<=60 words: the smallest discriminating observation/contrast — not a two-arm intervention",
+ "observe_a": "<=25 words: one side of the contrast",
+ "observe_b": "<=25 words: the other side, same measure",
+ "expected_if_alternative": "<=30 words: what the contrast looks like if the competing reading is right"}}
+
+Do not add a lever, a margin, an MDE, or a causal treatment. An observational question that is rewritten as a two-arm is refused.
+"""
+
+ACQUIRE_TEMPLATE = """Answer with JSON:
+{{"alternative": "<=50 words: why this capability might already exist or not be needed",
+ "experiment": "<=60 words: the smallest harvest/construction recipe",
+ "recipe": "<=60 words: how the missing artifact/world is built",
+ "validators": "<=40 words: what attests the new world",
+ "readiness_criteria": "<=30 words: when harvest succeeded",
+ "expected_if_alternative": "<=30 words: what failure looks like"}}
+
+Success is an attested new world, not a two-arm effect. Do not invent arms or a margin.
+"""
+
+THEORY_TEMPLATE = """Answer with JSON:
+{{"alternative": "<=50 words: the competing mechanism for the same phenomenon",
+ "experiment": "<=60 words: the smallest derived prediction that discriminates",
+ "derived_predictions": "<=40 words: what the mechanism entails",
+ "disconfirmation": "<=30 words: what observation would drop the theory",
+ "expected_if_alternative": "<=30 words: what the competitor predicts instead"}}
+
+Predictions stay GENERATED until a later world can test them. Do not invent a two-arm or treat an unchecked prediction as a WORLD fact.
+"""
+
+KIND_TEMPLATES = {
+    "probe": PROBE_TEMPLATE,
+    "question": QUESTION_TEMPLATE,
+    "acquire": ACQUIRE_TEMPLATE,
+    "theory": THEORY_TEMPLATE,
+}
+
 FOLLOWUP = """
 
 An earlier probe of this hypothesis failed to separate the arms (verdict: uninformative). That experiment was:
 {experiment}
 
 Do not repeat that design. Design a MORE discriminating experiment: a more extreme construction, a larger effect surface, or a regime where mechanism and alternative predict opposite signs — so the arms can actually separate this time. Do not use treatment or control numbers from any previous run; they are withheld so this redesign cannot chase a win. Iterate until the experiment can discriminate, not until the idea wins.
+"""
+
+COMPETING_EXPLANATION = """
+
+The previous diagnosis did not name a competing explanation as another declared lever of this world.
+Previous competing explanation: {alternative}
+Declared levers: {levers}
+The new diagnosis MUST name another declared lever of this world (not the registered world_lever) as the competing explanation. A prose story that names no lever leaves the mechanism unidentified.
 """
 
 SWITCH_MECHANISM = """
@@ -99,7 +162,7 @@ World: {world_id} — {title}
 Schema: {schema}
 Files in data/: {files}
 How to load: {load_hint}
-The treatment and control must read the same attested bytes and differ only by the mechanism flag. Do not subsample the instance just to make a preferred sign easier.
+{layout}The treatment and control must read the same attested bytes and differ only by the mechanism flag. Do not subsample the instance just to make a preferred sign easier.
 """
 
 WORLD_DYNAMICS = """
@@ -112,6 +175,14 @@ Add to the JSON:
 "world_lever": the ONE lever above your mechanism acts through — the treatment arm's intervention must be an instance of it; write "none" if the claimed mechanism has no handle in this world,
 "world_observable": the ONE observable above that the claim's predicted quantity is about (required unless world_lever is "none").
 An honest "none" means the prediction has no handle on this object: skip the probe rather than invent data. A surrogate binding that pretends a handle exists is worse than no world. A lever the simulation shows inert cannot separate your arms — pick a responsive one or say "none".
+"""
+
+CARD_COMPILE = """
+
+This card already compiled the distant concept onto a declared handle. Prefer that binding. An honest "none" is only for a mechanism that still has no lever after that compile.
+Compiled world_lever: {lever}
+Compiled world_observable: {observable}
+How the far concept maps: {maps}
 """
 
 SCOUT_FEEDBACK = """
@@ -128,9 +199,9 @@ World: {world_id} — {title}
 Schema: {schema}
 Files in data/: {files}
 How to load: {load_hint}
-Excerpt:
+{layout}Excerpt:
 {excerpt}
-Design the two arms against THIS instance. Both arms must read data/world.json and differ only by the mechanism flag.
+Design the two arms against THIS instance and name the fields listed above (not another schema's states/transitions/traces). Both arms must read data/world.json and differ only by the mechanism flag.
 """
 
 REQUIREMENT_CONTEXT = """
@@ -146,6 +217,23 @@ Named instance: {named_instance}
 Development path: {lineage}
 Why this is the claim's object: {why_this_object}
 Papers: {cite_ids}
+"""
+
+LINEAGE_WHEN_BOUND = """
+
+Retrieved papers name a published instance. That is literature, not this freeze.
+Named instance (wishlist only): {named_instance}
+Development path: {lineage}
+Design the two arms against the bound world {world_id} only. Do not write the experiment as running on the named instance. Do not change the scientific object.
+"""
+
+DEEPEN_LINE = """
+
+This pair already has a WORLD support that did not isolate the mechanism.
+Previous competing explanation: {alternative}
+Previous experiment: {experiment}
+{notes}
+The new diagnosis MUST change the competing explanation or the regime (the world slice or the lever). Repeating the same alternative and the same two-arm design is forbidden. Keep the bound freeze {world_id}. Do not name a different scientific object.
 """
 
 PAPER_BASELINES = """
@@ -201,6 +289,10 @@ class Diagnosis:
     # invent one.
     world_lever: str = ""
     world_observable: str = ""
+    # True when the diagnosis named another lever and was held to the
+    # card's compiled handle (the registration), recorded so a reader can
+    # see the drift the model attempted.
+    handle_held: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         payload = {
@@ -223,6 +315,8 @@ class Diagnosis:
         if self.world_lever:
             payload["world_lever"] = self.world_lever
             payload["world_observable"] = self.world_observable
+        if self.handle_held:
+            payload["handle_held"] = True
         return payload
 
 
@@ -245,7 +339,39 @@ def _parse(completion: Completion) -> dict[str, Any]:
     return payload
 
 
-def diagnosis_from_payload(card_id: str, payload: dict[str, Any]) -> Diagnosis:
+def diagnosis_from_payload(
+    card_id: str, payload: dict[str, Any], *, idea_kind: str = ""
+) -> Diagnosis:
+    kind = parse_idea_kind(idea_kind or payload.get("idea_kind"))
+    if not runs_two_arm(kind):
+        experiment = str(
+            payload.get("experiment")
+            or payload.get("recipe")
+            or payload.get("observation")
+            or payload.get("derivation")
+            or ""
+        ).strip()
+        if not experiment:
+            raise _refuse(
+                f"read a {kind} plan",
+                f"the diagnosis for {kind} names {diagnose_goal(kind)}",
+            )
+        return Diagnosis(
+            card_id=card_id,
+            alternative=str(payload.get("alternative") or "unspecified competing reading").strip(),
+            experiment=experiment,
+            treatment_arm=str(payload.get("treatment_arm") or payload.get("observe_a") or kind).strip(),
+            control_arm=str(payload.get("control_arm") or payload.get("observe_b") or "comparison").strip(),
+            expected_direction="",
+            alternative_direction="",
+            expected_if_alternative=str(
+                payload.get("expected_if_alternative") or "the contrast does not discriminate"
+            ).strip(),
+            margin=0.0,
+            margin_reason=str(payload.get("margin_reason") or f"not a probe; {diagnose_goal(kind)}").strip(),
+            world_lever=str(payload.get("world_lever") or "").strip(),
+            world_observable=str(payload.get("world_observable") or "").strip(),
+        )
     fields = {}
     for name in (
         "alternative",
@@ -314,6 +440,8 @@ def diagnosis_from_payload(card_id: str, payload: dict[str, Any]) -> Diagnosis:
         claim=str(payload.get("claim") or payload.get("_claim") or ""),
         mechanism=str(payload.get("mechanism") or payload.get("_mechanism") or ""),
         topic=str(payload.get("topic") or payload.get("_topic") or ""),
+        schema=str(payload.get("schema") or payload.get("_schema") or ""),
+        world_lever=str(payload.get("world_lever") or ""),
     )
     if locked:
         raise _refuse("write a two-arm diagnosis", locked)
@@ -397,6 +525,7 @@ def write_diagnosis(
     requirement: Any = None,
     dynamics: dict[str, Any] | None = None,
     world_path: Any = None,
+    scientific: dict[str, Any] | None = None,
 ) -> Diagnosis:
     """`prior_probe` is this hypothesis line's last probe from the research
     state, or an in-mission attempt that failed to discriminate. An
@@ -410,12 +539,15 @@ def write_diagnosis(
     explanations predict the same direction — is quoted back for `retries`
     more attempts. Only the final refusal propagates.
     """
-    prompt = TEMPLATE.format(
+    kind = idea_kind_of(card)
+    prompt = HEADER.format(
         topic=topic,
         claim=card.claim,
         mechanism=card.mechanism,
         prediction=card.prediction,
-    )
+        idea_kind=kind,
+        diagnose_goal=diagnose_goal(kind),
+    ) + KIND_TEMPLATES[kind]
     if skills:
         prompt = skills + prompt
     if (
@@ -426,8 +558,34 @@ def write_diagnosis(
         prompt += FOLLOWUP.format(experiment=prior_probe["experiment"])
     if prior_probe and str(prior_probe.get("world_scout") or "").strip():
         prompt += SCOUT_FEEDBACK.format(scout=prior_probe["world_scout"])
-    if prior_probe and prior_probe.get("must_switch_mechanism"):
+    if (
+        prior_probe
+        and prior_probe.get("must_switch_mechanism")
+        and world_attested(prior_probe)
+    ):
         prompt += SWITCH_MECHANISM
+    if (
+        world is not None
+        and prior_probe
+        and str(prior_probe.get("verdict") or "") == "supports"
+        and str(getattr(world, "role", "") or "") not in {"generated", "placebo"}
+    ):
+        notes = [
+            str(item).strip()
+            for item in (prior_probe.get("design_notes") or [])
+            if str(item or "").strip()
+        ]
+        prompt += DEEPEN_LINE.format(
+            alternative=str(prior_probe.get("alternative") or "unspecified")[:240],
+            experiment=str(prior_probe.get("experiment") or "unspecified")[:400],
+            notes=(
+                "Reviewer design notes (opinion, not a rewrite of the last probe): "
+                + "; ".join(notes[:4])
+                if notes
+                else ""
+            ),
+            world_id=str(getattr(world, "id", "") or "the bound freeze"),
+        )
     discarded: list[str] = []
     for text in list(failed_experiments or []) + list(
         (prior_probe or {}).get("discarded") or []
@@ -459,17 +617,22 @@ def write_diagnosis(
                 excerpt = world_excerpt(load_world_payload(world.root))
             except Exception:
                 excerpt = ""
-            prompt += CONSTRUCTED_WORLD_CONTEXT.format(
+            schema_name = str(getattr(world, "schema", "") or "")
+            prompt += CONSTRUCTED_WORLD_CONTEXT.replace(
+                "{layout}", _layout_block(schema_name)
+            ).format(
                 world_id=getattr(world, "id", "world"),
                 title=getattr(world, "title", ""),
-                schema=getattr(world, "schema", "") or "symbolic_trace",
+                schema=schema_name or "(unregistered)",
                 files=", ".join(files) or "world.json",
                 load_hint=getattr(world, "load_hint", "")
                 or "json.loads(Path('data/world.json').read_text())",
                 excerpt=excerpt or "(see data/world.json)",
             )
         else:
-            prompt += WORLD_CONTEXT.format(
+            prompt += WORLD_CONTEXT.replace(
+                "{layout}", _layout_block(getattr(world, "schema", ""))
+            ).format(
                 world_id=getattr(world, "id", "world"),
                 title=getattr(world, "title", ""),
                 schema=getattr(world, "schema", "") or "attested files",
@@ -488,15 +651,33 @@ def write_diagnosis(
                 lever_lines=card_lines(dynamics),
                 observables=", ".join(obs_vocab),
             )
-    if world_path is not None:
-        prompt += LINEAGE_CONTEXT.format(
-            named_instance=getattr(world_path, "named_instance", "") or "",
-            lineage=getattr(world_path, "lineage", "") or "",
-            why_this_object=getattr(world_path, "why_this_object", "") or "",
-            cite_ids=", ".join(
-                str(item) for item in (getattr(world_path, "cite_ids", ()) or ())
-            ),
+    compiled_lever = str(getattr(card, "world_lever", "") or "").strip()
+    compiled_obs = str(getattr(card, "world_observable", "") or "").strip()
+    compiled_maps = str(getattr(card, "far_maps_to_lever", "") or "").strip()
+    if compiled_lever and compiled_lever != "none":
+        prompt += CARD_COMPILE.format(
+            lever=compiled_lever,
+            observable=compiled_obs or "(unspecified)",
+            maps=compiled_maps or "(unspecified)",
         )
+    if world_path is not None:
+        bound_id = str(getattr(world, "id", "") or "")
+        bound_role = str(getattr(world, "role", "") or "")
+        if bound_id and bound_role not in {"generated", "placebo"}:
+            prompt += LINEAGE_WHEN_BOUND.format(
+                named_instance=getattr(world_path, "named_instance", "") or "",
+                lineage=getattr(world_path, "lineage", "") or "",
+                world_id=bound_id,
+            )
+        else:
+            prompt += LINEAGE_CONTEXT.format(
+                named_instance=getattr(world_path, "named_instance", "") or "",
+                lineage=getattr(world_path, "lineage", "") or "",
+                why_this_object=getattr(world_path, "why_this_object", "") or "",
+                cite_ids=", ".join(
+                    str(item) for item in (getattr(world_path, "cite_ids", ()) or ())
+                ),
+            )
     if requirement is not None and world is None:
         object_type = ""
         if hasattr(requirement, "object_type"):
@@ -508,7 +689,12 @@ def write_diagnosis(
         )
     allowed_ids: set[str] = set()
     paper_lines: list[str] = []
-    for work in works or []:
+    from .worldfields import papers_on_claim_object
+
+    works = papers_on_claim_object(
+        list(works or []), claim=card.claim, topic=topic, minimum="weak"
+    )
+    for work in works:
         cite = ""
         title = ""
         abstract = ""
@@ -527,6 +713,21 @@ def write_diagnosis(
         paper_lines.append(f"- [{cite}] {title}" + (f" — {cue}" if cue else ""))
     if paper_lines:
         prompt += PAPER_BASELINES.format(papers="\n".join(paper_lines[:12]))
+    if prior_probe:
+        gap_levers = lever_vocab or tuple(
+            str(item)
+            for item in (prior_probe.get("world_levers") or ())
+            if str(item or "").strip() and str(item) != "none"
+        )
+        if competing_explanation_missing(
+            str(prior_probe.get("alternative") or ""),
+            levers=gap_levers,
+            world_lever=str(prior_probe.get("world_lever") or ""),
+        ):
+            prompt += COMPETING_EXPLANATION.format(
+                alternative=str(prior_probe.get("alternative") or "(empty)")[:240],
+                levers=", ".join(gap_levers) or "(none declared)",
+            )
     refusal: DiagnosisRefused | None = None
     for attempt in range(retries + 1):
         ask = prompt
@@ -538,15 +739,17 @@ def write_diagnosis(
                 " Write a new diagnosis that cannot be rejected for the"
                 " same reason."
             )
-        completion = client.complete(
+        completion = complete_call(
+            client,
             ask,
             purpose=f"diagnosis:{card.card_id}"
             + (f":retry{attempt}" if attempt else ""),
             system=SYSTEM,
+            scientific=scientific,
         )
         completion.assert_usable()
         try:
-            return diagnosis_from_payload(
+            diagnosis = diagnosis_from_payload(
                 card.card_id,
                 {
                     **_parse(completion),
@@ -556,8 +759,34 @@ def write_diagnosis(
                     "_topic": topic,
                     "_world_levers": lever_vocab,
                     "_world_observables": obs_vocab,
+                    "_schema": str(getattr(world, "schema", "") or ""),
+                    "idea_kind": idea_kind_of(card),
                 },
+                idea_kind=idea_kind_of(card),
             )
+            if compiled_lever and compiled_lever != "none":
+                # The card's compiled handle is the registration. A diagnosis
+                # that drifts to another lever (v4: the card compiled onto
+                # `contrast:validator_write`, the diagnosis wrote `dropout`
+                # and spent three blind probes) is held to the card's
+                # handle; only an honest "none" may drop it, and only when
+                # the compiled lever is not one the scout shows responsive.
+                drifted = (
+                    diagnosis.world_lever not in ("", "none")
+                    and diagnosis.world_lever != compiled_lever
+                )
+                if diagnosis.world_lever in ("", "none") or drifted:
+                    diagnosis = replace(
+                        diagnosis,
+                        world_lever=compiled_lever,
+                        world_observable=(
+                            compiled_obs
+                            if compiled_obs in obs_vocab or not obs_vocab
+                            else diagnosis.world_observable
+                        ),
+                        handle_held=drifted,
+                    )
+            return diagnosis
         except DiagnosisRefused as exc:
             refusal = exc
     assert refusal is not None
@@ -565,14 +794,26 @@ def write_diagnosis(
 
 
 def judge_probe(
-    diagnosis: Diagnosis, treatment: float, control: float
+    diagnosis: Diagnosis,
+    treatment: float,
+    control: float,
+    *,
+    kind: str = "",
 ) -> dict[str, Any]:
     """Supports / weakens / uninformative, by arithmetic alone.
 
     The separation is relative to the control arm (absolute when the
     control is zero). Inside the margin, the probe failed to discriminate
     — that is a reading about the experiment, not about the idea.
+    WORLD_SIM imagined numbers are refused; they cannot become a verdict.
     """
+    from .worldsim import WorldSimError, refuse_world_sim_as_evidence
+
+    reason = refuse_world_sim_as_evidence(
+        {"kind": kind or getattr(diagnosis, "kind", "")}
+    )
+    if reason:
+        raise WorldSimError(reason)
     base = abs(control)
     if base > 0:
         separation = (treatment - control) / base

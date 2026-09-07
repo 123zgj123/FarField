@@ -1,0 +1,25 @@
+{
+  "run": "cwm-iclr2027-ds",
+  "world_objects": [
+    "divergent",
+    "accepted",
+    "task_return",
+    "validator_writes",
+    "contrast:divergent",
+    "false_accept_fraction"
+  ],
+  "claim": {
+    "mechanism": "accepted-state retrieval index",
+    "handle": "contrast:divergent",
+    "claim_type": "mechanism",
+    "statement": "The accepted-state retrieval index causes reduced false acceptance"
+  },
+  "expected": {
+    "mechanism_existence": "fail",
+    "handle_type": "observational",
+    "review_failure": "stop",
+    "weak_papers_in_related_work": 0,
+    "evidence_scope": "association_only",
+    "disposition": "needs_world_expansion"
+  }
+}

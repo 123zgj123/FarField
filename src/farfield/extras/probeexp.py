@@ -28,10 +28,16 @@ from pathlib import Path
 from typing import Any
 
 from ..models import BlockedRecord
-from .brief import ResearchBrief
 from .generate import GeneratedCard, GenerationRefused
-from .llm import Completion
+from .llm import Completion, complete_call
 from .world import reads_world_data
+from .worldfields import layout_prompt_block, probe_reads_bound_layout
+
+
+def _layout_block(schema: Any) -> str:
+    # Spliced into a template that is still `.format()`-ed afterwards, so
+    # the literal `{id, reads, ...}` record shapes must be escaped here.
+    return layout_prompt_block(str(schema or "")).replace("{", "{{").replace("}", "}}")
 
 ALLOWED_MODULES = frozenset(
     {
@@ -94,6 +100,43 @@ def resolve_tier(name: str | None) -> ComputeTier:
     """Named tier, or the default host budget. Unknown names do not
     invent a bigger budget."""
     return COMPUTE_TIERS.get(str(name or "").strip().lower(), COMPUTE_TIERS[DEFAULT_TIER])
+
+
+_TIER_RANK = {"sandbox": 0, "host": 1, "host-heavy": 2}
+
+# Schemas whose object is a history that has to be replayed (an update
+# log, an execution trajectory) cannot be measured at toy scale: a 20s
+# stdlib script over 1731 self-modification updates is a hashed-feature
+# classifier standing in for a validator. The floor is a property of the
+# *schema*, fixed before any card exists — so a bigger budget is still
+# never a reaction to a result.
+SCHEMA_TIER_FLOOR: dict[str, str] = {
+    "program_state": "host-heavy",
+    "labeled_traces": "host-heavy",
+}
+# The in-loop probe is a filter, not the experiment; it follows the tier
+# up to this wall clock. The full tier budget belongs to `farfield execute`.
+IN_LOOP_PROBE_CAP_SECONDS = 600.0
+
+
+def minimum_tier(schema: str | None) -> str:
+    return SCHEMA_TIER_FLOOR.get(str(schema or "").strip(), DEFAULT_TIER)
+
+
+def floor_tier(requested: str | None, schema: str | None) -> str:
+    """The higher of the diagnosis's tier and the schema's floor."""
+    asked = str(requested or "").strip().lower() or DEFAULT_TIER
+    if asked not in COMPUTE_TIERS:
+        asked = DEFAULT_TIER
+    floor = minimum_tier(schema)
+    return asked if _TIER_RANK[asked] >= _TIER_RANK[floor] else floor
+
+
+def probe_timeout(tier: ComputeTier | None) -> float:
+    """Wall clock for the in-loop probe under this tier."""
+    if tier is None:
+        return 20.0
+    return min(float(tier.timeout_seconds), IN_LOOP_PROBE_CAP_SECONDS)
 
 _ALLOWED_NODES = frozenset(
     {
@@ -215,7 +258,7 @@ SYSTEM = (
     " object and nothing else."
 )
 
-TEMPLATE = """Implement this pre-registered two-arm experiment as a small Python script. The script must run with the standard library only, finish in a few seconds, and write metrics.json with exactly two finite numbers: "treatment" and "control".
+TEMPLATE = """Implement this pre-registered two-arm experiment as a Python script. {budget} It must write metrics.json with exactly two finite numbers: "treatment" and "control".
 
 Researcher's topic: {topic}
 Claim: {claim}
@@ -260,7 +303,7 @@ A frozen experimental world is already in the probe cwd as data/. Files: {files}
 World: {world_id} — {title}
 Schema: {schema}
 How to load (stdlib): {load_hint}
-Source (attested; do not fetch): {source}
+{layout}Source (attested; do not fetch): {source}
 world.json repeats this metadata.
 
 Do NOT invent a dataset. Load the instance from data/ with pathlib as in the load hint. Both arms must measure that SAME loaded instance and differ only by the mechanism flag. A script that never names data/ is still SYNTHETIC and will be refused. Report a quantity of the CLAIM's object, not the distant mechanism's internal cost.
@@ -272,10 +315,10 @@ The experimental world for THIS registered experiment is in data/. Files: {files
 World: {world_id} — {title}
 Schema: {schema}
 How to load (stdlib): {load_hint}
-Excerpt:
+{layout}Excerpt:
 {excerpt}
 
-This world was constructed this iteration. It is not a freeze. The run is GENERATED: it can weaken, it cannot corroborate. Do NOT invent a different graph. Load data/world.json. Both arms measure that SAME instance and differ only by the mechanism flag. Do not write treatment/control into the world.
+This world was constructed this iteration. It is not a freeze. The run is GENERATED: it can weaken, it cannot corroborate. Do NOT invent a different graph. Load data/world.json and read ONLY the top-level keys this schema stores (listed above); a script that reads another schema's keys (states/transitions on a program_state world, traces on an automaton) measures nothing and is refused. Both arms measure that SAME instance and differ only by the mechanism flag. Do not write treatment/control into the world.
 """
 
 PAPER_CONTROL = """
@@ -498,6 +541,7 @@ def spec_from_payload(
     claim: str = "",
     mechanism: str = "",
     topic: str = "",
+    schema: str = "",
 ) -> ProbeSpec:
     measure = str(payload.get("measure") or "").strip()
     source = str(payload.get("source") or "").strip()
@@ -519,10 +563,40 @@ def spec_from_payload(
         claim=claim or str(payload.get("claim") or ""),
         mechanism=mechanism or str(payload.get("mechanism") or ""),
         topic=topic or str(payload.get("topic") or ""),
+        schema=schema or str(payload.get("schema") or ""),
     )
     if locked:
         raise _refuse("write a fair two-arm probe", locked)
+    wrong_layout = probe_reads_bound_layout(
+        source, schema or str(payload.get("schema") or "")
+    )
+    if wrong_layout:
+        raise _refuse("read the bound world's own keys", wrong_layout)
     return ProbeSpec(measure=measure, source=source)
+
+
+CONTRAST_ARMS = """
+This experiment compiles onto an OBSERVATIONAL handle, `{lever}`. The two arms are two strata of the records the world already contains, not an intervention: `measure(world, True)` evaluates the records IN the stratum, `measure(world, False)` evaluates the records OUTSIDE it, with the same statistic. Match the strata before comparing — reweight or pair the control records to the treatment records on the world's natural covariates (episode template / repo, number of updates per episode) so the contrast is not a difference in task difficulty. The dependent variable must read the oracle field (`task_return`) when the claim is about acceptance quality. Report the matched statistic for each arm; do not drop, resample, or relabel records by outcome.
+"""
+
+
+def _budget_sentence(tier: ComputeTier) -> str:
+    """The time and library budget the pre-registered tier bought."""
+    seconds = int(probe_timeout(tier))
+    if tier.name == "sandbox":
+        return "The script must run with the standard library only and finish in a few seconds."
+    extra = (
+        f" You may import {', '.join(sorted(tier.extra_modules))} in addition to the standard library."
+        if tier.extra_modules
+        else " The script must run with the standard library only."
+    )
+    return (
+        f"The pre-registered compute tier is `{tier.name}`: the script may run for up to "
+        f"{seconds} seconds in the in-loop probe (and {int(tier.timeout_seconds)} seconds under "
+        f"`farfield execute`), so replay the WHOLE attested history rather than a toy stand-in — "
+        f"iterate over every record, run the actual mechanism, and do not substitute a hashed "
+        f"proxy for the process the claim is about.{extra}"
+    )
 
 
 def write_probe(
@@ -535,6 +609,7 @@ def write_probe(
     skills: str = "",
     prior_failure: dict[str, Any] | None = None,
     world: Any = None,
+    scientific: dict[str, Any] | None = None,
 ) -> ProbeSpec:
     """The probe implements the diagnosis; it does not pick its own test.
 
@@ -565,9 +640,13 @@ def write_probe(
         treatment_arm=diagnosis.treatment_arm,
         control_arm=diagnosis.control_arm,
         allowed_modules=", ".join(sorted(tier.allowed_modules)),
+        budget=_budget_sentence(tier),
     )
     if skills:
         prompt = skills + prompt
+    lever_name = str(getattr(diagnosis, "world_lever", "") or "")
+    if lever_name.startswith("contrast:"):
+        prompt += CONTRAST_ARMS.format(lever=lever_name)
     if prior_failure:
         prompt += IMPLEMENTATION_FAILURE.format(
             status=str(prior_failure.get("status") or "failed"),
@@ -587,16 +666,21 @@ def write_probe(
                 excerpt = world_excerpt(load_world_payload(world.root))
             except Exception:
                 excerpt = ""
-            prompt += CONSTRUCTED_BINDING.format(
+            schema_name = str(getattr(world, "schema", "") or "")
+            prompt += CONSTRUCTED_BINDING.replace(
+                "{layout}", _layout_block(schema_name)
+            ).format(
                 files=", ".join(files) or "world.json",
                 world_id=getattr(world, "id", "world"),
                 title=getattr(world, "title", ""),
-                schema=getattr(world, "schema", "") or "symbolic_trace",
+                schema=schema_name or "(unregistered)",
                 load_hint=load_hint,
                 excerpt=excerpt or "(see data/world.json)",
             )
         else:
-            prompt += WORLD_BINDING.format(
+            prompt += WORLD_BINDING.replace(
+                "{layout}", _layout_block(getattr(world, "schema", ""))
+            ).format(
                 files=", ".join(files) or "(see data/)",
                 world_id=getattr(world, "id", "world"),
                 title=getattr(world, "title", ""),
@@ -620,11 +704,13 @@ def write_probe(
                 " staying inside the module whitelist and the identifier"
                 " rules above."
             )
-        completion = client.complete(
+        completion = complete_call(
+            client,
             ask,
             purpose=f"research_probe:{card.card_id}"
             + (f":retry{attempt}" if attempt else ""),
             system=SYSTEM,
+            scientific=scientific,
         )
         completion.assert_usable()
         try:
@@ -634,6 +720,7 @@ def write_probe(
                 claim=card.claim,
                 mechanism=card.mechanism,
                 topic=topic,
+                schema=str(getattr(world, "schema", "") or "") if world is not None else "",
             )
             if world is not None and not reads_world_data(spec.source, world):
                 raise _refuse(

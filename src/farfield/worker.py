@@ -17,8 +17,9 @@ class CampaignError(RuntimeError):
 
 def run_campaign(*_args: Any, **_kwargs: Any) -> None:
     raise CampaignError(
-        "the control-arm campaign (`farfield run`, toy sandbox, Wave A–F"
-        " dossier) was removed; the product path is `farfield research`"
+        "the control-arm campaign and Wave A–F ledger extras (dossier, F0"
+        " install, Wave E audit) were removed; the product path is"
+        " `farfield research`"
     )
 
 

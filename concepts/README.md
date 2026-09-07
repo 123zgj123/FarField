@@ -2,9 +2,9 @@
 
 English · 简体中文
 
-`farfield research` reads `concepts/arxiv_registry.json`. The production slice is `ds-arxiv-concepts-2026`. Those `G_full.json` / `G_le_T.json` files exceed GitHub's 100 MB limit, so a clone ships **`attn-concepts-s1/`** (~8 MB) instead. If the production graph is missing, `load_assets` uses this demo slice — same mission path, smaller neighbourhood.
+`farfield research` reads `concepts/arxiv_registry.json`. The production slice is `ds-arxiv-concepts-2026` until `cs-mixed-arxiv-concepts-2026` (one harvest, one T, cs.DS+AI+LG+CL) exists on disk. Do not union older DS / CL / attn graphs and call that a mixed oracle. Those `G_full.json` / `G_le_T.json` files exceed GitHub's 100 MB limit, so a clone ships **`attn-concepts-s1/`** (~8 MB) instead. If the production graph is missing, `load_assets` uses this demo slice — same mission path, smaller neighbourhood.
 
-产品路径默认读 `ds-arxiv-concepts-2026`。大图不进 git。克隆后自动落在演示切片 `attn-concepts-s1/`，循环本身不变。
+产品路径默认读 `ds-arxiv-concepts-2026`；混合图造好后才切 `cs-mixed-arxiv-concepts-2026`。大图不进 git。克隆后自动落在演示切片 `attn-concepts-s1/`，循环本身不变。
 
 Shipped per slice: `manifest.json`, `heldout_post_T.json`. Only `attn-concepts-s1` also ships the graph JSON.
 

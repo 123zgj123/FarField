@@ -15,6 +15,7 @@ from farfield.extras.baseline import (
     anchor_alienness,
     control_stake,
     gate_survival,
+    missing_stake,
 )
 from farfield.extras.embed import embed_nodes
 from farfield.extras.generate import ConceptOracle
@@ -64,6 +65,13 @@ class ControlStakeTests(unittest.TestCase):
         self.assertIsNone(
             control_stake(self.space, oracle, self.near_ids, [])
         )
+
+    def test_a_literature_arm_is_not_rewritten_into_a_graph_cousin(self) -> None:
+        payload = missing_stake(anchor="attn:0", arm_n=2, reason="literature_landing")
+        self.assertEqual(payload["skipped"], "literature_landing")
+        self.assertEqual(payload["arm"]["n"], 2)
+        self.assertEqual(payload["control"]["n"], 0)
+        self.assertIn("Not a verdict", payload["note"])
 
     def test_the_stake_is_deterministic_under_the_same_seed(self) -> None:
         oracle = ConceptOracle.from_graph(toy_graph())

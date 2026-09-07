@@ -254,9 +254,9 @@ def _singular(word: str) -> str:
     because both spellings fold the same way, and it is deliberately this crude
     because a real stemmer would merge concepts on rules no reader can audit.
     """
-    if len(word) > 3 and word.endswith("s") and not word.endswith("ss"):
-        return word[:-1]
-    return word
+    from .prior import fold_plural
+
+    return fold_plural(word)
 
 
 def _runs(
@@ -380,6 +380,9 @@ class ArxivSource:
     max_gram: int = MAX_GRAM
     use_abstract: bool = True
     max_pages: int = MAX_PAGES
+    # Additional OAI sets harvested into the same T split. One source,
+    # one vocabulary, one oracle — not a union of already-built graphs.
+    extra_sets: tuple[str, ...] = ()
 
     # A discipline name or None. Named rather than boolean so that revising the
     # breaker list is forced to mint a new name, and with it new corpus uids;
@@ -406,8 +409,13 @@ class ArxivSource:
             )
         return described
 
+    def _sets_label(self) -> str:
+        if not self.extra_sets:
+            return self.set_spec
+        return " + ".join((self.set_spec, *self.extra_sets))
+
     def _describe(self) -> dict[str, Any]:
-        return {
+        payload = {
             "catalogue": "arxiv-oai-pmh",
             "endpoint": OAI,
             "set_spec": self.set_spec,
@@ -418,7 +426,7 @@ class ArxivSource:
             "max_gram": self.max_gram,
             "use_abstract": self.use_abstract,
             "selection_rule": (
-                f"every work in OAI set {self.set_spec}"
+                f"every work in OAI set {self._sets_label()}"
                 f" submitted on or after {self.since}"
                 + (f" and no later than {self.until_year}" if self.until_year else "")
                 + "; no relevance ranking and no expansion from roots, so the slice"
@@ -451,6 +459,9 @@ class ArxivSource:
                 " some recorded abstract contains"
             ),
         }
+        if self.extra_sets:
+            payload["extra_sets"] = list(self.extra_sets)
+        return payload
 
     def _fetcher(self, base: Fetcher) -> Fetcher:
         return Fetcher(
@@ -464,11 +475,27 @@ class ArxivSource:
         )
 
     def harvest(self, fetcher: Fetcher, T: int) -> tuple[list[Work], list[Work]]:
+        pre_by: dict[str, Work] = {}
+        post_by: dict[str, Work] = {}
+        for set_spec in (self.set_spec, *self.extra_sets):
+            pre, post = self._harvest_set(fetcher, T, set_spec)
+            for work in pre:
+                pre_by[work.id] = work
+            for work in post:
+                post_by.setdefault(work.id, work)
+                pre_by.pop(work.id, None)
+        pre = sorted(pre_by.values(), key=lambda work: work.id)
+        post = sorted(post_by.values(), key=lambda work: work.id)
+        return pre, post
+
+    def _harvest_set(
+        self, fetcher: Fetcher, T: int, set_spec: str
+    ) -> tuple[list[Work], list[Work]]:
         pulled = self._fetcher(fetcher)
         url = f"{OAI}?" + urllib.parse.urlencode(
             {
                 "verb": "ListRecords",
-                "set": self.set_spec,
+                "set": set_spec,
                 "metadataPrefix": "oai_dc",
                 "from": self.since,
             }
@@ -485,7 +512,7 @@ class ArxivSource:
                 raise ArxivError(
                     BlockedRecord(
                         missing_capability="arxiv_oai",
-                        attempted=f"ListRecords for {self.set_spec} since {self.since}",
+                        attempted=f"ListRecords for {set_spec} since {self.since}",
                         unlock_condition=f"the endpoint answered {error.get('code')}: "
                         f"{(error.text or '').strip()}",
                     )
@@ -517,12 +544,9 @@ class ArxivSource:
             raise ArxivError(
                 BlockedRecord(
                     missing_capability="arxiv_oai_pages",
-                    attempted=f"harvest {self.set_spec} in {self.max_pages} pages",
+                    attempted=f"harvest {set_spec} in {self.max_pages} pages",
                     unlock_condition="the set is larger than the page cap; raise"
                     " max_pages or harvest a narrower set",
                 )
             )
-
-        pre.sort(key=lambda work: work.id)
-        post.sort(key=lambda work: work.id)
         return pre, post

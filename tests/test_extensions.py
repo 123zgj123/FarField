@@ -166,9 +166,68 @@ class ArtifactTests(unittest.TestCase):
             self.assertIsNone(attested["results"])
             writing = (folder / "artifact" / "WRITING.md").read_text(encoding="utf-8")
             self.assertIn("jin-s13/ai-research-writing-skill", writing)
+            self.assertNotIn("Declared venue", writing)
             md = (folder / "artifact" / "paper.md").read_text(encoding="utf-8")
             self.assertIn("empty until", md)
             self.assertIn("Not a paper", md.lower() + md)
+
+    def test_compile_artifact_venue_is_a_writing_pointer(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp) / "card"
+            folder.mkdir()
+            (folder / "protocol.json").write_text(
+                json.dumps({"card_id": "gen_v", "claim": "x"}), encoding="utf-8"
+            )
+            compile_artifact(folder, venue="cav")
+            writing = (folder / "artifact" / "WRITING.md").read_text(encoding="utf-8")
+            self.assertIn("Declared venue: cav", writing)
+            self.assertIn("jin-s13/ai-research-writing-skill", writing)
+            self.assertIn("official template", writing)
+            self.assertEqual(main(["compile-artifact", str(folder), "--venue", "stoc"]), 0)
+            writing = (folder / "artifact" / "WRITING.md").read_text(encoding="utf-8")
+            self.assertIn("Declared venue: stoc", writing)
+
+    def test_ingest_papers_banks_the_neighbourhood_wiki(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            papers = root / "papers.json"
+            papers.write_text(
+                json.dumps(
+                    [
+                        {
+                            "title": "We do not handle dynamic cuts",
+                            "arxiv_id": "2601.00002",
+                            "abstract": "However, we do not scale past ten nodes.",
+                        }
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            state = root / "state.json"
+            self.assertEqual(
+                main(
+                    [
+                        "ingest-papers",
+                        "--state-store",
+                        str(state),
+                        "--anchor",
+                        "succinct data structure",
+                        "--file",
+                        str(papers),
+                        "--corpus",
+                        "test-corpus",
+                        "--seen-at",
+                        "2026-08-30",
+                        "--skip-verify",
+                    ]
+                ),
+                0,
+            )
+            from farfield.extras.state import load, wiki_for
+
+            rows = wiki_for(load(state), "test-corpus", "succinct data structure")
+            self.assertEqual(len(rows), 1)
+            self.assertIn("2601.00002", str(rows[0].get("cite_id") or rows[0].get("arxiv_id")))
 
     def test_cli_compile_and_campaign_roundtrip(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -9,6 +9,7 @@ from farfield.extras.value import (
     archive_fitness,
     attach_observations,
     evidence_class,
+    idea_usefulness,
     run_tournament,
     score_live,
     selection_key,
@@ -152,6 +153,26 @@ class SelectionTests(unittest.TestCase):
         self.assertTrue(rows[0]["wiki_gap_hit"])
         self.assertIn("query time", rows[0]["wiki_gap"])
         self.assertEqual(rows[0]["pipeline_bottleneck"], "informative")
+        self.assertIn("idea_usefulness", rows[0])
+
+    def test_usefulness_prefers_an_uninformative_line_with_holes_over_a_graph_death(self) -> None:
+        iterate = card(
+            "live",
+            "a",
+            0.2,
+            verdict="uninformative",
+            world_sim_issues=[{"type": "structural", "summary": "no tampering labels"}],
+        )
+        dead = card(
+            "dead",
+            "b",
+            0.9,
+            killed=True,
+            killed_by=["endpoint_is_not_a_concept_hub"],
+            verdict=None,
+        )
+        self.assertGreater(idea_usefulness(iterate), idea_usefulness(dead))
+        self.assertLess(idea_usefulness(dead), 3)
 
 
 if __name__ == "__main__":

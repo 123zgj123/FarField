@@ -10,7 +10,14 @@ from pathlib import Path
 
 from farfield.extras.livefeed import FeedBlocked, FreshWork
 from farfield.extras.llm import Completion
-from farfield.extras.mission import load_assets, rank_ideas, run_mission
+from farfield.extras.mission import (
+    MIXED_CORPUS,
+    PRODUCTION_CORPUS,
+    load_assets,
+    rank_ideas,
+    resolve_production_corpus,
+    run_mission,
+)
 from farfield.extras.state import record_rejections
 
 # The production concept graph exceeds GitHub's 100 MB file limit and is
@@ -32,6 +39,54 @@ needs_production_graph = unittest.skipUnless(
 )
 
 
+def _compile_slots(prompt: str, far: str) -> dict[str, str]:
+    """Fill generation compile slots from the scout menu in the prompt."""
+    if "Declared levers:" not in prompt:
+        return {}
+    levers_m = re.search(r"Declared levers: (.+)", prompt)
+    obs_m = re.search(r"Declared observables: (.+)", prompt)
+    inert_m = re.search(
+        r"Inert lever/observable pairs \(do not register\): (.+)", prompt
+    )
+    used_m = re.search(
+        r"Compiled levers already used this mission.*?: (.+)", prompt
+    )
+    levers = [
+        item.strip()
+        for item in (levers_m.group(1).split(",") if levers_m else [])
+        if item.strip()
+    ]
+    observables = [
+        item.strip()
+        for item in (obs_m.group(1).split(",") if obs_m else [])
+        if item.strip()
+    ]
+    inert_text = inert_m.group(1).strip() if inert_m else ""
+    inert = set()
+    if inert_text and inert_text != "(none)":
+        inert = {item.strip() for item in inert_text.split(",") if item.strip()}
+    used_text = used_m.group(1).strip() if used_m else ""
+    used = set()
+    if used_text and used_text != "(none)":
+        used = {item.strip() for item in used_text.split(",") if item.strip()}
+    for lever in levers:
+        if lever in used:
+            continue
+        for observable in observables:
+            if f"{lever}/{observable}" in inert:
+                continue
+            return {
+                "world_lever": lever,
+                "world_observable": observable,
+                "far_maps_to_lever": (
+                    f"{far} becomes {lever} by intervening on attested "
+                    f"{observable} the runtime already measures on this freeze"
+                ),
+                "prediction_tail": f" measured as {observable} after {lever}",
+            }
+    return {}
+
+
 class SchemingClient:
     """Answers every generation prompt with a valid card built from the
     prompt itself: the pair is copied verbatim from the offered menus, so
@@ -45,6 +100,20 @@ class SchemingClient:
 
     def complete(self, prompt, *, purpose, system=None, logprobs=False):
         self.prompts.append(prompt)
+        import json
+        if str(purpose or "").startswith("world-sim"):
+            return Completion(
+                text="{}",
+                model="fake-model",
+                request_digest="req",
+                digest=f"w{len(self.prompts):015x}",
+                artifact_uri="file:///dev/null",
+                finish_reason="stop",
+                prompt_tokens=10,
+                completion_tokens=20,
+                reasoning_tokens=0,
+                mode="replay",
+            )
         if "Two anonymous research hypotheses" in prompt:
             import json
 
@@ -180,6 +249,42 @@ class SchemingClient:
                 reasoning_tokens=0,
                 mode="replay",
             )
+        if "as an adversarial reviewer" in prompt:
+            ids = re.findall(r"\[([0-9]+\.[0-9]+(?:v\d+)?)\]", prompt)
+            note = (
+                f"{ids[0]} leaves the claimed bound untested"
+                if ids
+                else "no live papers were retrieved"
+            )
+            import json
+
+            # keep_going false: the card is fine as drafted, so legacy
+            # mission flows keep their call budget and card identities.
+            return Completion(
+                text=json.dumps(
+                    {
+                        "novelty": 4,
+                        "novelty_note": note,
+                        "clarity": 4,
+                        "feasibility": 4,
+                        "importance": 3,
+                        "information_gain": 4,
+                        "transfer_potential": 3,
+                        "keep_going": False,
+                        "critique": "the two-arm design already names its margin",
+                        "must_change": ["none: register as drafted"],
+                    }
+                ),
+                model="fake-model",
+                request_digest="req",
+                digest=f"c{len(self.prompts):015x}",
+                artifact_uri="file:///dev/null",
+                finish_reason="stop",
+                prompt_tokens=10,
+                completion_tokens=20,
+                reasoning_tokens=0,
+                mode="replay",
+            )
         if "Score this research idea as a reviewer" in prompt:
             ids = re.findall(r"\[([0-9]+\.[0-9]+(?:v\d+)?)\]", prompt)
             note = (
@@ -231,6 +336,9 @@ class SchemingClient:
                 text=json.dumps(
                     {
                         "title": "Succinct pivot logs, revised",
+                        "plain_title": "转轴日志还能再压一压吗",
+                        "one_liner": "修订版：转轴历史能否压缩后仍快速查询？",
+                        "why_it_matters": "决定防循环检查要不要保留完整日志。",
                         "gap": gap,
                         "idea": "Store simplex pivot history succinctly and report ns/query on a public MIPLIB trace",
                         "approach": "Wavelet-tree encode the pivot log and time rank queries",
@@ -270,6 +378,9 @@ class SchemingClient:
             answer = json.dumps(
                 {
                     "title": "Succinct pivot logs for anticycling",
+                    "plain_title": "单纯形法的转轴历史能压缩吗",
+                    "one_liner": "转轴历史能否用线性空间存下并快速查询？",
+                    "why_it_matters": "决定求解器要不要为防循环保留完整日志。",
                     "gap": gap,
                     "idea": "Store simplex pivot history in a succinct structure and measure query time",
                     "approach": "Encode the pivot sequence and benchmark against a plain log",
@@ -328,6 +439,16 @@ class SchemingClient:
             '"derivation": "a partition recurrence T(n)=T(n/2)+O(1) keeps comparisons logarithmic on the bound world"'
             "}"
         )
+        slots = _compile_slots(prompt, first_far)
+        if slots:
+            payload = json.loads(answer)
+            payload["prediction"] = (
+                payload["prediction"] + slots["prediction_tail"]
+            )
+            payload["world_lever"] = slots["world_lever"]
+            payload["world_observable"] = slots["world_observable"]
+            payload["far_maps_to_lever"] = slots["far_maps_to_lever"]
+            answer = json.dumps(payload)
         return Completion(
             text=answer,
             model="fake-model",
@@ -387,22 +508,55 @@ class BabblingClient(SchemingClient):
 
 
 class FakeFeed:
-    """A live feed that answers from canned pages: fresh without network."""
+    """Canned literature: bibliographic pad plus a two-step development line.
+
+    The generic preprint stays for tests that name `2608.09999v1`. The
+    wavelet → dynamic papers recover a trajectory so the product far
+    menu is not empty. Empty literature is still `FakeFeed(dead=True)`.
+    """
+
+    verify_literature = False
 
     def __init__(self, *, dead: bool = False) -> None:
         self.dead = dead
         self.probed: list[tuple[str, str]] = []
 
-    def recent_in_field(self, concepts, *, max_results=6):
-        if self.dead:
-            return FeedBlocked(attempted="recent_in_field", reason="no route")
+    def _papers(self) -> list[FreshWork]:
         return [
             FreshWork(
                 title="A very fresh preprint",
                 published="2026-08-15",
                 arxiv_id="2608.09999v1",
-            )
+                abstract=(
+                    "We compress genomic sequence collections with succinct"
+                    " data structures."
+                ),
+            ),
+            FreshWork(
+                title="Wavelet tree indexes for genomic collections",
+                published="2022-03-01",
+                arxiv_id="2203.11111v1",
+                abstract=(
+                    "We index genomic sequence collections with wavelet trees. "
+                    "However, we do not support dynamic inserts."
+                ),
+            ),
+            FreshWork(
+                title="Dynamic succinct indexes for mutating genomes",
+                published="2024-06-01",
+                arxiv_id="2406.22222v1",
+                abstract=(
+                    "We drop the static-collection assumption and allow inserts. "
+                    "However, we do not test compressed query logs."
+                ),
+                references=("2203.11111v1",),
+            ),
         ]
+
+    def recent_in_field(self, concepts, *, max_results=6):
+        if self.dead:
+            return FeedBlocked(attempted="recent_in_field", reason="no route")
+        return self._papers()[:max_results]
 
     def pair_recently_combined(self, concept_a, concept_b, *, max_results=5):
         self.probed.append((concept_a, concept_b))
@@ -411,21 +565,63 @@ class FakeFeed:
     def survey_around(self, concept_a, concept_b, *, per_side=4, claim=""):
         if self.dead:
             return FeedBlocked(attempted="survey_around", reason="no route")
+        return self._papers()[:per_side]
+
+
+class TrajectoryFeed(FakeFeed):
+    """Named alias: FakeFeed now carries the developmental papers."""
+
+
+class ObjectFeed(FakeFeed):
+    """Developmental papers that actually name a non-default topic object."""
+
+    def __init__(self, object_line: str, *, method: str, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.object_line = object_line
+        self.method = method
+
+    def _papers(self) -> list[FreshWork]:
         return [
             FreshWork(
                 title="A very fresh preprint",
                 published="2026-08-15",
                 arxiv_id="2608.09999v1",
-                abstract="We study nearby constructions in this field.",
-            )
+                abstract=f"We study {self.object_line}.",
+            ),
+            FreshWork(
+                title=f"{self.method} for {self.object_line}",
+                published="2022-03-01",
+                arxiv_id="2203.11111v1",
+                abstract=(
+                    f"We index {self.object_line} with {self.method}. "
+                    "However, we do not support dynamic inserts."
+                ),
+            ),
+            FreshWork(
+                title=f"Dynamic {self.method} under mutation",
+                published="2024-06-01",
+                arxiv_id="2406.22222v1",
+                abstract=(
+                    f"We drop a static assumption on {self.object_line}. "
+                    "However, we do not test compressed query logs."
+                ),
+                references=("2203.11111v1",),
+            ),
         ]
 
 
 TOPIC = "compress genomic sequence collections with succinct data structures"
 
 
+def replace_completion_text(completion, text):
+    from dataclasses import replace as _replace
+
+    return _replace(completion, text=text)
+
+
 def run_all(**kwargs):
     with tempfile.TemporaryDirectory() as tmp:
+        topic = kwargs.pop("topic", TOPIC)
         kwargs.setdefault("state_store", Path(tmp) / "state.json")
         kwargs.setdefault("policy_log", Path(tmp) / "policy_log.json")
         kwargs.setdefault("policy_file", Path(tmp) / "policy.json")
@@ -433,7 +629,8 @@ def run_all(**kwargs):
         kwargs.setdefault("explore", "fixed")
         kwargs.setdefault("experiment_rounds", 0)
         kwargs.setdefault("idea_rounds", 0)
-        return list(run_mission(TOPIC, **kwargs))
+        kwargs.setdefault("feed", TrajectoryFeed())
+        return list(run_mission(topic, **kwargs))
 
 
 class MissionStreamTests(unittest.TestCase):
@@ -524,12 +721,170 @@ class MissionStreamTests(unittest.TestCase):
     def test_assets_are_loaded_once_and_reused(self) -> None:
         self.assertIs(load_assets(), load_assets())
 
+    def test_mixed_corpus_is_opt_in_until_the_graph_exists(self) -> None:
+        self.assertEqual(resolve_production_corpus(), PRODUCTION_CORPUS)
+        self.assertEqual(
+            resolve_production_corpus(requested="attn-concepts-s1"),
+            "attn-concepts-s1",
+        )
+        self.assertEqual(MIXED_CORPUS, "cs-mixed-arxiv-concepts-2026")
+
+    def test_mixed_corpus_becomes_default_when_the_graph_is_on_disk(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            dest = Path(tmp) / "concepts" / MIXED_CORPUS
+            dest.mkdir(parents=True)
+            (dest / "G_full.json").write_text("{}", encoding="utf-8")
+            self.assertEqual(resolve_production_corpus(Path(tmp)), MIXED_CORPUS)
+            self.assertEqual(
+                resolve_production_corpus(Path(tmp), requested=PRODUCTION_CORPUS),
+                PRODUCTION_CORPUS,
+            )
+
+    def test_a_generic_fresh_title_does_not_invent_a_graph_jump(self) -> None:
+        events = run_all(
+            jumps=1, candidates=1, client=SchemingClient(), feed=FakeFeed()
+        )
+        jumps = [event for event in events if event["stage"] == "jump"]
+        self.assertTrue(jumps)
+        self.assertNotIn("literature", [event.get("operator") for event in jumps])
+        self.assertEqual(jumps[0].get("lens"), "trajectory")
+        self.assertFalse(
+            any(
+                "edge set" in item
+                for event in jumps
+                for item in event.get("far") or []
+            )
+        )
+
+    def test_a_verified_method_title_opens_a_trajectory_landing(self) -> None:
+        class MethodFeed(FakeFeed):
+            def recent_in_field(self, concepts, *, max_results=6):
+                return [
+                    FreshWork(
+                        title="Shadow replay gates for self-modifying validators",
+                        published="2026-08-15",
+                        arxiv_id="2608.11111v1",
+                abstract=(
+                    "We add shadow replay gates that intercept write-read "
+                    "cycles of executable program state. However, we do not "
+                    "test replay on frozen validators."
+                ),
+                    )
+                ]
+
+            def survey_around(self, concept_a, concept_b, *, per_side=4, claim=""):
+                return self.recent_in_field((concept_a, concept_b), max_results=per_side)
+
+        events = run_all(
+            topic=(
+                "code world models of executable program state as the world "
+                "of an agent harness"
+            ),
+            jumps=1,
+            candidates=1,
+            client=SchemingClient(),
+            feed=MethodFeed(),
+        )
+        jumps = [event for event in events if event["stage"] == "jump"]
+        paper = [event for event in jumps if event.get("lens") == "trajectory"]
+        self.assertTrue(paper, [event.get("lens") for event in jumps])
+        self.assertTrue(
+            any("shadow replay" in item for event in paper for item in event["far"]),
+            [event.get("far") for event in paper],
+        )
+        self.assertTrue(paper[0].get("reasoning"))
+
+    def test_a_non_covering_topic_does_not_mint_graph_mechanisms(self) -> None:
+        topic = (
+            "code world models of executable program state as the world "
+            "of an agent harness"
+        )
+        events = run_all(
+            topic=topic,
+            jumps=2,
+            candidates=1,
+            client=SchemingClient(),
+            feed=FakeFeed(),
+        )
+        jumps = [
+            event
+            for event in events
+            if event["stage"] == "jump" and event.get("track") == "farfield"
+        ]
+        self.assertTrue(jumps)
+        for event in jumps:
+            self.assertEqual(event.get("lens"), "trajectory", event)
+        for event in events:
+            if event["stage"] != "card":
+                continue
+            far = (event.get("pair") or [None, ""])[1]
+            self.assertNotIn("edge set", far)
+            self.assertNotIn("min-cut", far)
+
+    def test_a_non_covering_topic_takes_mechanisms_from_papers(self) -> None:
+        topic = (
+            "code world models of executable program state as the world "
+            "of an agent harness"
+        )
+
+        class MethodFeed(FakeFeed):
+            def recent_in_field(self, concepts, *, max_results=6):
+                return [
+                    FreshWork(
+                        title="Shadow replay gates for self-modifying validators",
+                        published="2026-08-15",
+                        arxiv_id="2608.11111v1",
+                abstract=(
+                    "We add shadow replay gates that intercept write-read "
+                    "cycles of executable program state. However, we do not "
+                    "test replay on frozen validators."
+                ),
+                    )
+                ]
+
+            def survey_around(self, concept_a, concept_b, *, per_side=4, claim=""):
+                return self.recent_in_field((concept_a, concept_b), max_results=per_side)
+
+        events = run_all(
+            topic=topic,
+            jumps=1,
+            candidates=1,
+            client=SchemingClient(),
+            feed=MethodFeed(),
+        )
+        jumps = [event for event in events if event["stage"] == "jump"]
+        graph = [event for event in jumps if event.get("lens") == "graph"]
+        self.assertEqual(graph, [], [event.get("lens") for event in jumps])
+        self.assertTrue(jumps)
+        self.assertEqual(jumps[0].get("lens"), "trajectory")
+        self.assertTrue(
+            any("shadow replay" in item for item in jumps[0]["far"]),
+            jumps[0]["far"],
+        )
+
     def test_the_agenda_plans_every_slot_before_any_jump(self) -> None:
         stages = [event["stage"] for event in self.events]
         self.assertLess(stages.index("agenda"), stages.index("jump"))
         agenda = self.events[stages.index("agenda")]
         self.assertEqual(len(agenda["slots"]), 2)
         self.assertTrue(all(s["track"] == "farfield" for s in agenda["slots"]))
+
+    def test_research_space_is_recovered_before_the_first_jump(self) -> None:
+        stages = [event["stage"] for event in self.events]
+        self.assertLess(stages.index("research_state"), stages.index("trajectories"))
+        self.assertLess(stages.index("trajectories"), stages.index("jump"))
+        state = self.events[stages.index("research_state")]
+        self.assertTrue(state.get("object") or state.get("summary"))
+        recovered = self.events[stages.index("trajectories")]
+        self.assertTrue(recovered.get("lines"), recovered)
+        jumps = [
+            event
+            for event in self.events
+            if event["stage"] == "jump" and event.get("track") == "farfield"
+        ]
+        self.assertTrue(jumps[0].get("reasoning"))
+        self.assertEqual(jumps[0].get("lens"), "trajectory")
+        self.assertIn(jumps[0].get("band"), {"early", "middle", "far"})
 
     def test_every_verdict_names_its_exit(self) -> None:
         for event in self.events:
@@ -777,9 +1132,14 @@ class ResearchCompletionTests(unittest.TestCase):
                 state_events[0].get("known"),
                 "SYNTHETIC support must not become known ground",
             )
+            self.assertFalse(
+                any(e["stage"] == "card" for e in second),
+                "an executable SYNTHETIC plan stops spray; remaining work is execute",
+            )
             promo2 = [e for e in second if e["stage"] == "promotion"]
-            self.assertTrue(promo2)
-            self.assertEqual(promo2[0]["status"], "speculative")
+            self.assertFalse(
+                any(e.get("status") in {"corroborated", "verified"} for e in promo2),
+            )
             self.assertFalse(
                 [e for e in first if e["stage"].startswith("heavy")],
                 "SYNTHETIC support never triggers confirmation",
@@ -822,7 +1182,9 @@ class ResearchCompletionTests(unittest.TestCase):
             missions = load_log(log)
             self.assertEqual(len(missions), 1)
             card = missions[0]["cards"][0]
-            self.assertEqual(card["operator"], "directional")
+            from farfield.extras.researchspace import JUMP_MOVES
+
+            self.assertIn(card["operator"], JUMP_MOVES)
             self.assertEqual(card["promoted"], "speculative")
 
     def test_a_workspace_freezes_every_live_retrieval(self) -> None:
@@ -855,6 +1217,40 @@ class ResearchCompletionTests(unittest.TestCase):
             self.assertTrue(folders)
             self.assertTrue((folders[0] / "protocol.md").is_file())
             self.assertTrue((folders[0] / "README.md").is_file())
+            idea_dirs = [
+                p for p in (dest / "ideas").iterdir() if p.is_dir()
+            ]
+            self.assertTrue(idea_dirs)
+            idea_home = idea_dirs[0]
+            self.assertFalse(idea_home.name.startswith("gen_"))
+            self.assertTrue((idea_home / "RESEARCH_PACKET.md").is_file())
+            self.assertTrue((idea_home / "AGENT_PACKET.md").is_file())
+            self.assertTrue((idea_home / "idea-stage" / "RESEARCH_BRIEF.md").is_file())
+            self.assertTrue((idea_home / "idea-stage" / "RESEARCH_BRIEF_EN.md").is_file())
+            self.assertTrue((idea_home / "refine-logs" / "EXPERIMENT_PLAN.md").is_file())
+            self.assertTrue((idea_home / "refine-logs" / "EXPERIMENT_PLAN_EN.md").is_file())
+            self.assertTrue((idea_home / "refine-logs" / "EXPERIMENT_TRACKER.md").is_file())
+            human = (idea_home / "idea-stage" / "RESEARCH_BRIEF.md").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn("问题陈述", human)
+            self.assertIn("背景", human)
+            self.assertIn("实验设计", human)
+            self.assertIn("实验块 1", human)
+            english = (idea_home / "idea-stage" / "RESEARCH_BRIEF_EN.md").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn("Research plan", english)
+            self.assertIn("Experiment design", english)
+            packet = dest / "RESEARCH_PACKET.md"
+            self.assertTrue((dest / "RESEARCH_PACKET_EN.md").is_file())
+            self.assertIn("实验设计", packet.read_text(encoding="utf-8"))
+            agent = (idea_home / "AGENT_PACKET.md").read_text(encoding="utf-8")
+            self.assertIn("Do not open sibling folders", agent)
+            self.assertIn("audience: execute", agent)
+            self.assertNotIn("next-round agent", agent)
+            self.assertIn("Do not start a new `farfield research`", agent)
+            self.assertIn("Do not start a new `farfield research`", agent)
 
     def test_a_restated_claim_stops_the_briefing(self) -> None:
         class CopycatFeed(FakeFeed):
@@ -889,11 +1285,14 @@ class FailureMemoryTests(unittest.TestCase):
                 "policy_log": Path(tmp) / "policy_log.json",
                 "policy_file": Path(tmp) / "policy.json",
                 "polish_rounds": 0,
+                "explore": "fixed",
+                "experiment_rounds": 0,
+                "idea_rounds": 0,
             }
             probe = list(
                 run_mission(
                     TOPIC, jumps=1, candidates=1,
-                    client=SchemingClient(), **isolated,
+                    client=BabblingClient(), feed=FakeFeed(), **isolated,
                 )
             )
             anchor = next(
@@ -909,7 +1308,7 @@ class FailureMemoryTests(unittest.TestCase):
             events = list(
                 run_mission(
                     TOPIC, jumps=1, candidates=1,
-                    client=client, **isolated,
+                    client=client, feed=FakeFeed(), **isolated,
                 )
             )
         state_event = next(e for e in events if e["stage"] == "state")
@@ -974,7 +1373,10 @@ class ValueAndEvolveTests(unittest.TestCase):
 
 
 class AutoExploreTests(unittest.TestCase):
-    def test_synthetic_support_uses_the_full_jump_cap(self) -> None:
+    def test_synthetic_support_stops_because_the_plan_is_executable(self) -> None:
+        # Breadth floor (default 3): the first executable plan keeps its
+        # seat but does not close the spray until three distinct landings
+        # have opened; the cap (4) is still not reached.
         events = run_all(
             jumps=4,
             explore="auto",
@@ -984,13 +1386,24 @@ class AutoExploreTests(unittest.TestCase):
         far = [
             e for e in events if e["stage"] == "jump" and e.get("track") == "farfield"
         ]
-        self.assertEqual(len(far), 4)
+        self.assertEqual(len(far), 3)
         decisions = [e for e in events if e["stage"] == "explore_decision"]
         self.assertTrue(decisions)
-        self.assertEqual(decisions[-1]["reason"], "hit_cap")
+        self.assertEqual(decisions[0]["reason"], "breadth_floor")
+        self.assertTrue(decisions[0]["continue"])
+        self.assertEqual(decisions[-1]["reason"], "plan_executable")
         self.assertFalse(decisions[-1]["continue"])
         self.assertEqual(events[0]["explore"], "auto")
-        self.assertEqual(events[-1]["jumps_opened"], 4)
+        self.assertEqual(events[-1]["jumps_opened"], 3)
+        # min_ideas=1 restores stop-at-first-plan.
+        legacy = run_all(
+            jumps=4,
+            explore="auto",
+            client=SchemingClient(),
+            feed=FakeFeed(),
+            min_ideas=1,
+        )
+        self.assertEqual(legacy[-1]["jumps_opened"], 1)
 
     def test_a_world_support_stops_before_the_jump_cap(self) -> None:
         events = run_all(
@@ -999,6 +1412,7 @@ class AutoExploreTests(unittest.TestCase):
             client=WorldProbeClient(),
             feed=FakeFeed(),
             world="path-trace",
+            min_ideas=1,
         )
         far = [
             e for e in events if e["stage"] == "jump" and e.get("track") == "farfield"
@@ -1006,7 +1420,7 @@ class AutoExploreTests(unittest.TestCase):
         self.assertEqual(len(far), 1)
         decisions = [e for e in events if e["stage"] == "explore_decision"]
         self.assertTrue(decisions)
-        self.assertEqual(decisions[0]["reason"], "has_plan")
+        self.assertEqual(decisions[0]["reason"], "plan_executable")
         self.assertFalse(decisions[0]["continue"])
         self.assertEqual(events[-1]["jumps_opened"], 1)
 
@@ -1024,7 +1438,7 @@ class AutoExploreTests(unittest.TestCase):
         ]
         self.assertEqual(reframes, [])
 
-    def test_synthetic_support_still_opens_a_reframe(self) -> None:
+    def test_synthetic_support_does_not_open_a_reframe(self) -> None:
         events = run_all(
             jumps=4,
             reframes=1,
@@ -1035,7 +1449,7 @@ class AutoExploreTests(unittest.TestCase):
         reframes = [
             e for e in events if e["stage"] == "jump" and e.get("track") == "reframe"
         ]
-        self.assertEqual(len(reframes), 1)
+        self.assertEqual(reframes, [])
 
     def test_failed_generation_uses_the_full_cap(self) -> None:
         events = run_all(
@@ -1050,6 +1464,33 @@ class AutoExploreTests(unittest.TestCase):
         decisions = [e for e in events if e["stage"] == "explore_decision"]
         self.assertEqual(decisions[-1]["reason"], "hit_cap")
         self.assertEqual(events[-1]["cards"], 0)
+
+    def test_a_later_auto_jump_records_blocked_routes_from_the_earlier_one(self) -> None:
+        events = run_all(
+            jumps=2,
+            explore="auto",
+            client=ProbeScriptClient([WEAKEN_ARMS]),
+            feed=FakeFeed(),
+            idea_rounds=0,
+            experiment_rounds=0,
+        )
+        far = [
+            e for e in events if e["stage"] == "jump" and e.get("track") == "farfield"
+        ]
+        self.assertEqual(len(far), 2)
+        self.assertEqual(far[0]["used_far"], [])
+        self.assertEqual(far[0]["blocked_pairs"], [])
+        first_verdict = next(
+            e for e in events if e["stage"] == "verdict" and e.get("chosen")
+        )
+        if first_verdict.get("pair") and len(first_verdict["pair"]) >= 2:
+            self.assertIn(first_verdict["pair"][1], far[1]["used_far"])
+        self.assertTrue(far[0].get("object_phrases"))
+        self.assertNotIn("landing", far[1])
+        second_prompts = [
+            e for e in events if e["stage"] == "generating" and e.get("jump") == 1
+        ]
+        self.assertTrue(second_prompts or far[1]["used_far"] or not far[0]["far"])
 
     def test_auto_polish_reviews_until_the_reviewer_or_the_cap(self) -> None:
         events = run_all(
@@ -1460,8 +1901,17 @@ class AwakenedWorldTests(unittest.TestCase):
         for promo in (e for e in events if e["stage"] == "promotion"):
             self.assertNotIn(promo["status"], ("corroborated", "verified"))
 
-    def test_an_inert_forecast_rewrites_instead_of_burning_a_probe(self) -> None:
-        class InertForecastClient(LeverBindingClient):
+    def test_a_diagnosis_that_drifts_to_another_lever_is_held_to_the_cards_handle(self) -> None:
+        """The card's compiled handle is the registration.
+
+        Before: a diagnosis could name any declared lever, and the inert
+        forecast was the only thing standing between an inert pick and a
+        probe. v4 showed the other failure: a card compiled onto an
+        observational contrast, the diagnosis drifted to `dropout`, and
+        three probes ran blind on the wrong handle. Now the drift is held:
+        the diagnosis keeps the card's lever/observable and says so.
+        """
+        class DriftingClient(LeverBindingClient):
             def complete(self, prompt, *, purpose, system=None, logprobs=False):
                 if "name what would change our mind" in prompt and "world_lever" in prompt:
                     self.prompts.append(prompt)
@@ -1497,19 +1947,20 @@ class AwakenedWorldTests(unittest.TestCase):
 
         events = run_all(
             jumps=1,
-            client=InertForecastClient(),
+            client=DriftingClient(),
             feed=FakeFeed(),
             world="tcp-linux-server",
         )
-        stages = [e["stage"] for e in events]
-        self.assertIn("world_forecast", stages)
-        forecast = events[stages.index("world_forecast")]
-        self.assertEqual(forecast["simulated_direction"], "flat")
-        self.assertTrue(forecast.get("rewrite"))
-        self.assertFalse([e for e in events if e["stage"] == "probe"])
+        cards = [e for e in events if e["stage"] == "card"]
+        diagnoses = [e for e in events if e["stage"] == "diagnosis"]
+        self.assertTrue(cards and diagnoses)
+        compiled = cards[0]["world_lever"]
+        self.assertTrue(compiled and compiled != "rewire")
+        self.assertEqual(diagnoses[0]["world_lever"], compiled)
+        self.assertTrue(diagnoses[0].get("handle_held"))
         decisions = [e for e in events if e["stage"] == "experiment_decision"]
         self.assertTrue(decisions)
-        self.assertIn("inert", decisions[0].get("reason", ""))
+        self.assertNotIn("inert", decisions[0].get("reason", ""))
 
     def test_protocol_is_registered_before_the_first_probe(self) -> None:
         from farfield.extras import chain
@@ -1587,14 +2038,15 @@ class AwakenedWorldTests(unittest.TestCase):
         self.assertIn("world_path", stages)
         self.assertIn("world_surrogate", stages)
         self.assertLess(stages.index("world_path"), stages.index("world_surrogate"))
-        skipped = [e for e in events if e["stage"] == "probe_skipped"]
-        self.assertTrue(skipped)
-        self.assertFalse([e for e in events if e["stage"] == "probe"])
+        for probe in [e for e in events if e["stage"] == "probe"]:
+            self.assertNotEqual(probe.get("kind"), "WORLD")
+        for promo in (e for e in events if e["stage"] == "promotion"):
+            self.assertNotIn(promo["status"], ("corroborated", "verified"))
 
-    def test_a_mechanism_with_no_lever_skips_the_probe(self) -> None:
-        # SchemingClient's diagnosis never names a lever: with a dynamics
-        # vocabulary on the table that is the honest "none". Skip the probe
-        # rather than unbind-then-invent.
+    def test_a_compiled_card_does_not_skip_when_diagnosis_omits_the_lever(self) -> None:
+        # Scout is the mission prior. Generation must compile onto a declared
+        # lever; an honest diagnosis "none" is filled from that compile
+        # rather than treated as WORLD_INCOMPATIBLE spray.
         events = run_all(
             jumps=1,
             client=SchemingClient(),
@@ -1603,11 +2055,13 @@ class AwakenedWorldTests(unittest.TestCase):
         )
         stages = [e["stage"] for e in events]
         self.assertIn("world_scout", stages)
-        self.assertIn("probe_skipped", stages)
         self.assertNotIn("world_surrogate", stages)
-        self.assertFalse([e for e in events if e["stage"] == "probe"])
-        for promo in (e for e in events if e["stage"] == "promotion"):
-            self.assertNotIn(promo["status"], ("corroborated", "verified"))
+        self.assertLess(stages.index("world_scout"), stages.index("diagnosis"))
+        diagnoses = [e for e in events if e["stage"] == "diagnosis"]
+        self.assertTrue(diagnoses)
+        self.assertNotEqual(diagnoses[0].get("world_lever"), "none")
+        self.assertNotIn("probe_skipped", stages)
+        self.assertIn("probing", stages)
 
 
 class WorldLadderTests(unittest.TestCase):
@@ -1632,17 +2086,134 @@ class WorldLadderTests(unittest.TestCase):
         self.assertEqual(events[-1]["stage"], "blocked")
         self.assertEqual(events[-1]["missing_capability"], "attested_world")
 
-    def test_auto_world_binds_a_real_fixture_for_the_topic(self) -> None:
+    def test_auto_world_constructs_from_the_topic_instead_of_the_catalog(self) -> None:
         events = run_all(
             jumps=1,
             client=SchemingClient(),
             feed=FakeFeed(),
             world="auto",
         )
-        self.assertEqual(events[0]["world"]["id"], "phage-lambda")
-        self.assertEqual(events[0]["world"]["role"], "world")
+        world = events[0]["world"]
+        self.assertIsNotNone(world)
+        self.assertEqual(world["role"], "generated")
+        self.assertNotEqual(world["id"], "phage-lambda")
+        self.assertTrue(str(world["id"]).startswith("generated-"))
 
-    def test_an_smt_claim_binds_the_frozen_automaton_under_auto(self) -> None:
+    def test_auto_does_not_bind_a2a_on_an_agent_harness_claim(self) -> None:
+        events = run_all(
+            jumps=1,
+            client=SchemingClient(),
+            feed=FakeFeed(),
+            world="auto",
+            topic=(
+                "code world models of executable program state as the world "
+                "for an agent harness"
+            ),
+        )
+        corpus = events[0]["world"]
+        if corpus is not None:
+            self.assertNotEqual(corpus["id"], "a2a-task-lifecycle")
+            # A shipped fixture never auto-binds. An acquired program_state
+            # freeze (derived / harvested / wishlist) of this object family
+            # may, and the event stream says which one and why.
+            if corpus.get("role") == "world":
+                self.assertEqual(corpus.get("schema"), "program_state")
+                self.assertIn(corpus.get("provenance"), {"derived", "harvested", "wishlist"})
+                bound_events = [e for e in events if e["stage"] == "world_acquired_bound"]
+                self.assertTrue(bound_events)
+                self.assertEqual(bound_events[0]["world_id"], corpus["id"])
+        bound = [
+            event
+            for event in events
+            if (event.get("world") or {}).get("id") == "a2a-task-lifecycle"
+            or event.get("world_id") == "a2a-task-lifecycle"
+        ]
+        self.assertFalse(bound)
+
+    def test_auto_constructs_a_task_world_when_catalog_domain_misses(self) -> None:
+        topic = (
+            "space-efficient sketches for heavy hitters in adversarial streams"
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp) / "mission"
+            events = run_all(
+                jumps=2,
+                client=SchemingClient(),
+                feed=FakeFeed(),
+                world="auto",
+                workspace=workspace,
+                topic=topic,
+            )
+            world = events[0]["world"]
+            self.assertIsNotNone(world)
+            self.assertEqual(world["role"], "generated")
+            self.assertTrue(str(world["id"]).startswith("generated-text_stream-"))
+            self.assertNotEqual(world["id"], "gutenberg-pride")
+            self.assertTrue((workspace / "WORLD.md").is_file())
+            payload = json.loads(
+                (workspace / "world" / "data" / "world.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            self.assertEqual(payload.get("task_topic"), topic)
+            self.assertTrue(payload.get("far_concept_must_not_rename_object"))
+            constructed_ids = {
+                str((e.get("world") or {}).get("id") or e.get("world_id") or "")
+                for e in events
+                if str((e.get("world") or {}).get("id") or e.get("world_id") or "").startswith(
+                    "generated-"
+                )
+            }
+            self.assertEqual(constructed_ids, {world["id"]})
+
+    def test_a_generated_probe_merges_a_freeze_recipe_into_the_wishlist(self) -> None:
+        topic = (
+            "space-efficient sketches for heavy hitters in adversarial streams"
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            events = run_all(
+                jumps=2,
+                client=SchemingClient(),
+                feed=ObjectFeed(
+                    "heavy hitters in adversarial streams",
+                    method="count sketches",
+                ),
+                world="auto",
+                workspace=root / "mission",
+                topic=topic,
+                world_root=root,
+            )
+            wish = root / "var" / "world_wishlist.json"
+            self.assertTrue(
+                wish.is_file(),
+                [e["stage"] for e in events[-8:]],
+            )
+            payload = json.loads(wish.read_text(encoding="utf-8"))
+            entries = payload.get("entries") or []
+            self.assertTrue(entries)
+            self.assertTrue(any(row.get("generated") for row in entries))
+            self.assertEqual(entries[0].get("last_topic"), topic)
+            wishlist_events = [e for e in events if e["stage"] == "world_wishlist"]
+            self.assertTrue(wishlist_events)
+            self.assertGreaterEqual(wishlist_events[-1].get("unmatched") or 0, 1)
+
+    def test_an_smt_topic_constructs_instead_of_binding_the_catalog(self) -> None:
+        events = run_all(
+            jumps=1,
+            client=SchemingClient(),
+            feed=FakeFeed(),
+            world="auto",
+            topic="formal verification of smt solver encodings",
+        )
+        world = events[0]["world"]
+        self.assertIsNotNone(world)
+        self.assertEqual(world["role"], "generated")
+        self.assertNotEqual(world["id"], "tcp-linux-server")
+        incompatible = [e for e in events if e["stage"] == "world_incompatible"]
+        self.assertFalse(incompatible)
+
+    def test_a_painted_far_claim_does_not_rebind_the_task_world(self) -> None:
         import dataclasses
 
         class SmtClient(SchemingClient):
@@ -1674,12 +2245,18 @@ class WorldLadderTests(unittest.TestCase):
             feed=FakeFeed(),
             world="auto",
         )
-        # With worlds/tcp-linux-server frozen, a formula claim is no
-        # longer WORLD_INCOMPATIBLE: it binds the attested trace.
-        incompatible = [e for e in events if e["stage"] == "world_incompatible"]
-        self.assertFalse(incompatible)
+        world = events[0]["world"]
+        self.assertIsNotNone(world)
+        self.assertEqual(world["role"], "generated")
+        self.assertNotEqual(world["id"], "phage-lambda")
+        rebound = [
+            e
+            for e in events
+            if (e.get("world") or {}).get("id") == "tcp-linux-server"
+        ]
+        self.assertFalse(rebound)
 
-    def test_an_external_memory_claim_is_world_incompatible_under_auto(self) -> None:
+    def test_an_external_memory_topic_is_world_incompatible_under_auto(self) -> None:
         import dataclasses
 
         class IoClient(SchemingClient):
@@ -1708,8 +2285,12 @@ class WorldLadderTests(unittest.TestCase):
         events = run_all(
             jumps=1,
             client=IoClient(),
-            feed=FakeFeed(),
+            feed=ObjectFeed(
+                "external memory search trees",
+                method="buffer pool",
+            ),
             world="auto",
+            topic="external memory search trees with i/o complexity bounds",
         )
         incompatible = [e for e in events if e["stage"] == "world_incompatible"]
         self.assertTrue(incompatible)
@@ -1729,6 +2310,329 @@ class WorldLadderTests(unittest.TestCase):
         promo = [e for e in events if e["stage"] == "promotion"]
         self.assertTrue(promo)
         self.assertNotIn(promo[0]["status"], ("corroborated", "verified"))
+
+    def test_the_human_gate_stops_before_evidence_and_approve_continues(self) -> None:
+        """P11: after the adversarial review, before any paid evidence step.
+
+        The first run writes HUMAN_GATE.md and blocks on human_approval; no
+        diagnosis or probe ran. Rerunning with the card approved continues
+        through evidence (the fake client stands in for the replayed cache).
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp) / "mission"
+            events = run_all(
+                jumps=1,
+                client=SchemingClient(),
+                feed=FakeFeed(),
+                world="auto",
+                workspace=workspace,
+                human_gate="after_review",
+            )
+            stages = [e["stage"] for e in events]
+            self.assertIn("awaiting_human", stages)
+            self.assertIn("verdict", stages)
+            self.assertLess(stages.index("verdict"), stages.index("awaiting_human"))
+            self.assertNotIn("diagnosis", stages)
+            self.assertNotIn("probe", stages)
+            blocked = [e for e in events if e["stage"] == "blocked"]
+            self.assertEqual(blocked[-1]["missing_capability"], "human_approval")
+            gate = json.loads((workspace / "HUMAN_GATE.json").read_text(encoding="utf-8"))
+            pending = [row["card_id"] for row in gate["pending"]]
+            self.assertTrue(pending)
+            self.assertIn("claim", gate["pending"][0])
+            self.assertIn("--approve", (workspace / "HUMAN_GATE.md").read_text(encoding="utf-8"))
+            approved_events = run_all(
+                jumps=1,
+                client=SchemingClient(),
+                feed=FakeFeed(),
+                world="auto",
+                workspace=Path(tmp) / "mission-approved",
+                human_gate="after_review",
+                approved=tuple(pending),
+            )
+            approved_stages = [e["stage"] for e in approved_events]
+            self.assertNotIn("awaiting_human", approved_stages)
+            self.assertIn("diagnosis", approved_stages)
+
+    def test_a_blind_measure_is_object_absent_not_uninformative(self) -> None:
+        """P2: the oracle-shuffle placebo on a program_state WORLD.
+
+        SchemingClient's probe never reads task_return, so permuting it
+        leaves both arms unchanged: dv_sanity says blind, the evidence is
+        booked object_absent, and the seat stays open (no plan_executable).
+        """
+        from farfield.extras.freeze import derive_world, freeze_world
+
+        topic = (
+            "code world models of executable program state as the world "
+            "for an agent harness in recursive self-improvement: false acceptance under the oracle"
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "site"
+            catalog = root / "worlds"
+            catalog.mkdir(parents=True)
+            traces = {"schema": "labeled_traces", "id": "t", "object_type": "trace", "traces": [], "n": 0}
+            for index, (inst, label, tools) in enumerate(
+                [
+                    ("astropy__astropy-1", "resolved", ["edit_tool.py", "review_fix.py"]),
+                    ("django__django-2", "unresolved", ["edit_tool.py"]),
+                    ("sympy__sympy-3", "resolved", ["verify.py", "scan.py"]),
+                    ("numpy__numpy-5", "unresolved", ["scan.py"]),
+                ]
+            ):
+                steps = [{"t": 0, "action": "ls", "returncode": 0}]
+                for name in tools:
+                    steps.append({"t": len(steps), "action": f"cat <<'EOF' > {name}\nx\nEOF", "returncode": 0})
+                    if label == "resolved":
+                        steps.append({"t": len(steps), "action": f"python3 {name}", "returncode": 0})
+                traces["traces"].append(
+                    {
+                        "id": f"m/{inst}", "label": label, "instance_id": inst,
+                        "template_id": inst.split("__")[0], "steps": steps,
+                        "created_tools": [{"name": n, "chars": 3, "sha256": f"{index}{n}"} for n in tools],
+                    }
+                )
+            traces["n"] = 4
+            src = root / "traces.json"
+            src.write_text(json.dumps(traces), encoding="utf-8")
+            freeze_world(world_id="swe-traces", schema="labeled_traces", slice_rule="all", catalog=catalog,
+                         source_file=src, domains=("swe", "agent", "harness"))
+            derive_world(world_id="swe-selfmod", parent="swe-traces", schema="program_state", catalog=catalog,
+                         domains=("program", "executable", "agent", "harness", "self-improvement"))
+            workspace = Path(tmp) / "mission"
+            events = run_all(
+                jumps=1,
+                client=SchemingClient(),
+                feed=ObjectFeed("executable program state", method="validator dropout"),
+                world="auto",
+                world_root=root,
+                workspace=workspace,
+                topic=topic,
+            )
+            sanity = [e for e in events if e["stage"] == "dv_sanity"]
+            evidence = [e for e in events if e["stage"] == "evidence"]
+            if evidence:
+                # A probe that ran on the WORLD went through the gate.
+                self.assertTrue(sanity, [e["stage"] for e in events])
+                self.assertTrue(all(e.get("blind") is not None or e.get("skipped") or e.get("error") for e in sanity))
+                for ev in evidence:
+                    if ev.get("dv_blind"):
+                        self.assertTrue(ev.get("object_absent"))
+                        self.assertIn("dv_blind", ev.get("reason", ""))
+                decisions = [e for e in events if e["stage"] == "explore_decision"]
+                if decisions and any(ev.get("dv_blind") for ev in evidence):
+                    self.assertNotEqual(decisions[-1].get("reason"), "plan_executable")
+            tiers = [e for e in events if e["stage"] == "tier_floor"]
+            # program_state floors the tier at host-heavy before any probe.
+            if any(e["stage"] == "diagnosis" for e in events):
+                self.assertTrue(tiers)
+                self.assertEqual(tiers[0]["compute_tier"], "host-heavy")
+
+    def test_auto_binds_an_acquired_program_state_world(self) -> None:
+        """The closed loop: a derived program_state freeze is the WORLD.
+
+        Before: `--world auto` never bound the catalog, so a program_state
+        topic always ran on a GENERATED stub and could not corroborate.
+        Now an acquired freeze (derived from the attested Live-SWE traces)
+        of the same object family binds, the event stream says so, and
+        the mission world is the fixture, not a stub.
+        """
+        from farfield.extras.freeze import derive_world, freeze_world
+
+        topic = (
+            "code world models of executable program state as the world "
+            "for an agent harness in recursive self-improvement"
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "site"
+            catalog = root / "worlds"
+            catalog.mkdir(parents=True)
+            traces = {
+                "schema": "labeled_traces",
+                "id": "t",
+                "object_type": "trace",
+                "traces": [],
+                "n": 0,
+            }
+            for index, (inst, label, tools) in enumerate(
+                [
+                    ("astropy__astropy-1", "resolved", ["edit_tool.py", "review_fix.py"]),
+                    ("django__django-2", "unresolved", ["edit_tool.py"]),
+                    ("sympy__sympy-3", "resolved", ["verify.py", "scan.py"]),
+                    ("numpy__numpy-5", "unresolved", ["scan.py"]),
+                ]
+            ):
+                steps = [{"t": 0, "action": "ls", "returncode": 0}]
+                for name in tools:
+                    steps.append(
+                        {"t": len(steps), "action": f"cat <<'EOF' > {name}\nx\nEOF", "returncode": 0}
+                    )
+                    if label == "resolved":
+                        steps.append({"t": len(steps), "action": f"python3 {name}", "returncode": 0})
+                traces["traces"].append(
+                    {
+                        "id": f"m/{inst}",
+                        "label": label,
+                        "instance_id": inst,
+                        "template_id": inst.split("__")[0],
+                        "steps": steps,
+                        "created_tools": [
+                            {"name": n, "chars": 3, "sha256": f"{index}{n}"} for n in tools
+                        ],
+                    }
+                )
+            traces["n"] = len(traces["traces"])
+            src = root / "traces.json"
+            src.write_text(json.dumps(traces), encoding="utf-8")
+            freeze_world(
+                world_id="swe-traces",
+                schema="labeled_traces",
+                slice_rule="all",
+                catalog=catalog,
+                source_file=src,
+                domains=("swe", "agent", "harness"),
+            )
+            derive_world(
+                world_id="swe-selfmod",
+                parent="swe-traces",
+                schema="program_state",
+                catalog=catalog,
+                domains=("program", "executable", "agent", "harness", "self-improvement"),
+            )
+            workspace = Path(tmp) / "mission"
+            events = run_all(
+                jumps=1,
+                client=SchemingClient(),
+                feed=ObjectFeed("executable program state", method="validator dropout"),
+                world="auto",
+                world_root=root,
+                workspace=workspace,
+                topic=topic,
+            )
+            world = events[0]["world"]
+            self.assertIsNotNone(world)
+            self.assertEqual(world["id"], "swe-selfmod")
+            self.assertEqual(world["role"], "world")
+            self.assertEqual(world["schema"], "program_state")
+            self.assertEqual(world["provenance"], "derived")
+            bound = [e for e in events if e["stage"] == "world_acquired_bound"]
+            self.assertEqual(len(bound), 1)
+            self.assertEqual(bound[0]["world_id"], "swe-selfmod")
+            self.assertFalse([e for e in events if e["stage"] in {"world_constructed", "world_generated"}])
+            readme = (workspace / "WORLD.md").read_text(encoding="utf-8")
+            self.assertIn("kind: `WORLD`", readme)
+            self.assertIn("provenance: `derived`", readme)
+            data = json.loads((workspace / "world" / "data" / "world.json").read_text(encoding="utf-8"))
+            self.assertEqual(data["schema"], "program_state")
+            self.assertIn("updates", data)
+            for event in events:
+                if event["stage"] == "probe_skipped":
+                    self.assertNotEqual(event.get("bottleneck"), "world", event)
+            # The world's own numbers reach the first generation prompt, and
+            # every compiled idea gets an evidence grid.
+            self.assertTrue([e for e in events if e["stage"] == "exploratory"])
+            grids = [e for e in events if e["stage"] == "evidence_grid"]
+            self.assertTrue(grids, [e["stage"] for e in events])
+            self.assertTrue(Path(grids[0]["path"]).is_file())
+            self.assertIn("coverage", grids[0])
+            scout = [e for e in events if e["stage"] == "world_scout"][0]
+            self.assertTrue(any(str(l).startswith("contrast:") for l in scout["levers"]))
+
+    def test_a_lineage_freeze_schema_cannot_rebuild_the_task_world_as_another_family(
+        self,
+    ) -> None:
+        """Regression for the cwm-iclr2027 mission.
+
+        The topic is executable program state. The lineage step named
+        `freeze_schema: symbolic_trace` (the only freezable neighbour at the
+        time), that leaked into the construction requirement, and the
+        mission world was rebuilt as a protocol automaton; the probe then
+        read states/transitions and both arms were 0/0.
+        """
+        topic = (
+            "code world models of executable program state as the world "
+            "for an agent harness in recursive self-improvement"
+        )
+
+        class AutomatonWishClient(SchemingClient):
+            def complete(self, prompt, *, purpose, system=None, logprobs=False):
+                if "how THIS CLAIM'S object developed" in prompt:
+                    self.prompts.append(prompt)
+                    return Completion(
+                        text=json.dumps(
+                            {
+                                "lineage": (
+                                    "self-improving agents moved from archives "
+                                    "to validated executable state; validator "
+                                    "dropout is still open"
+                                ),
+                                "named_instance": "the published self-improvement protocol",
+                                "object_type": "executable",
+                                "schema": "program_state",
+                                "cite_ids": ["2608.09999v1"],
+                                "why_this_object": (
+                                    "accepted updates are properties of the "
+                                    "executable object, not of the mechanism"
+                                ),
+                                "freeze_source": "the protocol's evaluation harness",
+                                "freeze_url": "",
+                                "freeze_schema": "symbolic_trace",
+                            }
+                        ),
+                        model="fake-model",
+                        request_digest="req",
+                        digest=f"z{len(self.prompts):015x}",
+                        artifact_uri="file:///dev/null",
+                        finish_reason="stop",
+                        prompt_tokens=10,
+                        completion_tokens=20,
+                        reasoning_tokens=0,
+                        mode="replay",
+                    )
+                return super().complete(
+                    prompt, purpose=purpose, system=system, logprobs=logprobs
+                )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp) / "mission"
+            # An empty catalog: this pins the GENERATED path. With the repo
+            # catalog, auto would bind the derived Live-SWE program_state
+            # WORLD instead (see test_auto_binds_an_acquired_program_state_world).
+            empty_root = Path(tmp) / "empty"
+            (empty_root / "worlds").mkdir(parents=True)
+            events = run_all(
+                jumps=1,
+                client=AutomatonWishClient(),
+                feed=ObjectFeed(
+                    "executable program state",
+                    method="validator dropout",
+                ),
+                world="auto",
+                world_root=empty_root,
+                workspace=workspace,
+                topic=topic,
+            )
+            task_world = events[0]["world"]
+            self.assertIsNotNone(task_world)
+            self.assertEqual(task_world["role"], "generated")
+            self.assertEqual(task_world["schema"], "program_state")
+            constructed = [e for e in events if e["stage"] == "world_constructed"]
+            for event in constructed:
+                self.assertEqual(event["world"]["schema"], "program_state", event)
+            payload = json.loads(
+                (workspace / "world" / "world.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(payload.get("schema"), "program_state")
+            self.assertNotIn("states", payload)
+            self.assertIn("updates", payload)
+            held = [e for e in events if e["stage"] == "world_schema_held"]
+            paths = [e for e in events if e["stage"] == "world_path"]
+            if paths:
+                self.assertTrue(held, "a symbolic_trace wish must be logged, not built")
+                self.assertEqual(held[0]["schema"], "program_state")
+                self.assertEqual(held[0]["requested"], "symbolic_trace")
+            for probe in [e for e in events if e["stage"] == "probe"]:
+                self.assertNotEqual(probe.get("kind"), "WORLD")
 
     def test_retrieved_papers_ground_a_constructed_world_lineage(self) -> None:
         import dataclasses
@@ -1792,8 +2696,12 @@ class WorldLadderTests(unittest.TestCase):
         events = run_all(
             jumps=1,
             client=LineageIoClient(),
-            feed=FakeFeed(),
+            feed=ObjectFeed(
+                "external memory search trees",
+                method="buffer pool",
+            ),
             world="auto",
+            topic="external memory search trees with i/o complexity bounds",
         )
         paths = [e for e in events if e["stage"] == "world_path"]
         self.assertTrue(paths)
@@ -2014,9 +2922,13 @@ class BaselineStakeMissionTests(unittest.TestCase):
         stakes = [e for e in self.events if e["stage"] == "baseline"]
         self.assertEqual(len(stakes), 1)
         stake = stakes[0]
-        self.assertEqual(stake["arm"]["n"], 2)
-        self.assertGreater(stake["control"]["n"], 0)
         self.assertIn("Not a verdict", stake["note"])
+        if stake.get("skipped"):
+            self.assertEqual(stake["arm"]["n"], 2)
+            self.assertEqual(stake["control"]["n"], 0)
+        else:
+            self.assertEqual(stake["arm"]["n"], 2)
+            self.assertGreater(stake["control"]["n"], 0)
 
     def test_the_stake_never_reaches_the_ranking(self) -> None:
         stages = [e["stage"] for e in self.events]

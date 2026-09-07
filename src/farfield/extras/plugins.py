@@ -108,7 +108,7 @@ class BuiltinPlugin:
         claim: str = "",
         mechanism: str = "",
         topic: str = "",
-        **_: Any,
+        **kwargs: Any,
     ) -> str | None:
         from .domain import measure_stays_on_object
         from .probeexp import ProbeRefused, assert_fair_probe
@@ -127,7 +127,13 @@ class BuiltinPlugin:
                 " the claim's scientific object; count the object (protocol"
                 " field, invariant, index) — not cut-maintenance hops"
             )
-        return None
+        from .worldfields import probe_reads_attested_fields
+
+        schema = str(kwargs.get("schema") or "")
+        source = str(source or "")
+        return probe_reads_attested_fields(
+            source, claim=claim, mechanism=mechanism, schema=schema
+        )
 
     def lock_claim(
         self,
@@ -179,7 +185,7 @@ class BuiltinPlugin:
         claim: str = "",
         mechanism: str = "",
         topic: str = "",
-        **_: Any,
+        **kwargs: Any,
     ) -> str | None:
         from .domain import experiment_stays_on_object
 
@@ -201,7 +207,28 @@ class BuiltinPlugin:
                 "the diagnosis measures the distant mechanism instead of the"
                 " claim's object; the two arms must test the topic artefact"
             )
-        return None
+        from .worldfields import (
+            diagnosis_names_claimed_fields,
+            missing_attested_field,
+        )
+
+        schema = str(kwargs.get("schema") or "")
+        missing = missing_attested_field(
+            claim,
+            mechanism,
+            schema,
+            str(kwargs.get("world_lever") or ""),
+        )
+        if missing:
+            return missing
+        return diagnosis_names_claimed_fields(
+            experiment=experiment,
+            treatment=treatment_arm,
+            control=control_arm,
+            claim=claim,
+            mechanism=mechanism,
+            schema=schema,
+        )
 
     def to_dict(self) -> dict[str, Any]:
         return {

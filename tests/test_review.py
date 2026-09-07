@@ -9,13 +9,16 @@ from farfield.extras.brief import write_brief
 from farfield.extras.generate import GeneratedCard, GenerationRefused
 from farfield.extras.livefeed import FreshWork
 from farfield.extras.llm import Completion
-from farfield.extras.review import refine_brief, review_idea
+from farfield.extras.review import critique_card, refine_brief, review_idea
 
 PAPER = FreshWork(
-    title="Succinct wavelet trees meet pivot rules",
+    title="Succinct structure for simplex pivot history",
     published="2026-08-12",
     arxiv_id="2608.01234v1",
-    abstract="We compress pivot histories with a wavelet tree.",
+    abstract=(
+        "A succinct structure stores simplex pivot history in linear space "
+        "using a wavelet tree."
+    ),
 )
 CARD = GeneratedCard(
     card_id="gen_testreview01",
@@ -60,6 +63,9 @@ def brief_json() -> str:
     return json.dumps(
         {
             "title": "Pivot-history compression",
+            "plain_title": "单纯形法的转轴历史能压缩吗",
+            "one_liner": "单纯形法每一步的转轴记录，能否用线性空间存下并快速查询？",
+            "why_it_matters": "如果可行，防循环检查就不必保留完整日志，求解器内存占用可以明显下降。",
             "gap": "2608.01234v1 compresses pivot histories but never measures query time",
             "idea": "Build a succinct pivot log",
             "approach": "Encode the sequence as a wavelet tree",
@@ -168,6 +174,22 @@ class ReviewTests(unittest.TestCase):
             [PAPER],
         )
         self.assertNotEqual(revised.idea, self.brief.idea)
+
+    def test_critique_card_is_opinion_and_names_must_change(self) -> None:
+        client = ScriptedClient(review_json(keep_going=True))
+        review = critique_card(
+            client,
+            CARD,
+            "compress simplex traces",
+            [PAPER],
+        )
+        self.assertEqual(review.novelty, 3)
+        self.assertTrue(review.keep_going)
+        self.assertTrue(review.must_change)
+        self.assertIn("cannot kill", review.to_dict()["status"])
+        self.assertTrue(
+            any("Attack this probe" in prompt for prompt in client.prompts)
+        )
 
 
 if __name__ == "__main__":

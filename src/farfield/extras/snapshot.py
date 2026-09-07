@@ -22,7 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from .livefeed import FeedBlocked, FreshWork
+from .livefeed import FeedBlocked, FreshWork, as_work, is_signature_typeerror
 
 LOG_NAME = "feed_log.jsonl"
 SNAPSHOT_DIR = "evidence_snapshot"
@@ -45,7 +45,16 @@ def _serialize(result: Any) -> dict[str, Any]:
     if isinstance(result, FeedBlocked):
         return {"blocked": result.to_dict()}
     if isinstance(result, list):
-        return {"works": [work.to_dict() for work in result]}
+        works: list[dict[str, Any]] = []
+        for item in result:
+            work = as_work(item)
+            if work is not None:
+                works.append(work.to_dict())
+            elif isinstance(item, dict):
+                works.append(item)
+        return {"works": works}
+    if isinstance(result, dict):
+        return {"payload": result}
     return {"payload": result}
 
 
@@ -71,7 +80,21 @@ class RecordingFeed:
         self.log = self.dir / LOG_NAME
         self._lock = threading.Lock()
 
+    @property
+    def verify_literature(self) -> bool:
+        return bool(getattr(self.inner, "verify_literature", True))
+
+    @property
+    def last_sources_blocked(self) -> list[dict[str, Any]]:
+        return list(getattr(self.inner, "last_sources_blocked", None) or [])
+
+    @property
+    def verify_fetcher(self) -> Any:
+        return getattr(self.inner, "verify_fetcher", None)
+
     def _record(self, method: str, args: dict[str, Any], result: Any) -> Any:
+        if isinstance(result, list):
+            result = [work for item in result if (work := as_work(item)) is not None]
         entry = {
             "method": method,
             "args": args,
@@ -80,7 +103,9 @@ class RecordingFeed:
         entry.update(_serialize(result))
         with self._lock:
             with self.log.open("a", encoding="utf-8") as handle:
-                handle.write(json.dumps(entry, ensure_ascii=False) + "\n")
+                from .workspace import jsonable
+
+                handle.write(json.dumps(jsonable(entry), ensure_ascii=False) + "\n")
         return result
 
     def recent_in_field(self, concepts, *, max_results: int = 6):
@@ -105,7 +130,9 @@ class RecordingFeed:
             kwargs["topic"] = topic
         try:
             result = self.inner.survey_around(concept_a, concept_b, **kwargs)
-        except TypeError:
+        except TypeError as exc:
+            if not is_signature_typeerror(exc):
+                raise
             result = self.inner.survey_around(concept_a, concept_b, per_side=per_side)
         args: dict[str, Any] = {"pair": [concept_a, concept_b], "claim": claim}
         if topic:
@@ -118,8 +145,11 @@ class ReplayFeed:
 
     Parallel surveys append in completion order, not call order, so replay
     must match the request (pair, concepts) rather than consume the log as
-    a FIFO of method names.
+    a FIFO of method names. Snapshot rows are already attested; replay
+    does not re-verify against a live index.
     """
+
+    verify_literature = False
 
     def __init__(self, snapshot_dir: Path) -> None:
         self.entries: list[dict[str, Any]] = []

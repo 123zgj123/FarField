@@ -1,0 +1,9 @@
+{
+  "run": "cwm-iclr2027-v2",
+  "note": "Frozen oracle from the v2 weld: far noun compiled by lexical mention of a lever.",
+  "expected": {
+    "mechanism_existence": "fail_unless_world_refs",
+    "prose_cannot_attest_mechanism": true,
+    "evidence_scope": "cannot_exceed_handle"
+  }
+}

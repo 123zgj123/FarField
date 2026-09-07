@@ -76,11 +76,20 @@ class CatalogIsolationTests(unittest.TestCase):
         self.assertIn("external-gpu-run", names)
         self.assertIn("attested-writeup", names)
         self.assertIn("campaign-horizon", names)
+        self.assertIn("research-lit", names)
+        self.assertIn("experiment-plan", names)
+        self.assertIn("result-to-claim", names)
+        self.assertIn("ablation-planner", names)
+        self.assertIn("experiment-audit", names)
+        self.assertIn("citation-audit", names)
         self.assertNotIn("farfield-research", names)
         executable = {row["name"] for row in host.summary() if row.get("executable")}
         self.assertIn("fair-two-arm-probe", executable)
         self.assertIn("claim-domain-lock", executable)
         self.assertIn("external-gpu-run", executable)
+        self.assertIn("research-lit", executable)
+        self.assertIn("experiment-audit", executable)
+        self.assertIn("citation-audit", executable)
         self.assertIn("deepseek-harness", executable)
         self.assertIn("builtin", executable)
         fair = host.by_name("fair-two-arm-probe")
@@ -153,6 +162,9 @@ class HookCausalityTests(unittest.TestCase):
                 "card",
                 {
                     "title": "Certified Replay for LLM Tool-Use Safety",
+                    "plain_title": "回放证书能保证工具调用安全吗",
+                    "one_liner": "给工具调用的执行轨迹加一个可验证的回放证书，能否证明安全性质？",
+                    "why_it_matters": "如果能，部署方就可以只审计证书而不用重放全部轨迹。",
                     "gap": "the retrieved paper leaves the bound open",
                     "idea": "Verify tool-calling agents with a replay certificate",
                     "approach": "instrument traces",
@@ -289,6 +301,23 @@ class CliProductPathTests(unittest.TestCase):
         self.assertEqual(args.command, "execute")
         args = parser.parse_args(["research", "/tmp/x", "--topic", "t"])
         self.assertTrue(args.host_execute)
+        self.assertEqual(args.venue, "")
+        args = parser.parse_args(
+            ["research", "/tmp/x", "--topic", "t", "--venue", "neurips"]
+        )
+        self.assertEqual(args.venue, "neurips")
+        args = parser.parse_args(
+            [
+                "ingest-papers",
+                "--state-store",
+                "/tmp/state.json",
+                "--anchor",
+                "graph",
+                "--file",
+                "/tmp/papers.json",
+            ]
+        )
+        self.assertEqual(args.command, "ingest-papers")
         args = parser.parse_args(
             ["freeze", "--id", "phage-lambda", "--schema", "fasta", "--slice", "first_bases:50000", "--file", "/tmp/x"]
         )

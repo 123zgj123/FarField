@@ -39,7 +39,7 @@ WRITING_WHEELS = (
 
 
 def compile_artifact(
-    folder: Path, *, plugin_host: Any = None
+    folder: Path, *, plugin_host: Any = None, venue: str = ""
 ) -> dict[str, Any]:
     folder = Path(folder)
     protocol_path = folder / "protocol.json"
@@ -54,7 +54,15 @@ def compile_artifact(
     (dest / "attested.json").write_text(
         json.dumps(attested, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
-    (dest / "WRITING.md").write_text(WRITING_WHEELS + "\n", encoding="utf-8")
+    from .venue import VenueError, normalize_venue, venue_writing_note
+
+    writing = WRITING_WHEELS
+    if venue:
+        try:
+            writing += venue_writing_note(normalize_venue(venue))
+        except VenueError as exc:
+            raise ArtifactError(str(exc)) from exc
+    (dest / "WRITING.md").write_text(writing + "\n", encoding="utf-8")
     (dest / "paper.md").write_text(_markdown(attested), encoding="utf-8")
     (dest / "paper.tex").write_text(_tex_stub(), encoding="utf-8")
     extra: list[str] = []

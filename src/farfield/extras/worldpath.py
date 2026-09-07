@@ -36,6 +36,7 @@ from typing import Any
 from urllib.parse import urlparse
 
 from .schemas import FREEZABLE_SCHEMAS, OBJECT_SCHEMA, SCHEMAS
+from .world import incompatible_family
 
 SYSTEM = (
     "You reconstruct how a scientific object developed, from retrieved"
@@ -102,7 +103,16 @@ class WorldPath:
         return payload
 
     def wishlist_fields(self) -> dict[str, Any]:
-        """Extra keys to merge into an unmatched WorldRequirement."""
+        """Extra keys to merge into a WorldRequirement.
+
+        Lineage, named instance, and the freeze recipe are wishlist
+        facts. `schema` is deliberately absent: `freeze_schema` is the
+        family a *host* could freeze later, chosen from the freezable
+        list — when the claim's own family is not freezable the model
+        is forced to name a neighbour, and letting that neighbour
+        become the construction schema turned a program_state topic
+        into a protocol automaton nobody registered.
+        """
         extra: dict[str, Any] = {}
         if self.named_instance:
             extra["named_instance"] = self.named_instance
@@ -115,7 +125,6 @@ class WorldPath:
         if self.freeze_url:
             extra["freeze_url"] = self.freeze_url
         if self.freeze_schema:
-            extra["schema"] = extra.get("schema") or self.freeze_schema
             extra["freeze_schema"] = self.freeze_schema
         return extra
 
@@ -187,6 +196,14 @@ def path_from_payload(
     object_type = str(payload.get("object_type") or required_object or "").strip()
     if required_object and object_type != required_object:
         return None
+    if object_type not in OBJECT_SCHEMA and not incompatible_family(object_type):
+        # The prompt's placeholder ("the claim's object") or free prose is
+        # not a registered family; keep the lineage, drop the label. A
+        # known unattestable family (`io`) is a real answer and stays.
+        object_type = ""
+    schema = str(payload.get("schema") or "").strip()
+    if not object_type and schema in SCHEMAS:
+        object_type = SCHEMAS[schema].object_type
     if not object_type:
         return None
     raw_ids = payload.get("cite_ids") or []
@@ -195,7 +212,6 @@ def path_from_payload(
     cite_ids = tuple(str(item).strip() for item in raw_ids if str(item).strip())
     if not cite_ids or any(item not in allowed_ids for item in cite_ids):
         return None
-    schema = str(payload.get("schema") or "").strip()
     if not schema:
         schema = OBJECT_SCHEMA.get(object_type, "")
     if schema and schema not in SCHEMAS:

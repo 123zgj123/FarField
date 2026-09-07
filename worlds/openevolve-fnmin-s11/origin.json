@@ -1,0 +1,85 @@
+{
+  "url": "/home/ubuntu/Guijia_Zhang/FarField/runs/cwm-iclr2027/harvest/fnmin/openevolve_output/checkpoints/checkpoint_40",
+  "retrieved_at": "2026-09-05",
+  "source_digest": "30020539f38ff9bf8ffa6069a9a7ce3043b305b22157c209e663c4095db7b5d3",
+  "text_digest": "c148c84cbfda4b57e182049ab4b05564d0c027c91b327b076025f1ca799d1403",
+  "slice_rule": {
+    "kind": "all"
+  },
+  "parent": {
+    "cells": 38,
+    "validators": 1,
+    "updates": 33,
+    "accepted": 20,
+    "format": "json_program_state"
+  },
+  "slice": {
+    "updates": 33,
+    "accepted": 20
+  },
+  "imported": {
+    "format": "openevolve",
+    "files": [
+      "metadata.json",
+      "programs/04e3687b-37fc-47bf-ab5c-d149399f53bc.json",
+      "programs/0aa832b6-e48a-4316-bfa9-12946fc1652b.json",
+      "programs/32b146f1-3fb9-44ce-8398-4e6502c74d99.json",
+      "programs/32c5adb4-6ff6-49e5-b964-111b48d4dbda.json",
+      "programs/39180c58-f216-4ee2-a29d-fdd88f635df4.json",
+      "programs/3de231c5-d9d1-4915-bf95-cb3b92731db3.json",
+      "programs/4ba69d59-2c9b-4ec3-9159-9b36bc3f7b1f.json",
+      "programs/512bc7b4-191d-41c2-b2b9-f68553b20f55.json",
+      "programs/5cd8aa5b-4766-400e-9127-ef52f92db0f5.json",
+      "programs/643b55c5-dbeb-4103-8f93-2c0bc6c4241b.json",
+      "programs/680f6749-dc81-4bfd-af53-eae1f16da3bb.json",
+      "programs/6bd6cd24-45cd-4a9e-8041-c509d9adc249.json",
+      "programs/70092f87-f29e-4ef6-aca0-89a2cd7b5efa.json",
+      "programs/73cdafa1-0651-4737-932f-c0b4ad1f6d1d.json",
+      "programs/87fbe78c-fe2e-4e94-9f92-2b7353285708.json",
+      "programs/a7fc1233-dbe4-47b7-9069-f8da07385832.json",
+      "programs/ad109b7d-2935-40ba-b02e-f2c2199b38f9.json",
+      "programs/b1a8e140-a659-4f02-b34e-39889dad2d44.json",
+      "programs/b73717bd-8136-4c51-a690-754d2337c72c.json",
+      "programs/bb2ad8bf-9f15-4a53-91e8-d5cddcbe3f80.json",
+      "programs/bc2ad752-9fc2-4025-924d-aaab6b8b32a4.json",
+      "programs/c0d1e97d-3db4-41c9-92e6-61ec4b2f2164.json",
+      "programs/c37eb689-53ba-4bb8-89c4-1a2688f3515f.json",
+      "programs/c696d8ec-ccaa-4a55-ac3e-ab50ddebe9a0.json",
+      "programs/cb5201be-8458-4b6f-853d-a61193a58935.json",
+      "programs/cbbf7063-33cb-4b65-92d5-20dc603894f2.json",
+      "programs/ceedc545-8d95-4ab6-8b57-af0349343267.json",
+      "programs/dac7819c-a090-4c06-825f-869a32abe635.json",
+      "programs/e2fd2bb9-01ed-4968-9c4a-8a2d2ea550af.json",
+      "programs/e66d92d8-fc38-425f-adfc-82f11145c1a5.json",
+      "programs/ef3885ae-3c99-4553-a0ee-81031421cbbd.json",
+      "programs/f748f50b-2bfa-4c2b-b7cd-6f2f0409a7b3.json",
+      "programs/fd4a50a3-4250-4188-8429-3f7f755801a7.json"
+    ],
+    "rule": "openevolve.checkpoint→program_state.v1",
+    "best_program_id": "6bd6cd24-45cd-4a9e-8041-c509d9adc249"
+  },
+  "harness_run": {
+    "argv": [
+      "/home/ubuntu/Guijia_Zhang/FarField/runs/cwm-iclr2027/harvest/oe-venv/bin/openevolve-run",
+      "initial_program.py",
+      "evaluator.py",
+      "--config",
+      "config.yaml",
+      "--iterations",
+      "40",
+      "--output",
+      "openevolve_output"
+    ],
+    "exit_code": 0,
+    "harness": "openevolve-0.3.2/function_minimization",
+    "iterations": 40,
+    "recipe_digest": "343d6342be7da64459a1df19ff9edececbc7446e075d5aa63d660c516a1927b7",
+    "seconds": 197.719,
+    "seed": 11,
+    "stderr_sha256": "906d7c8b7fa6310ca04675ff52aa257f0ad20371c93bbf1ca8098f8622895199",
+    "stdout_sha256": "98de516f1dcf50941db081168f5eaa03677a5905890fcc3e8d0e14138f35e320",
+    "workdir": "/home/ubuntu/Guijia_Zhang/FarField/runs/cwm-iclr2027/harvest/fnmin",
+    "chain_seq": 6,
+    "chain_at": "2026-09-05T09:10:12+00:00"
+  }
+}

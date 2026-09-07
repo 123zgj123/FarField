@@ -171,6 +171,22 @@
       ],
       "T": 2025,
       "note": "production slice: vocabulary and walker edges cover 2012..2025, full graph to the 2026-08-14 harvest end; the live idea oracle reads the full graph so a 2026 combination is not offered as open"
+    },
+    {
+      "snapshot_id": "cs-mixed-arxiv-concepts-2026",
+      "role": "production-mixed",
+      "discipline": "noun-phrases-v1",
+      "corpus_uid": "",
+      "set_spec": "cs:cs:DS",
+      "extra_sets": ["cs:cs:AI", "cs:cs:LG", "cs:cs:CL"],
+      "graph": "concepts/cs-mixed-arxiv-concepts-2026/G_le_T.json",
+      "full_graph": "concepts/cs-mixed-arxiv-concepts-2026/G_full.json",
+      "heldout": "concepts/cs-mixed-arxiv-concepts-2026/heldout_post_T.json",
+      "post_t_placement": "real: a pair is combined when some post-T work carries both labels, read off that work alone",
+      "seeds": [],
+      "seed_nodes": [],
+      "T": 2025,
+      "note": "one harvest, one T, four complete arXiv sets. Not a union of the DS/CL/attn graphs. Build with scripts/build_concepts.py cs-mixed-arxiv-concepts-2026. The product path switches here only when G_full.json exists."
     }
   ],
   "envelope": {

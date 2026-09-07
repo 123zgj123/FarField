@@ -9,7 +9,7 @@ the oracle, not instead of it.
 - `apply_x_to_y` reads only the card. If stripping the two concept phrases
   leaves nothing but juxtaposition verbs and padding, the card is the
   named failure mode and it dies. No network, so it may kill.
-- `claim_already_stated` reads papers this neighbourhood has actually
+- `strongest_prior` reads papers this neighbourhood has actually
   retrieved (this mission's survey plus the research-state wiki). Support
   is "does a short span restating the claim's distinctive phrases exist",
   not bag-of-words recall against a long abstract. Scattered field
@@ -23,7 +23,7 @@ import re
 from dataclasses import dataclass
 from typing import Any, Iterable
 
-from .livefeed import FreshWork
+from .livefeed import FreshWork, as_work
 
 APPLY_PAD = frozenset(
     {
@@ -95,13 +95,28 @@ PRIOR_KILL = 0.70
 _SENTENCE = re.compile(r"(?<=[.!?])\s+")
 
 
+def fold_plural(word: str) -> str:
+    """The one light plural fold every phrase key in FarField shares.
+
+    `harnesses` → `harness` and `classes` → `class` (an `-sses` noun is
+    the `-ss` singular plus `es`); otherwise a trailing `s` on a word of
+    four letters or more is dropped, never on `-ss`. Before `-sses` was
+    handled, `agent harnesses` folded to `agent harnesse`, escaped the
+    topic-object block, and was offered back as a far mechanism.
+    """
+    if len(word) > 4 and word.endswith("sses"):
+        return word[:-2]
+    if len(word) > 3 and word.endswith("s") and not word.endswith("ss"):
+        return word[:-1]
+    return word
+
+
 def content_tokens(text: str) -> frozenset[str]:
     """Content words, lowercased, light plural fold. Same spirit as sandbox."""
     cleaned = "".join(ch.lower() if ch.isalnum() else " " for ch in text)
     tokens = set()
     for word in cleaned.split():
-        if len(word) > 3 and word.endswith("s") and not word.endswith("ss"):
-            word = word[:-1]
+        word = fold_plural(word)
         if len(word) >= 3:
             tokens.add(word)
     return frozenset(tokens)
@@ -132,25 +147,54 @@ def ordered_content(text: str) -> list[str]:
     """Content words in order, same folding as `content_tokens`."""
     cleaned = "".join(ch.lower() if ch.isalnum() else " " for ch in text)
     tokens: list[str] = []
-    for word in cleaned.split():
-        if len(word) > 3 and word.endswith("s") and not word.endswith("ss"):
-            word = word[:-1]
-        if len(word) >= 3 and word not in APPLY_PAD:
+    for raw in cleaned.split():
+        word = fold_plural(raw)
+        if len(word) >= 3 and word not in APPLY_PAD and raw not in APPLY_PAD:
             tokens.append(word)
     return tokens
 
 
+def ordered_content_runs(text: str) -> list[list[str]]:
+    """Runs of content words that were *adjacent in the original text*.
+
+    Dropping "of" between "models" and "executable" and then welding the
+    survivors into a bigram manufactures phrases no author ever wrote
+    ("world executable"). Those fake phrases then leak into literature
+    queries and phrase-support checks. A dropped word ends the run.
+    """
+    cleaned = "".join(ch.lower() if ch.isalnum() else " " for ch in text)
+    runs: list[list[str]] = []
+    current: list[str] = []
+    for raw in cleaned.split():
+        word = fold_plural(raw)
+        # Pad is checked on the written word too: folding `this` → `thi`
+        # before the check let `frame thi` into a mechanism menu.
+        if len(word) >= 3 and word not in APPLY_PAD and raw not in APPLY_PAD:
+            current.append(word)
+        elif current:
+            runs.append(current)
+            current = []
+    if current:
+        runs.append(current)
+    return runs
+
+
 def claim_phrases(text: str) -> tuple[str, ...]:
-    """Distinctive bigrams and trigrams; the unit a supporting span must carry."""
-    tokens = ordered_content(text)
+    """Distinctive bigrams and trigrams; the unit a supporting span must carry.
+
+    N-grams never bridge a removed padding word: only phrases the text
+    actually contains may anchor retrieval or count as a restatement.
+    """
+    runs = ordered_content_runs(text)
     phrases: list[str] = []
     seen: set[str] = set()
     for n in (2, 3):
-        for i in range(len(tokens) - n + 1):
-            gram = " ".join(tokens[i : i + n])
-            if gram not in seen:
-                seen.add(gram)
-                phrases.append(gram)
+        for run in runs:
+            for i in range(len(run) - n + 1):
+                gram = " ".join(run[i : i + n])
+                if gram not in seen:
+                    seen.add(gram)
+                    phrases.append(gram)
     return tuple(phrases)
 
 
@@ -223,7 +267,13 @@ def strongest_prior(
 ) -> PriorHit | None:
     """The retrieved paper whose best span most completely restates the claim."""
     best: PriorHit | None = None
-    for work in works:
+    for raw in works or []:
+        work = raw
+        if not isinstance(work, FreshWork):
+            converted = as_work(work)
+            if converted is None:
+                continue
+            work = converted
         paper = f"{work.title}. {work.abstract}"
         support, span = claim_support(claim, paper)
         if support < PRIOR_FLAG:

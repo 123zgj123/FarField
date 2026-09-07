@@ -19,4 +19,4 @@ Refuse, do not repair:
 - one arm `pass`, the other counting
 - treatment increments unconditionally, control only under a predicate
 
-The expected direction was pre-registered before this script. Do not pick the outcome. Do not measure wall-clock; count work. The counted quantity still has to be the claim's object, not the distant mechanism's bookkeeping.
+The expected direction was pre-registered before this script. Do not pick the outcome. Do not measure wall-clock; count work. The counted quantity still has to be the claim's object, not the distant mechanism's bookkeeping. If the claim names `created_tools` on a `labeled_traces` freeze, both arms must read `trace['created_tools']` (or `derived['created_tool_count']`), not `step.get('created_tools')`.

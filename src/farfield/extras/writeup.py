@@ -170,10 +170,23 @@ def render_note(
             + "."
         )
 
+    plain_heading = (
+        f"{brief.plain_title}（{brief.title}）"
+        if getattr(brief, "plain_title", "")
+        else brief.title
+    )
+    plain_intro: list[str] = []
+    if getattr(brief, "one_liner", ""):
+        plain_intro.append(f"- 在问什么：{brief.one_liner}")
+    if getattr(brief, "why_it_matters", ""):
+        plain_intro.append(f"- 为什么值得答：{brief.why_it_matters}")
+    if plain_intro:
+        plain_intro = ["**这张卡在说什么**", "", *plain_intro, ""]
     markdown = "\n".join(
         [
-            f"# {brief.title}",
+            f"# {plain_heading}",
             "",
+            *plain_intro,
             f"*Topic.* {topic}",
             "",
             f"*Combination.* {card.pair[0]} × {card.pair[1]}",

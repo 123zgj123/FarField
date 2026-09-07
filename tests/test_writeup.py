@@ -10,7 +10,14 @@ from farfield.extras.brief import ResearchBrief
 from farfield.extras.diagnose import Diagnosis
 from farfield.extras.generate import GeneratedCard
 from farfield.extras.livefeed import FreshWork
-from farfield.extras.packet import render_mission_packet, render_protocol
+from farfield.extras.packet import (
+    render_experiment_plan,
+    render_idea_agent_packet,
+    render_idea_human_packet,
+    render_idea_report,
+    render_mission_packet,
+    render_protocol,
+)
 from farfield.extras.writeup import compile_tex, render_note
 from farfield.extras.workspace import mission_dir, write_idea, write_summary
 
@@ -41,6 +48,15 @@ BRIEF = ResearchBrief(
     risks="real traces may not compress",
     read_first=("2608.01234v1",),
     papers=(),
+)
+
+BRIEF_PLAIN = ResearchBrief(
+    **{
+        **BRIEF.__dict__,
+        "plain_title": "单纯形法的转轴历史能压缩吗",
+        "one_liner": "转轴记录能否用线性空间存下并快速查询？",
+        "why_it_matters": "如果可行，防循环检查不必保留完整日志。",
+    }
 )
 
 PAPER = FreshWork(
@@ -307,15 +323,59 @@ class ProtocolTests(unittest.TestCase):
         )
         self.assertIn("推荐课题", text)
         self.assertIn("Succinct pivot logs", text)
+        self.assertIn("ideas/succinct-pivot-logs", text)
         do_next, rest = text.split("先读文献", 1)
-        self.assertIn("live", do_next)
+        self.assertIn("succinct-pivot-logs", do_next)
         self.assertNotIn("old", do_next)
         self.assertNotIn("dead", do_next)
         closed, weakened = rest.split("不要继续投入", 1)
         self.assertIn("someone already wrote this", closed)
         self.assertIn("the speedup is real", weakened)
         self.assertIn("不是会议论文", text)
-        self.assertIn("下周步骤", text)
+        self.assertIn("研究方案", text)
+        self.assertIn("记忆污染", text)
+        self.assertIn("IDEA_REPORT.md", text)
+
+    def test_idea_report_ranks_live_lines_and_closed_roads(self) -> None:
+        text = render_idea_report(
+            "code world models of executable program state",
+            found=[
+                {
+                    "card_id": "live",
+                    "pair": ["code world", "acceptance gate"],
+                    "claim": "cross-seed certificates reject reward tampering",
+                    "verdict": "uninformative",
+                    "idea_world": {"iterate": "store hidden-seed rewards on the same object"},
+                    "idea_name": "cross-seed-gate",
+                },
+                {
+                    "card_id": "dead",
+                    "pair": ["recursive algorithm", "stochastic reward"],
+                    "verdict": "weakens",
+                    "why_failed": "survey pulled knapsack papers",
+                },
+            ],
+            kills=[
+                {
+                    "pair": ["recursive algorithm", "stochastic reward"],
+                    "killed_by": ["already_combined"],
+                    "why": "pair already walked",
+                }
+            ],
+            wiki=[
+                {
+                    "cite_id": "2510.04542",
+                    "limitations": ["However, we do not evaluate self-edit certificates."],
+                }
+            ],
+        )
+        self.assertIn("活线", text)
+        self.assertIn("cross-seed certificates", text)
+        self.assertIn("hidden-seed rewards", text)
+        self.assertIn("关掉的路", text)
+        self.assertIn("knapsack", text)
+        self.assertIn("文献缺口", text)
+        self.assertIn("self-edit certificates", text)
 
     def test_a_constructed_world_with_a_brief_is_do_next_and_cannot_corroborate(self) -> None:
         text = render_mission_packet(
@@ -348,36 +408,135 @@ class ProtocolTests(unittest.TestCase):
         self.assertIn("fv", do_next)
         self.assertIn("不能佐证", do_next)
         self.assertIn("GENERATED", do_next)
-        self.assertIn("下周步骤", text)
+        self.assertIn("研究方案", text)
         self.assertNotIn("下场纲领", text)
         self.assertNotIn("给下一跳 FarField", text)
 
     def test_the_packet_renders_forward_simulation_analysis(self) -> None:
+        rec = {
+            "card_id": "live",
+            "title": "Succinct pivot logs",
+            "claim": CARD.claim,
+            "verdict": "supports",
+            "probe_kind": "WORLD",
+            "has_brief": True,
+            "world_id": "tcp-linux-server",
+            "idea_analysis": {
+                "stop_reason": "plateau",
+                "room_to_move": True,
+                "n_steps": 4,
+                "summary": "On tcp-linux-server under walk, execution stopped at t=3 (plateau).",
+            },
+        }
+        text = render_idea_human_packet("succinct pivots", rec)
+        self.assertIn("前向模拟", text)
+        self.assertIn("plateau", text)
+        self.assertIn("tcp-linux-server under walk", text)
+        self.assertIn("不能爬梯", text)
+
+    def test_the_packet_ends_with_a_glossary(self) -> None:
         text = render_mission_packet(
             "succinct pivots",
-            ranked=[{"rank": 1, "card_id": "live", "verdict": "supports"}],
             found=[
                 {
                     "card_id": "live",
                     "title": "Succinct pivot logs",
                     "claim": CARD.claim,
                     "verdict": "supports",
-                    "probe_kind": "WORLD",
                     "has_brief": True,
-                    "world_id": "tcp-linux-server",
-                    "idea_analysis": {
-                        "stop_reason": "plateau",
-                        "room_to_move": True,
-                        "n_steps": 4,
-                        "summary": "On tcp-linux-server under walk, execution stopped at t=3 (plateau).",
-                    },
                 }
             ],
         )
-        self.assertIn("前向模拟", text)
-        self.assertIn("plateau", text)
-        self.assertIn("tcp-linux-server under walk", text)
-        self.assertIn("不能爬梯", text)
+        self.assertIn("## 术语速查", text)
+        self.assertIn("处理臂 / 对照臂", text)
+        self.assertIn("protocol_executed", text)
+        self.assertIn("supports / weakens / uninformative", text)
+
+    def test_plain_titles_lead_the_packet_headings(self) -> None:
+        text = render_mission_packet(
+            "succinct pivots",
+            found=[
+                {
+                    "card_id": "live",
+                    "title": "Succinct pivot logs",
+                    "plain_title": "单纯形法的转轴历史能压缩吗",
+                    "one_liner": "转轴记录能否用线性空间存下并快速查询？",
+                    "why_it_matters": "如果可行，防循环检查不必保留完整日志。",
+                    "claim": CARD.claim,
+                    "verdict": "supports",
+                    "has_brief": True,
+                }
+            ],
+        )
+        self.assertIn("### 单纯形法的转轴历史能压缩吗（Succinct pivot logs）", text)
+        human = render_idea_human_packet(
+            "succinct pivots",
+            {
+                "card_id": "live",
+                "title": "Succinct pivot logs",
+                "plain_title": "单纯形法的转轴历史能压缩吗",
+                "one_liner": "转轴记录能否用线性空间存下并快速查询？",
+                "why_it_matters": "如果可行，防循环检查不必保留完整日志。",
+                "claim": CARD.claim,
+                "verdict": "supports",
+                "has_brief": True,
+            },
+        )
+        self.assertIn("问题陈述", human)
+        self.assertIn("转轴记录能否用线性空间存下并快速查询？", human)
+        self.assertIn("如果可行，防循环检查不必保留完整日志。", human)
+        from farfield.extras.packet import render_experiment_plan
+
+        plan = render_experiment_plan("succinct pivots", {
+            "card_id": "live",
+            "claim": CARD.claim,
+            "prediction": CARD.prediction,
+            "experiment": DIAGNOSIS.experiment,
+            "treatment_arm": DIAGNOSIS.treatment_arm,
+            "control_arm": DIAGNOSIS.control_arm,
+            "expected_direction": DIAGNOSIS.expected_direction,
+            "alternative": DIAGNOSIS.alternative,
+        })
+        self.assertIn("Claim 映射", plan)
+        self.assertIn("必须运行", plan)
+        self.assertIn("实验块 1", plan)
+        self.assertIn(CARD.claim, plan)
+        self.assertNotIn("研究简报:", plan)
+
+    def test_records_without_plain_fields_degrade_to_the_title(self) -> None:
+        text = render_mission_packet(
+            "succinct pivots",
+            found=[
+                {
+                    "card_id": "live",
+                    "title": "Succinct pivot logs",
+                    "claim": CARD.claim,
+                    "verdict": "supports",
+                    "has_brief": True,
+                }
+            ],
+        )
+        self.assertIn("### Succinct pivot logs", text)
+        self.assertNotIn("这张卡在说什么", text)
+
+    def test_the_protocol_and_readme_prefer_the_plain_title(self) -> None:
+        protocol = render_protocol(
+            "topic",
+            CARD,
+            BRIEF_PLAIN,
+            [PAPER],
+            probe=PROBE,
+            diagnosis=DIAGNOSIS,
+        )
+        heading = "单纯形法的转轴历史能压缩吗（Succinct pivot logs）"
+        self.assertIn(f"# Research plan: {heading}", protocol.markdown)
+        self.assertIn("**这张卡在说什么**", protocol.markdown)
+        self.assertTrue(protocol.readme.startswith(f"# {heading}"))
+        self.assertEqual(
+            protocol.payload["plain_title"], "单纯形法的转轴历史能压缩吗"
+        )
+        note = render_note("topic", CARD, BRIEF_PLAIN, [PAPER])
+        self.assertIn(f"# {heading}", note.markdown)
 
     def test_an_unfinished_line_inlines_the_claim_and_does_not_link_a_missing_protocol(self) -> None:
         text = render_mission_packet(
@@ -415,11 +574,124 @@ class ProtocolTests(unittest.TestCase):
         )
         self.assertIn("推荐课题", text)
         self.assertIn("learned score treated as an arbitrary function", text)
-        self.assertIn("下周步骤", text)
+        self.assertIn("研究方案", text)
         self.assertNotIn("keep the pair", text)
         self.assertNotIn("不要点死链", text)
         self.assertNotIn("P(text_pass|generated)", text)
         self.assertIn("summary.json", text)
+
+
+    def test_distinct_ideas_do_not_share_a_packet(self) -> None:
+        first = {
+            "card_id": "gen_aaa",
+            "title": "Memory key A",
+            "claim": "prefix contrast predicts created_tools",
+            "mechanism": "count mass sits in a few columns",
+            "has_brief": True,
+        }
+        second = {
+            "card_id": "gen_bbb",
+            "title": "Memory key B",
+            "claim": "returncode ngrams beat a length baseline",
+            "mechanism": "failure states accumulate in the key",
+            "has_brief": True,
+        }
+        index = render_mission_packet(
+            "agent memory",
+            found=[first, second],
+            workspace="/tmp/mission",
+        )
+        self.assertIn("ideas/memory-key-a", index)
+        self.assertIn("ideas/memory-key-b", index)
+        self.assertNotIn("ideas/gen_aaa", index)
+        self.assertNotIn("ideas/gen_bbb", index)
+        self.assertIn("prefix contrast predicts created_tools", index)
+        self.assertIn("returncode ngrams beat a length baseline", index)
+        human_a = render_idea_human_packet(
+            "agent memory", first, sibling_ids=["gen_aaa", "gen_bbb"]
+        )
+        agent_a = render_idea_agent_packet(
+            "agent memory", first, sibling_ids=["gen_aaa", "gen_bbb"]
+        )
+        self.assertIn("prefix contrast predicts created_tools", human_a)
+        self.assertNotIn("returncode ngrams beat a length baseline", human_a)
+        self.assertIn("`memory-key-a`", human_a)
+        self.assertNotIn("一条 idea（`gen_aaa`）", human_a)
+        self.assertNotIn("../gen_bbb/", human_a)
+        self.assertIn("Do not open sibling folders", agent_a)
+        self.assertNotIn("ideas/gen_bbb/", agent_a)
+        self.assertIn("audience: execute", agent_a)
+        self.assertNotIn("next-round", agent_a)
+        self.assertIn("Do not start a new `farfield research`", agent_a)
+        self.assertIn("问题陈述", human_a)
+        self.assertIn("背景", human_a)
+        self.assertIn("世界与约束", human_a)
+        self.assertIn("实验设计", human_a)
+        self.assertIn("领域知识", human_a)
+        self.assertIn("非目标", human_a)
+        self.assertIn("已有结果", human_a)
+        self.assertIn("下一步计划", human_a)
+        self.assertIn("实验块 1", human_a)
+        self.assertNotIn("完整实验块", human_a)
+        english = render_idea_human_packet(
+            "agent memory", first, sibling_ids=["gen_aaa", "gen_bbb"], lang="en"
+        )
+        self.assertIn("Research plan", english)
+        self.assertIn("Experiment design", english)
+        self.assertIn("prefix contrast predicts created_tools", english)
+        self.assertNotIn("returncode ngrams beat a length baseline", english)
+        plan_en = render_experiment_plan("agent memory", first, lang="en")
+        self.assertIn("# Experiment design", plan_en)
+        self.assertIn("prefix contrast predicts created_tools", plan_en)
+
+
+class IdeaFolderNameTests(unittest.TestCase):
+    def test_slug_uses_far_concept_and_lever_not_digest(self) -> None:
+        from farfield.extras.packet import idea_folder_name, packet_worthy
+
+        slug = idea_folder_name(
+            {
+                "card_id": "gen_cdadff266f68",
+                "pair": ["agent system", "adaptive sampling"],
+                "mechanism_flag": "mask_selector",
+            }
+        )
+        self.assertEqual(slug, "adaptive-sampling-mask-selector")
+        self.assertFalse(slug.startswith("gen_"))
+
+    def test_weakens_and_unrunnable_are_not_packet_worthy(self) -> None:
+        from farfield.extras.packet import packet_worthy
+
+        self.assertFalse(packet_worthy({"verdict": "weakens", "has_brief": True}))
+        self.assertFalse(
+            packet_worthy(
+                {
+                    "verdict": None,
+                    "experiment": "Train two models. Not runnable here: bound world lacks recall observable.",
+                    "has_brief": True,
+                }
+            )
+        )
+        self.assertTrue(
+            packet_worthy({"verdict": "uninformative", "has_brief": True, "experiment": "two-arm"})
+        )
+
+
+class ResultHonestyTests(unittest.TestCase):
+    def test_generated_supports_cannot_be_a_discovery(self) -> None:
+        from farfield.extras.packet import render_result_to_claim
+
+        text = render_result_to_claim(
+            {
+                "claim": "sketches recover heavy hitters",
+                "probe_kind": "GENERATED",
+                "verdict": "supports",
+                "world_id": "generated-text_stream-abc",
+            }
+        )
+        self.assertIn("GENERATED", text)
+        self.assertIn("cannot corroborate", text)
+        self.assertNotIn("Two-arm arithmetic on an attested freeze", text)
 
 
 if __name__ == "__main__":

@@ -136,6 +136,24 @@ SLICES = (
         ),
         replay_source="ds-arxiv-concepts",
     ),
+    # Mixed production harvest: one T, one vocabulary, several complete
+    # arXiv sets. Not a union of the DS / CL / attn graphs already on
+    # disk — those oracles would lie about cross-field combinations.
+    Slice(
+        spec=ConceptSpec(
+            topic="computer science (ds + ai + lg + cl)",
+            corpus_id="cs-mixed-arxiv-concepts-2026",
+            T=2025,
+            min_df=10,
+            confirmed_min_df=3,
+        ),
+        source=ArxivSource(
+            set_spec="cs:cs:DS",
+            extra_sets=("cs:cs:AI", "cs:cs:LG", "cs:cs:CL"),
+            since="2012-01-01",
+            discipline=NOUN_DISCIPLINE,
+        ),
+    ),
 )
 
 BY_ID = {item.spec.corpus_id: item for item in SLICES}

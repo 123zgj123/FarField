@@ -207,6 +207,42 @@ class ConstructedWorldTests(unittest.TestCase):
             self.assertGreaterEqual(len(payload.get("traces") or []), 2)
             self.assertEqual(execute_world(payload), [])
 
+    def test_construction_locks_the_task_topic_not_the_far_pair(self) -> None:
+        topic = "space-efficient sketches for heavy hitters in adversarial streams"
+        card = GeneratedCard(
+            card_id="gen_drift",
+            operator="directional",
+            claim="a balanced tree z-score certifies the sampler",
+            mechanism="reverse Kolmogorov drift is nonpositive",
+            prediction="unsafe trajectory fraction is 0.0",
+            falsifier="pair_not_already_combined",
+            pair=("balanced tree", "zero weight"),
+            pair_nodes=("a", "b"),
+            alienness=0.4,
+            model="test",
+            artifact_digest="d",
+            artifact_uri="file:///dev/null",
+            replay_mode="replay",
+        )
+        req = infer_requirement(topic)
+        self.assertIsNotNone(req)
+        self.assertEqual(req.object_type, "stream")
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = construct_world(
+                None,
+                card,
+                req,
+                dest=Path(tmp) / "world",
+                topic=topic,
+            )
+            payload = load_world_payload(fixture.root)
+            self.assertEqual(payload["task_topic"], topic)
+            self.assertTrue(payload.get("far_concept_must_not_rename_object"))
+            self.assertTrue(fixture.id.startswith("generated-text_stream-"))
+            self.assertEqual(fixture.schema, "text_stream")
+            self.assertNotIn("balanced", fixture.title.lower())
+            self.assertEqual(execute_world(payload), [])
+
     def test_incomplete_previous_can_be_reconstructed(self) -> None:
         card = _card()
         diagnosis = SimpleNamespace(

@@ -415,6 +415,35 @@ class LogprobsTest(unittest.TestCase):
         self.assertEqual(client.ledger.spent_calls, 1.0)
         self.assertEqual(client.ledger.reserved_calls, 0.0)
 
+    def test_reasoning_models_omit_locked_sampling_fields(self) -> None:
+        from farfield.extras.llm import sampling_is_locked
+
+        self.assertTrue(sampling_is_locked("gpt-5.6-sol"))
+        self.assertFalse(sampling_is_locked("test-model"))
+        seen: list[bytes] = []
+
+        class Recorder(Transport):
+            def __call__(self, url: str, body: bytes, headers: dict[str, str]) -> bytes:
+                seen.append(body)
+                return super().__call__(url, body, headers)
+
+        backend = Backend(
+            base_url="https://example.invalid/v1",
+            model="gpt-5.6-sol",
+            api_key="secret-key",
+        )
+        client = LLMClient(
+            backend,
+            self.cache,
+            ledger=TokenLedger(api_calls=2.0, token_cost=1000.0),
+            mode="live",
+            transport=Recorder(response("ok")),
+        )
+        client.complete("prompt", purpose="score", logprobs=True)
+        body = json.loads(seen[0].decode("utf-8"))
+        self.assertNotIn("temperature", body)
+        self.assertNotIn("logprobs", body)
+
 
 if __name__ == "__main__":
     unittest.main()

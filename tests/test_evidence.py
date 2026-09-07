@@ -93,6 +93,12 @@ class LedgerTests(unittest.TestCase):
         self.assertTrue(any("evidence_id missing" in gap for gap in gaps))
         self.assertTrue(any("digest missing" in gap for gap in gaps))
 
+    def test_world_sim_imagined_numbers_cannot_corroborate(self) -> None:
+        row = confirmable(probe_kind="WORLD_SIM", results_status="imagined")
+        self.assertFalse(host_confirms(row))
+        gaps = host_confirmation_gaps(row)
+        self.assertTrue(any("WORLD_SIM" in gap for gap in gaps))
+
     def test_each_missing_field_blocks_confirmation(self) -> None:
         for key in (
             "evidence_id",
@@ -243,6 +249,33 @@ class RequirementTests(unittest.TestCase):
         # No dynamics: nothing to ablate.
         self.assertFalse(
             ablation_required("caching", "any experiment", levers=(), world_lever="")
+        )
+        self.assertTrue(
+            ablation_required(
+                "",
+                "dropout edges only",
+                levers=levers,
+                world_lever="dropout",
+            )
+        )
+        from farfield.extras.evidence import competing_explanation_missing
+
+        self.assertTrue(
+            competing_explanation_missing(
+                "the speedup comes from caching",
+                levers=levers,
+                world_lever="dropout",
+            )
+        )
+        self.assertFalse(
+            competing_explanation_missing(
+                "hub_removal would also shrink the giant component",
+                levers=levers,
+                world_lever="dropout",
+            )
+        )
+        self.assertFalse(
+            competing_explanation_missing("", levers=(), world_lever="")
         )
 
 

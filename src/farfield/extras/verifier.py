@@ -35,7 +35,8 @@ from .predicates import (
     compile_predicate,
     run as run_predicate,
 )
-from .routing import WORLD_KINDS, load_log, settlement_missions
+from .routing import load_log, settlement_missions
+from .world import WORLD_KINDS
 
 MIN_MISSIONS = 6
 

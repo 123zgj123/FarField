@@ -88,9 +88,9 @@ class SchemaTests(unittest.TestCase):
         with self.assertRaises(GenerationRefused):
             card(assumption="")
 
-    def test_a_missing_dead_end_is_refused(self) -> None:
-        with self.assertRaises(GenerationRefused):
-            card(dead_end="")
+    def test_a_missing_dead_end_is_allowed(self) -> None:
+        result = card(dead_end="")
+        self.assertEqual(result.dead_end, "")
 
     def test_an_unknown_operator_is_a_caller_error(self) -> None:
         with self.assertRaises(KeyError):

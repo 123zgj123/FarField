@@ -207,6 +207,34 @@ def mechanism_identified(outcome: dict[str, Any] | None) -> bool:
     return True
 
 
+def competing_explanation_missing(
+    alternative: str,
+    *,
+    levers: tuple[str, ...] | list[str] = (),
+    world_lever: str = "",
+) -> bool:
+    """True when no competing handle of this world is named.
+
+    A competing explanation is another declared lever of this world, not
+    an English word list. Empty alternative, or prose that names no
+    other lever, leaves the mechanism unidentified on this object.
+    """
+    vocab = tuple(
+        str(item) for item in levers if str(item or "").strip() and str(item) != "none"
+    )
+    if not vocab:
+        return False
+    alt = str(alternative or "").strip()
+    if not alt:
+        return True
+    named = [
+        lever
+        for lever in vocab
+        if lever != world_lever and _mentions_lever(alt, lever)
+    ]
+    return not named
+
+
 def ablation_required(
     alternative: str,
     experiment: str,
@@ -219,15 +247,16 @@ def ablation_required(
     Competing explanations are other declared levers, not an English
     word list. A prose alternative that names no lever of this world is
     also required: the mechanism is then not identified on this object.
+    An empty alternative is the same gap when this world has levers.
     """
-    alt = str(alternative or "").strip()
-    if not alt:
-        return False
     vocab = tuple(
         str(item) for item in levers if str(item or "").strip() and str(item) != "none"
     )
     if not vocab:
         return False
+    alt = str(alternative or "").strip()
+    if not alt:
+        return True
     named = [
         lever
         for lever in vocab
@@ -248,6 +277,11 @@ def host_confirmation_gaps(outcome: dict[str, Any] | None) -> tuple[str, ...]:
     """
     row = outcome or {}
     gaps: list[str] = []
+    from .worldsim import refuse_world_sim_as_evidence
+
+    imagined = refuse_world_sim_as_evidence(row)
+    if imagined:
+        gaps.append(imagined)
     if not world_attested(row):
         gaps.append("probe did not run on an attested WORLD")
     if scientific_verdict(row) != SCIENTIFIC_SUPPORTS:
@@ -267,6 +301,13 @@ def host_confirmation_gaps(outcome: dict[str, Any] | None) -> tuple[str, ...]:
         gaps.append("host evidence_id missing")
     if probe_eid and host_eid and probe_eid != host_eid:
         gaps.append("EvidenceID mismatch: the host ran a different evidence object")
+    claim_world = str(row.get("claim_world_id") or row.get("target_world_id") or "")
+    evidence_world = str(row.get("world_id") or "")
+    if claim_world and evidence_world and claim_world != evidence_world:
+        gaps.append("cross-world evidence: W0 evidence cannot promote a W1 claim")
+    if row.get("world_digest") and row.get("claim_world_digest"):
+        if str(row["world_digest"]) != str(row["claim_world_digest"]):
+            gaps.append("EvidenceID mismatch: world digest does not match the claim freeze")
     for key in ("world_digest", "experiment_digest", "data_digest"):
         probe_val = str(row.get(key) or "")
         host_val = str(row.get(f"host_{key}") or "")

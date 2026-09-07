@@ -10,9 +10,10 @@ repository-code: https://github.com/123zgj123/FarField
 url: https://github.com/123zgj123/FarField
 abstract: >-
   FarField is a local research loop for automated scientific inquiry.
-  Given a topic, it searches a concept graph, proposes a falsifiable
-  hypothesis, registers a two-arm experiment before any result is
-  observed, and emits a protocol another researcher can rerun. Binding,
+  Given a topic, it recovers development trajectories from verified
+  papers and makes far-field jumps, proposes a falsifiable hypothesis,
+  registers a two-arm experiment before any result is observed, and
+  emits a protocol another researcher can rerun. Binding,
   construction, lever, and probe must be the same scientific object.
   The model proposes claims and scripts; graph checks, prior-art checks,
   world binding, and two-arm arithmetic are ordinary Python. Synthetic

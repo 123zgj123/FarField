@@ -402,6 +402,37 @@ class HarvestTest(unittest.TestCase):
         ):
             self.assertTrue(described[key].strip())
         self.assertIn("2012-01-01", described["completeness_rule"])
+        self.assertNotIn("extra_sets", described)
+
+    def test_extra_sets_are_one_harvest_not_a_union_of_old_graphs(self) -> None:
+        described = ArxivSource(
+            set_spec="cs:cs:DS",
+            extra_sets=("cs:cs:AI", "cs:cs:LG", "cs:cs:CL"),
+            since="2012-01-01",
+        ).describe()
+        self.assertEqual(described["extra_sets"], ["cs:cs:AI", "cs:cs:LG", "cs:cs:CL"])
+        self.assertIn("cs:cs:AI", described["selection_rule"])
+        self.assertIn("cs:cs:DS", described["selection_rule"])
+
+
+class MixedHarvestTests(HarvestTest):
+    def test_extra_sets_dedupe_the_same_work(self) -> None:
+        source = ArxivSource(
+            set_spec="cs:cs:DS",
+            extra_sets=("cs:cs:AI",),
+            since="2012-01-01",
+        )
+        (pre, _), api, _ = self.harvest(
+            [
+                page(record("oai:arXiv.org:a", "Same paper", ("2013-01-01",))),
+                page(record("oai:arXiv.org:a", "Same paper", ("2013-01-01",))),
+            ],
+            source=source,
+        )
+        self.assertEqual([work.id for work in pre], ["oai:arXiv.org:a"])
+        self.assertEqual(len(api.urls), 2)
+        self.assertIn("cs:cs:DS", urllib.parse.unquote(api.urls[0]))
+        self.assertIn("cs:cs:AI", urllib.parse.unquote(api.urls[1]))
 
 
 if __name__ == "__main__":

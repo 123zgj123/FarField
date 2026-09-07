@@ -20,4 +20,4 @@ farfield campaign rollback --id line-a --reason "method search is a dead end"
 
 Rollback records no-go. It must not rewrite finished verdicts, EvidenceIDs, or corroborated status. Authorities (`operator|manager|planner|engineer|reviewer`) are recorded names, not four model agents.
 
-Unattended ticks: `/loop 1h append the latest mission folder to campaign line-a if RESEARCH_PACKET.md exists`. Do not let a tick redesign after `weakens`.
+Unattended ticks: `/loop 1h execute the protocol named in AGENT_PACKET.md if RESEARCH_PACKET.md exists`. Do not start a new `farfield research` to refine. Do not let a tick redesign after `weakens`.

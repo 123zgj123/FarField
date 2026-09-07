@@ -6,7 +6,7 @@ import json
 import unittest
 
 from farfield.extras.livefeed import FreshWork
-from farfield.extras.sources import merge_works, search_openalex, search_scholar
+from farfield.extras.sources import merge_works, quoted_query, search_openalex, search_scholar
 
 S2 = json.dumps(
     {
@@ -19,6 +19,9 @@ S2 = json.dumps(
                 "venue": "SODA",
                 "url": "https://example.test/s2",
                 "externalIds": {"ArXiv": "2601.11111", "DOI": "10.1234/soda"},
+                "references": [
+                    {"paperId": "old1", "externalIds": {"ArXiv": "2203.11111"}}
+                ],
             }
         ]
     }
@@ -34,6 +37,7 @@ OA = json.dumps(
                 "doi": "https://doi.org/10.1234/soda",
                 "abstract_inverted_index": {"We": [0], "compress": [1], "histories": [2]},
                 "primary_location": {"source": {"display_name": "SODA"}},
+                "referenced_works": ["https://openalex.org/W2203"],
             }
         ]
     }
@@ -47,6 +51,7 @@ class ScholarTests(unittest.TestCase):
         self.assertEqual(works[0].cite_id(), "2601.11111")
         self.assertEqual(works[0].source, "s2")
         self.assertIn("compress", works[0].abstract)
+        self.assertIn("2203.11111", works[0].references)
 
 
 class OpenAlexTests(unittest.TestCase):
@@ -54,6 +59,7 @@ class OpenAlexTests(unittest.TestCase):
         works = search_openalex("wavelet pivot", fetcher=lambda url: OA)
         self.assertEqual(works[0].abstract, "We compress histories")
         self.assertTrue(works[0].cite_id().startswith("doi:"))
+        self.assertIn("W2203", works[0].references)
 
 
 class MergeTests(unittest.TestCase):
@@ -69,6 +75,21 @@ class MergeTests(unittest.TestCase):
         merged = merge_works([thin], [rich])
         self.assertEqual(len(merged), 1)
         self.assertIn("compress", merged[0].abstract)
+
+
+class QuotedQueryTests(unittest.TestCase):
+    def test_multiword_concepts_are_quoted_not_a_bag(self) -> None:
+        query = quoted_query(
+            (
+                "code world models",
+                "executable program state",
+                "self-improvement",
+            )
+        )
+        self.assertIn('"code world models"', query)
+        self.assertIn('"executable program state"', query)
+        self.assertIn("self-improvement", query)
+        self.assertNotIn('"self-improvement"', query)
 
 
 if __name__ == "__main__":

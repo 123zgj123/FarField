@@ -11,6 +11,7 @@ from farfield.extras.workspace import (
     append_recorded_event,
     candidate_dir,
     iter_recorded_events,
+    jsonable,
     list_recorded_missions,
     resolve_recorded_mission,
     seal_candidate,
@@ -115,3 +116,21 @@ class RecordedMissionTests(unittest.TestCase):
         self.assertGreaterEqual(len(events), 10)
         self.assertEqual(events[-1]["stage"], "done")
         self.assertTrue(any(row.get("stage") == "host_skipped" for row in events))
+
+
+class JsonableEventTests(unittest.TestCase):
+    def test_sets_dump_as_sorted_lists(self) -> None:
+        import json
+
+        payload = jsonable({"stage": "survey", "features": {"tools", "labels"}})
+        blob = json.dumps(payload)
+        self.assertIn("labels", blob)
+        self.assertEqual(payload["features"], ["labels", "tools"])
+
+    def test_append_recorded_event_accepts_a_set(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "mission.ndjson"
+            append_recorded_event(path, {"stage": "note", "tags": {"a", "b"}})
+            rows = iter_recorded_events(Path(tmp))
+            self.assertEqual(rows[0]["tags"], ["a", "b"])
+

@@ -48,6 +48,22 @@ ENV_KEY_FILE = "FARFIELD_LLM_KEY_FILE"
 TIMEOUT_SECONDS = 300.0
 TRANSPORT_ATTEMPTS = 3
 TRANSPORT_BACKOFF_SECONDS = 3.0
+# Resume is replay. Every completion is recorded under the cache before it
+# is used, and the feed snapshot is recorded in the workspace, so the same
+# command in the same workspace replays every recorded step for free and
+# spends again only at the first call that was never answered.
+RESUME_HINT = (
+    " | resume: rerun the same command with the same workspace and state "
+    "store; recorded completions and the feed snapshot replay, spend restarts "
+    "at the first unrecorded call"
+)
+_QUOTA_MARKERS = ("insufficient_quota", "credit_balance_exhausted", "no credits remaining")
+
+
+def quota_exhausted(detail: str) -> bool:
+    """A 429 that says the balance is gone, not that the rate is high."""
+    text = str(detail or "").lower()
+    return any(marker in text for marker in _QUOTA_MARKERS)
 
 # Common OpenAI-compatible hosts. The model id is never implied by the host:
 # a researcher picks both, the way AI Scientist exposes --model_writeup.
@@ -344,24 +360,39 @@ class Completion:
             )
 
 
+def sampling_is_locked(model: str) -> bool:
+    """Reasoning endpoints that reject temperature / optional logprobs.
+
+    DeepSeek and GPT-4 family artifacts still record `temperature: 0`.
+    Sending that field to `gpt-5.6-sol` is a 400, so the live body and
+    the request digest both omit it for those ids.
+    """
+    name = str(model or "").strip().lower()
+    return name.startswith(("gpt-5.6", "o1", "o3", "o4"))
+
+
 def _canonical_request(
     backend: Backend,
     messages: list[dict[str, str]],
     purpose: str,
     *,
     logprobs: bool = False,
+    scientific: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     payload = {
         "base_url": backend.base_url,
         "model": backend.model,
         "messages": messages,
-        "temperature": 0,
         "purpose": purpose,
     }
+    if not sampling_is_locked(backend.model):
+        payload["temperature"] = 0
     # Only present when asked for, so every request recorded before this
     # option existed keeps its digest and stays replayable.
-    if logprobs:
+    if logprobs and not sampling_is_locked(backend.model):
         payload["logprobs"] = True
+    if scientific:
+        payload["scientific"] = dict(scientific)
     return payload
 
 
@@ -371,9 +402,39 @@ def request_digest(
     purpose: str,
     *,
     logprobs: bool = False,
+    scientific: dict[str, Any] | None = None,
 ) -> str:
-    payload = _canonical_request(backend, messages, purpose, logprobs=logprobs)
+    payload = _canonical_request(
+        backend, messages, purpose, logprobs=logprobs, scientific=scientific
+    )
     return content_digest(payload)
+
+
+def complete_call(
+    client: Any,
+    prompt: str,
+    *,
+    purpose: str,
+    system: str | None = None,
+    logprobs: bool = False,
+    scientific: dict[str, Any] | None = None,
+) -> Any:
+    """Call `complete` with scientific cache fields when the client accepts them.
+
+    Test doubles keep the old signature. A TypeError falls back so FakeClient
+    does not have to know about object-identity keys.
+    """
+    kwargs: dict[str, Any] = {"purpose": purpose}
+    if system is not None:
+        kwargs["system"] = system
+    if logprobs:
+        kwargs["logprobs"] = True
+    if scientific:
+        try:
+            return client.complete(prompt, scientific=scientific, **kwargs)
+        except TypeError:
+            pass
+    return client.complete(prompt, **kwargs)
 
 
 class LLMClient:
@@ -407,12 +468,19 @@ class LLMClient:
         purpose: str,
         system: str | None = None,
         logprobs: bool = False,
+        scientific: dict[str, Any] | None = None,
     ) -> Completion:
         messages: list[dict[str, str]] = []
         if system:
             messages.append({"role": "system", "content": system})
         messages.append({"role": "user", "content": prompt})
-        digest = request_digest(self.backend, messages, purpose, logprobs=logprobs)
+        digest = request_digest(
+            self.backend,
+            messages,
+            purpose,
+            logprobs=logprobs,
+            scientific=scientific,
+        )
         path = self.artifact_path(digest)
         with self._lock:
             if path.is_file():
@@ -433,10 +501,11 @@ class LLMClient:
         request_body: dict[str, Any] = {
             "model": self.backend.model,
             "messages": messages,
-            "temperature": 0,
             "stream": False,
         }
-        if logprobs:
+        if not sampling_is_locked(self.backend.model):
+            request_body["temperature"] = 0
+        if logprobs and not sampling_is_locked(self.backend.model):
             request_body["logprobs"] = True
         body = json.dumps(request_body, ensure_ascii=False).encode("utf-8")
         headers = {
@@ -460,13 +529,19 @@ class LLMClient:
                     break
                 except urllib.error.HTTPError as exc:
                     detail = exc.read().decode("utf-8", "replace")[:400]
-                    retryable = exc.code == 429 or exc.code >= 500
+                    # A spent balance is a 429 that no backoff will change;
+                    # three sleeps on it only delay the operator.
+                    exhausted = exc.code == 429 and quota_exhausted(detail)
+                    retryable = (exc.code == 429 and not exhausted) or exc.code >= 500
                     if not retryable or attempt == TRANSPORT_ATTEMPTS:
                         raise LLMUnavailable(
                             BlockedRecord(
                                 missing_capability="llm_endpoint",
                                 attempted=f"POST {self.backend.base_url}/chat/completions",
-                                unlock_condition=f"endpoint returned HTTP {exc.code}: {detail}",
+                                unlock_condition=(
+                                    f"endpoint returned HTTP {exc.code}: {detail}"
+                                    + RESUME_HINT
+                                ),
                             )
                         ) from exc
                     time.sleep(TRANSPORT_BACKOFF_SECONDS * attempt)
@@ -476,7 +551,7 @@ class LLMClient:
                             BlockedRecord(
                                 missing_capability="llm_endpoint",
                                 attempted=f"POST {self.backend.base_url}/chat/completions",
-                                unlock_condition=f"endpoint is reachable: {exc}",
+                                unlock_condition=f"endpoint is reachable: {exc}" + RESUME_HINT,
                             )
                         ) from exc
                     time.sleep(TRANSPORT_BACKOFF_SECONDS * attempt)
@@ -486,7 +561,13 @@ class LLMClient:
             raise
         elapsed = time.time() - started
         artifact = _artifact(
-            _canonical_request(self.backend, messages, purpose, logprobs=logprobs),
+            _canonical_request(
+                self.backend,
+                messages,
+                purpose,
+                logprobs=logprobs,
+                scientific=scientific,
+            ),
             raw,
             elapsed,
             digest,

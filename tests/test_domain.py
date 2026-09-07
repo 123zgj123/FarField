@@ -7,8 +7,15 @@ import unittest
 from farfield.extras.domain import (
     claim_covers_topic,
     experiment_stays_on_object,
+    feed_query_concepts,
+    label_covers_topic,
     measure_stays_on_object,
+    graph_supplies_mechanisms,
+    preferred_object_labels,
+    surface_object_labels,
+    topic_object_phrases,
     topic_payload_terms,
+    without_far_terms,
     writeup_retrofits_topic,
 )
 
@@ -40,6 +47,65 @@ class PayloadTests(unittest.TestCase):
                 "the certificate is a cut in the alignment graph",
                 "formal verification of safety properties for LLM agents",
                 "formal verification",
+            )
+        )
+
+    def test_sharing_metric_is_not_coding_agent_coverage(self) -> None:
+        self.assertFalse(
+            claim_covers_topic(
+                "block z-score distance under a finite metric",
+                "uniform metric on token blocks",
+                "Coding-agent evaluation: a host-stdlib metric on attested tool-call fields",
+                "finite metric",
+            )
+        )
+
+    def test_two_topic_unigrams_are_not_coverage_when_a_bigram_exists(self) -> None:
+        topic = "process supervision of chain-of-thought reasoning traces"
+        self.assertFalse(
+            claim_covers_topic(
+                "reasoning models need process scores",
+                "a wavelet tree stores the rank dictionary",
+                topic,
+                "wavelet tree",
+            )
+        )
+        self.assertTrue(
+            claim_covers_topic(
+                "chain-of-thought reasoning traces need process supervision",
+                "a verifier scores the same traces",
+                topic,
+                "process supervision",
+            )
+        )
+        self.assertFalse(
+            claim_covers_topic(
+                "reasoning models need better traces",
+                "a wavelet tree stores the rank dictionary",
+                topic,
+                "wavelet tree",
+            )
+        )
+
+    def test_surface_labels_fall_back_to_topic_phrases(self) -> None:
+        labels = surface_object_labels(
+            ("finite metric", "balanced tree"),
+            "Coding-agent evaluation on tool-call traces",
+        )
+        self.assertTrue(any("coding" in item or "tool-call" in item or "evaluation" in item for item in labels))
+        self.assertNotIn("finite metric", labels)
+
+    def test_cosine_neighbours_do_not_license_graph_mechanisms(self) -> None:
+        self.assertFalse(
+            graph_supplies_mechanisms(
+                ("finite metric", "balanced tree"),
+                "code world models of executable program state",
+            )
+        )
+        self.assertTrue(
+            graph_supplies_mechanisms(
+                ("succinct data structure", "wavelet tree"),
+                "compress genomic sequence collections with succinct data structures",
             )
         )
 
@@ -102,6 +168,75 @@ class MeasureObjectTests(unittest.TestCase):
                 topic="A2A Agent Card authentication",
             )
         )
+
+
+class TopicObjectTests(unittest.TestCase):
+    def test_phrases_prefer_bigrams_from_the_named_topic(self) -> None:
+        phrases = topic_object_phrases(
+            "formal verification of concurrent systems"
+        )
+        self.assertIn("formal verification", phrases)
+        self.assertTrue(all(len(item) >= 5 or " " in item for item in phrases))
+
+    def test_preferred_labels_keep_topic_overlap_only(self) -> None:
+        kept = preferred_object_labels(
+            (
+                "formal verification",
+                "golden ratio",
+                "concurrent systems",
+            ),
+            "formal verification of concurrent systems",
+        )
+        self.assertEqual(
+            kept, ("formal verification", "concurrent systems")
+        )
+
+    def test_literature_queries_topic_bigrams_not_the_nearest_neighbour(self) -> None:
+        query = feed_query_concepts(
+            "formal verification of concurrent systems",
+            ("formal verification",),
+            ("golden ratio", "compression ratio"),
+        )
+        self.assertIn("formal verification", query)
+        self.assertNotIn("golden ratio", query)
+
+    def test_definite_program_does_not_cover_a_code_world_topic(self) -> None:
+        topic = (
+            "code world models of executable program state as the world "
+            "of an agent harness"
+        )
+        self.assertFalse(label_covers_topic("definite program", topic))
+        self.assertFalse(label_covers_topic("feedback edge set", topic))
+        self.assertEqual(
+            preferred_object_labels(
+                ("definite program", "feedback edge set", "self concordant"),
+                topic,
+            ),
+            (),
+        )
+        surface = surface_object_labels(
+            ("definite program", "feedback edge set"),
+            topic,
+        )
+        self.assertTrue(surface)
+        self.assertNotIn("definite program", surface)
+        self.assertNotIn("feedback edge set", surface)
+
+    def test_far_graph_terms_are_stripped_before_schema_inference(self) -> None:
+        stripped = without_far_terms(
+            "intercept the write-read cycle instead of a feedback edge set",
+            "feedback edge set",
+            "code world models of executable program state",
+        )
+        lowered = stripped.lower()
+        self.assertNotIn("feedback", lowered)
+        self.assertNotIn("edge", lowered)
+        kept = without_far_terms(
+            "executable program state with a validator",
+            "definite program",
+            "code world models of executable program state",
+        )
+        self.assertIn("program", kept.lower())
 
 
 if __name__ == "__main__":

@@ -1,13 +1,14 @@
-"""The generation program: what the *next generate in this mission* may propose.
+"""Runtime H for this idea: what the next in-mission refine may propose.
 
 Self-evolution in this codebase is rewriting the same idea against working
 H compiled from this mission so far. It is not polishing a briefing, and
 it is not a new far-field crossover. The program is also persisted so a
-later mission can continue the same line, but the first consumer is the
-next `generate_card` / `refine_card` call in the current run.
+later mission cannot spray over this pair. Remaining scientific work on
+an executable plan is `farfield execute`, not another generate.
 
 The program is compiled from attested mission records. It cannot climb
-the promotion ladder and is not evidence.
+the promotion ladder and is not evidence. The next refine of the *same
+pair* in this mission reads it. A new far jump does not.
 """
 
 from __future__ import annotations
@@ -15,7 +16,8 @@ from __future__ import annotations
 from collections import Counter
 from typing import Any
 
-from .explore import pair_structurally_dead
+from .explore import is_continue_program, is_live_program, pair_structurally_dead
+from .world import is_world_kind, world_attested
 
 
 def compile_program(
@@ -29,8 +31,11 @@ def compile_program(
 ) -> dict[str, Any] | None:
     """Build the working generator brief from this mission's books. No LLM.
 
-    The program is the Memory slot of runtime H. The next refine or jump
-    *in this mission* reads it. Tools / verifiers / routing sit beside it.
+    The program is the Memory slot of runtime H. The next refine of the
+    same pair in this mission reads it. A new far jump reads the
+    exploration notebook of blocked routes, not this brief. Once the
+    plan is executable, `next_card_must` names execute work, not a
+    later research generate.
     """
     found = list(found or [])
     ranked = list(ranked or [])
@@ -42,7 +47,7 @@ def compile_program(
     lead: dict[str, Any] | None = None
 
     def _worldish(row: dict[str, Any]) -> bool:
-        return str(row.get("probe_kind") or "").upper() in {"WORLD", "REAL", "FIXTURE"}
+        return world_attested(row)
 
     def _closed(row: dict[str, Any]) -> bool:
         return bool(row.get("prior_kills") or row.get("verdict") == "weakens")
@@ -135,41 +140,87 @@ def compile_program(
             kind = str(lead.get("probe_kind") or "").upper()
             if kind == "GENERATED":
                 must = (
-                    "the last support used a constructed world; freeze "
-                    "a matching attested schema or keep evolving this idea — "
-                    "do not spray a new pair"
+                    "the last support used a constructed world; freeze a "
+                    "matching attested schema (farfield freeze) then execute "
+                    "the same registration; this result cannot occupy the "
+                    "continue seat, distill, or corroborate"
                 )
-            elif kind not in {"WORLD", "REAL", "FIXTURE"}:
+            elif not is_world_kind(kind):
                 must = (
-                    "the last support was SYNTHETIC (invented data); the next "
-                    "card must measure an attested world fixture under data/, "
-                    "not invent a dataset that the idea is guaranteed to win"
+                    "the last support was SYNTHETIC (invented data); freeze "
+                    "an attested fixture, then farfield execute the same "
+                    "registration — do not generate a dataset the idea is "
+                    "guaranteed to win"
                 )
             elif lead.get("host_ok") is False:
                 must = (
-                    "the WORLD filter supported the line but the parent was "
-                    "not executed; freeze the attested source or run "
-                    "farfield execute; do not treat the 20s slice as a discovery"
+                    "run farfield execute on the attested parent of the "
+                    "same EvidenceID; the 20s slice is a filter, not a "
+                    "discovery, and not a reason to generate a new card"
                 )
             else:
-                must = (
-                    experiment
-                    or "deepen this same far concept: change the competing explanation "
-                    "or the regime, do not start a new distant pairing"
-                )
+                if (
+                    lead.get("ablation_required")
+                    or lead.get("mechanism_identified") is False
+                ):
+                    must = (
+                        "execute 实验块 2 (ablate the competing explanation) "
+                        "on THIS freeze via farfield execute; do not generate "
+                        "a new pair or change the scientific object"
+                    )
+                    if experiment:
+                        must += f"; registered experiment: {experiment[:160]}"
+                else:
+                    must = (
+                        "execute the registered protocol (M0 then M1, then "
+                        "farfield execute). Do not generate a new distant pairing"
+                    )
                 if lead.get("host_ok") is True:
                     must += (
-                        "; host protocol_executed is not a discovery — the "
-                        "next card must change the competing explanation or "
-                        "the regime on the same attested world"
+                        "; host protocol_executed is not a discovery — keep "
+                        "the same attested freeze"
                     )
         elif verdict == "uninformative":
             prior = "; ".join(failed[:3]) if failed else experiment
-            must = (
-                "the last two-arm test was UNINFORMATIVE; switch the "
-                "mechanism flag, the metric, the scale, or the competing "
-                "explanation — do not rewrite the same experiment in new words"
-            ) + (f"; do not repeat: {prior}" if prior else "")
+            kind = str(lead.get("probe_kind") or "").upper()
+            switch = bool(
+                lead.get("must_switch_mechanism")
+                or (
+                    previous
+                    and previous.get("must_switch_mechanism")
+                    and list(previous.get("pair") or [])[:2]
+                    == list(lead.get("pair") or [])[:2]
+                )
+            )
+            if lead.get("object_absent"):
+                must = (
+                    "the last probe never met the claim's object (both arms "
+                    "0); construct or freeze a fixture that actually stores "
+                    "the claimed quantities before rerunning — an eligibility "
+                    "check over an empty world is not an experiment"
+                )
+            elif kind == "GENERATED":
+                must = (
+                    "the last uninformative ran on a constructed world; it "
+                    "does not occupy the continue seat. Freeze a matching "
+                    "attested schema or rework the same pair against the "
+                    "constructed lever table — do not treat that rehearsal "
+                    "as an executable plan"
+                )
+            elif switch:
+                must = (
+                    "execute the plan's must-run lever switch on THIS freeze; "
+                    "do not generate a new card and do not rewrite the same "
+                    "experiment in new words"
+                )
+            else:
+                must = (
+                    "execute the sharper must-run items in "
+                    "EXPERIMENT_PLAN.md on THIS pair and THIS freeze; "
+                    "do not generate a new pair"
+                )
+            if prior:
+                must += f"; do not repeat: {prior}"
         else:
             must = (
                 experiment
@@ -181,14 +232,39 @@ def compile_program(
             "why": str(lead.get("mechanism") or "")[:400]
             or "this mission's evidence did not weaken the line",
             "stakes": str(lead.get("prediction") or "")[:240],
-            "next_card_must": must[:400],
+            "next_card_must": must[:600],
             "do_not_generate": "; ".join(avoid)[:600],
             "card_id": str(lead.get("card_id") or ""),
             "pair": list(lead.get("pair") or []),
             "verdict": verdict,
             "probe_kind": str(lead.get("probe_kind") or ""),
             "source": "compiled",
+            "prior_kills": bool(lead.get("prior_kills") or lead.get("killed")),
         }
+        nodes = [
+            str(item) for item in (lead.get("pair_nodes") or []) if item
+        ][:2]
+        if len(nodes) == 2:
+            program["pair_nodes"] = nodes
+        if lead.get("object_absent"):
+            # A probe that never met its object is not an executable plan;
+            # the stored program must not occupy the neighbourhood seat.
+            program["object_absent"] = True
+        if lead.get("ablation_required"):
+            program["ablation_required"] = True
+        if (
+            program.get("verdict") == "uninformative"
+            and is_world_kind(program.get("probe_kind"))
+            and (
+                lead.get("must_switch_mechanism")
+                or (
+                    previous
+                    and previous.get("must_switch_mechanism")
+                    and list(previous.get("pair") or [])[:2] == list(program.get("pair") or [])[:2]
+                )
+            )
+        ):
+            program["must_switch_mechanism"] = True
     else:
         program = {
             "commit": str((previous or {}).get("commit") or "")
@@ -219,6 +295,41 @@ def compile_program(
                 for part in str(program.get("do_not_generate") or "").split(";")
                 if part.strip() and label not in part and alt not in part
             )
+    skills: list[dict[str, Any]] = []
+    seen_skill = set()
+    for row in list((previous or {}).get("skills") or []) + [
+        lead.get("distilled_skill") if lead else None
+    ]:
+        if not isinstance(row, dict):
+            continue
+        name = str(row.get("name") or "").strip()
+        if not name or name in seen_skill:
+            continue
+        seen_skill.add(name)
+        skills.append(row)
+    if skills:
+        program["skills"] = skills[:4]
+    notes = [
+        str(item).strip()
+        for item in (
+            list((lead or {}).get("design_notes") or [])
+            + list((previous or {}).get("design_notes") or [])
+        )
+        if str(item or "").strip()
+    ]
+    if notes:
+        program["design_notes"] = list(dict.fromkeys(notes))[:6]
+    world_id = ""
+    if lead:
+        world_id = str(lead.get("world_id") or "")
+    if not world_id:
+        world_id = str(getattr(world, "id", "") or "")
+    if not world_id:
+        world_id = str((previous or {}).get("world_id") or "")
+    if world_id:
+        program["world_id"] = world_id
+    if lead and isinstance(lead.get("how_found"), dict):
+        program["how_found"] = dict(lead["how_found"])
     program["h"] = _compile_h(
         lead=lead,
         found=found,
@@ -240,8 +351,9 @@ def prompt_lines(program: dict[str, Any] | None) -> tuple[str, ...]:
     if program.get("stakes"):
         lines.append(f"Stakes: {program['stakes']}")
     lines.append(
-        "The next hypothesis must: "
-        + str(program.get("next_card_must") or "advance the committed line")
+        "Remaining duty (execute or in-mission refine; not a later "
+        "research generate): "
+        + str(program.get("next_card_must") or "execute the committed plan")
     )
     if program.get("do_not_generate"):
         lines.append(f"Do not generate: {program['do_not_generate']}")
@@ -249,7 +361,7 @@ def prompt_lines(program: dict[str, Any] | None) -> tuple[str, ...]:
     if isinstance(h, dict) and h:
         parts = [
             f"{slot}={h[slot]}"
-            for slot in ("memory", "tools", "verifiers", "routing")
+            for slot in ("memory", "skills", "tools", "verifiers", "routing")
             if str(h.get(slot) or "").strip()
         ]
         if parts:
@@ -261,6 +373,45 @@ def prompt_lines(program: dict[str, Any] | None) -> tuple[str, ...]:
         if honesty:
             lines.append(honesty)
     return tuple(lines)
+
+
+def continue_duty_lines(program: dict[str, Any] | None) -> tuple[str, ...]:
+    """Lock this pair against spray. Empty unless a WORLD plan is seated.
+
+    Ablation, a sharper test, or a lever switch are already must-run
+    rows. Do not generate a new card to perform them.
+    """
+    if not is_continue_program(program):
+        return ()
+    pair = list((program or {}).get("pair") or [])
+    if len(pair) < 2:
+        return ()
+    freeze = str((program or {}).get("world_id") or "").strip()
+    claim = str((program or {}).get("commit") or "")
+    freeze_line = (
+        f"Bound freeze: {freeze}. Stay on that instance; "
+        "do not unbind it to hunt a different object."
+        if freeze
+        else "Keep the attested freeze this pair already measured."
+    )
+    duty = (
+        "The plan is executable. Run refine-logs/EXPERIMENT_PLAN.md "
+        "(M0 then M1, then farfield execute). Do not open a new distant "
+        "landing. Do not rewrite the claim to hunt a different object."
+    )
+    if is_live_program(program):
+        duty = (
+            "The plan is executable. Run the registered protocol and "
+            "must-run ablation on this freeze. Do not pick a new distant "
+            "concept. Do not reduce the claim to a different scientific "
+            "object than the freeze."
+        )
+    return (
+        f"Keep pair {pair[0]} × {pair[1]} exactly. Do not generate a new card.",
+        f"Previous claim: {claim}",
+        freeze_line,
+        duty,
+    )
 
 
 def _compile_h(
@@ -308,8 +459,26 @@ def _compile_h(
             + ": "
             + str(analysis.get("summary") or "")[:200]
         )
+    if lead and isinstance(lead.get("idea_world"), dict):
+        world_note = lead["idea_world"]
+        objects = [
+            str(item)
+            for item in (world_note.get("objects") or [])
+            if str(item or "").strip()
+        ]
+        if objects:
+            tools += "; idea-world objects: " + ", ".join(objects[:4])
+        iterate = str(world_note.get("iterate") or "").strip()
+        if iterate:
+            verifiers_extra_idea = iterate
+        else:
+            verifiers_extra_idea = ""
+    else:
+        verifiers_extra_idea = ""
     dominant = ", ".join(f"{name} ({n})" for name, n in kill_reasons.most_common(3))
     verifiers = dominant or "no gate kills recorded"
+    if verifiers_extra_idea:
+        verifiers += "; idea-world iterate: " + verifiers_extra_idea[:200]
     failed = []
     if lead:
         failed = [
@@ -332,11 +501,46 @@ def _compile_h(
         pipe = str(lead.get("pipeline_bottleneck") or "")
         if pipe and pipe not in {"informative", "unresolved"}:
             verifiers += f"; pipeline {pipe}"
+    if lead and isinstance(lead.get("world_sim_h"), dict):
+        sim_mem = str((lead["world_sim_h"] or {}).get("memory") or "").strip()
+        if sim_mem:
+            tools += "; " + sim_mem[:240]
+    if lead:
+        structural = [
+            str(item.get("summary") or "").strip()
+            for item in (lead.get("world_sim_issues") or [])
+            if isinstance(item, dict) and item.get("type") == "structural"
+        ]
+        if structural:
+            verifiers += "; world-sim structural: " + "; ".join(structural[:3])
+    if lead and lead.get("ablation_required"):
+        verifiers += "; ablation_required: competing explanation not isolated"
+    notes = [
+        str(item).strip()
+        for item in (
+            list((lead or {}).get("design_notes") or [])
+            + list((previous or {}).get("design_notes") or [])
+        )
+        if str(item or "").strip()
+    ]
+    if notes:
+        verifiers += "; this-mission design notes: " + "; ".join(notes[:3])
+    skill_names = []
+    for row in list((previous or {}).get("skills") or []) + [
+        (lead or {}).get("distilled_skill")
+    ]:
+        if isinstance(row, dict) and str(row.get("name") or "").strip():
+            skill_names.append(str(row["name"]))
+    skills = (
+        "this pair's distilled procedures: " + ", ".join(skill_names[:4])
+        if skill_names
+        else "no distilled procedure for this pair yet"
+    )
     ops = Counter(str(row.get("operator") or "unknown") for row in found)
     world_ops = Counter(
         str(row.get("operator") or "unknown")
         for row in found
-        if str(row.get("probe_kind") or "").upper() in {"WORLD", "REAL", "FIXTURE"}
+        if is_world_kind(row.get("probe_kind"))
         and row.get("verdict") == "supports"
         and row.get("host_ok") is True
     )
@@ -359,14 +563,17 @@ def _compile_h(
         memory = "no committed line; rewrite the current idea against this H, do not spray"
     return {
         "memory": memory,
+        "skills": skills,
         "tools": tools,
         "verifiers": verifiers,
         "routing": routing,
         "honesty": (
-            "H is this idea's runtime state. It upgrades the next round of "
-            "THE SAME idea (memory, tools, verifiers). It is not evidence, "
-            "cannot climb, and must not be pasted into a different idea's "
-            "generation. A generated world is diagnostic and cannot corroborate."
+            "H is this idea's runtime state. It upgrades the next refine "
+            "of THE SAME idea in this mission (memory, skills, tools, "
+            "verifiers). It is not evidence, cannot climb, and must not "
+            "be pasted into a different idea's generation. A generated "
+            "world or WORLD_SIM rehearsal is diagnostic and cannot "
+            "corroborate. An executable plan is executed, not regenerated."
         ),
     }
 

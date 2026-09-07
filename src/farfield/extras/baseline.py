@@ -70,6 +70,7 @@ def control_stake(
     nothing or no matched controls exist — a missing stake is reported
     as missing, never invented.
     """
+    arm_nodes = [node for node in arm_nodes if node in space.vectors]
     if not arm_nodes or not near_ids:
         return None
     anchor = near_ids[0]
@@ -83,6 +84,8 @@ def control_stake(
     arm_pass = 0
     control_nodes: list[str] = []
     for node in arm_nodes:
+        # Literature mechanisms are not corpus nodes; the stake is a
+        # graph-walk measurement and stays silent on them.
         arm_pass += gate_survival(oracle, anchor, node)
         alienness = anchor_alienness(space, near_ids, node)
         matched = [
@@ -110,4 +113,24 @@ def control_stake(
             "rate": round(control_pass / len(control_nodes), 4),
         },
         "note": STAKE_NOTE,
+    }
+
+
+def missing_stake(
+    *,
+    anchor: str = "",
+    arm_n: int = 0,
+    reason: str = "literature_landing",
+) -> dict[str, Any]:
+    """Event payload when the jump arm is not a graph walk.
+
+    Trajectory landings are literature endpoints. The stake cannot invent
+    catalog cousins to gate; it records the miss.
+    """
+    return {
+        "anchor": anchor,
+        "arm": {"n": int(arm_n), "passed": 0, "rate": 0.0},
+        "control": {"n": 0, "passed": 0, "rate": 0.0},
+        "note": STAKE_NOTE,
+        "skipped": reason,
     }

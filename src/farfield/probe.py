@@ -479,11 +479,3 @@ def probe_card(
         killed=killed,
         checks=tuple(checks),
     )
-
-
-def probe_cards(
-    graph: GraphSnapshot,
-    cards: Sequence[dict[str, Any]],
-    neighborhood: set[str],
-) -> tuple[ProbeResult, ...]:
-    return tuple(probe_card(graph, card, neighborhood) for card in cards)

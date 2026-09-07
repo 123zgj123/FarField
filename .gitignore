@@ -34,6 +34,7 @@ concepts/*/G_le_T.json
 # Runtime and local leftovers. None of this is source.
 var/
 experiments/
+runs/
 worlds/.cache/
 worlds/wishlist.json
 worlds/.*
