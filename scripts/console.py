@@ -28,7 +28,7 @@ from farfield.extras.mission import (  # noqa: E402
     default_client,
     load_assets,
     polish_idea,
-    run_mission,
+    run_research,
     works_from_dicts,
 )
 from farfield.extras.llm import LLMUnavailable, configured_status  # noqa: E402
@@ -351,15 +351,15 @@ class Handler(BaseHTTPRequestHandler):
             dest = mission_dir(ROOT, topic)
             dest.mkdir(parents=True, exist_ok=True)
             stores = _runtime_stores()
-            for event in run_mission(
+            for event in run_research(
                 topic,
-                jumps=jumps,
+                horizon=jumps,
                 candidates=candidates,
                 polish_rounds=polish_rounds,
                 explore=explore,
                 experiment_rounds=experiment_rounds,
                 idea_rounds=idea_rounds,
-                world=world,
+                world=world if world not in {"auto", "none", ""} else None,
                 host_execute=host_execute,
                 reframes=reframes,
                 parallel=parallel,

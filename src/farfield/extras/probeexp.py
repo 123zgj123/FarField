@@ -610,6 +610,7 @@ def write_probe(
     prior_failure: dict[str, Any] | None = None,
     world: Any = None,
     scientific: dict[str, Any] | None = None,
+    registered_measure: str = "",
 ) -> ProbeSpec:
     """The probe implements the diagnosis; it does not pick its own test.
 
@@ -644,6 +645,11 @@ def write_probe(
     )
     if skills:
         prompt = skills + prompt
+    if registered_measure:
+        prompt += ("\nRegistered measurement identity: JSON \"measure\" must be exactly "
+                   + json.dumps(registered_measure) + ". Do not substitute a prose description, "
+                   "another quantity, or a new aggregation. Explain implementation in source comments; "
+                   "if this registered measurement cannot test the claim, refuse instead of renaming it.\n")
     lever_name = str(getattr(diagnosis, "world_lever", "") or "")
     if lever_name.startswith("contrast:"):
         prompt += CONTRAST_ARMS.format(lever=lever_name)

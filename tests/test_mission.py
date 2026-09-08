@@ -2770,7 +2770,7 @@ class ShadowBenchMissionTests(unittest.TestCase):
         for verdict in flagged:
             self.assertNotIn("no_cached_boundaries", verdict["text_kills"])
 
-    def test_heldout_world_catches_promote_the_judge_to_lethal(self) -> None:
+    def test_mission_history_cannot_automatically_promote_a_judge(self) -> None:
         from farfield.extras.routing import append_mission
         from farfield.extras.verifier import add_shadow, load_bench
 
@@ -2802,13 +2802,10 @@ class ShadowBenchMissionTests(unittest.TestCase):
                 policy_log=log,
             )
             settlements = [e for e in events if e["stage"] == "verifier"]
-            self.assertTrue(settlements)
-            self.assertEqual(
-                settlements[0]["promoted"], ["no_cached_boundaries"]
-            )
+            self.assertFalse(settlements)
             bench = load_bench(judges)
-            self.assertEqual(bench["shadow"], [])
-            self.assertEqual(bench["lethal"][0]["name"], "no_cached_boundaries")
+            self.assertEqual(bench["shadow"][0]["name"], "no_cached_boundaries")
+            self.assertEqual(bench["lethal"], [])
 
     def test_a_promoted_judge_kills_on_the_next_mission(self) -> None:
         from farfield.extras.verifier import load_bench, save_bench
@@ -2875,7 +2872,7 @@ class ShadowProposalMissionTests(unittest.TestCase):
     """F2 in the stream: repeated evidence-beaten cards earn one predicate
     proposal onto the shadow bench, where it has no power."""
 
-    def test_two_beaten_cards_earn_one_shadow_proposal(self) -> None:
+    def test_two_beaten_cards_do_not_create_new_llm_judges(self) -> None:
         from farfield.extras.verifier import load_bench
 
         with tempfile.TemporaryDirectory() as tmp:
@@ -2887,11 +2884,9 @@ class ShadowProposalMissionTests(unittest.TestCase):
                 judges_file=judges,
             )
             proposals = [e for e in events if e["stage"] == "shadow_judge"]
-            self.assertEqual(len(proposals), 1)
-            self.assertTrue(proposals[0]["admitted"])
-            self.assertEqual(proposals[0]["name"], "no_cached_boundaries")
+            self.assertFalse(proposals)
             bench = load_bench(judges)
-            self.assertEqual(bench["shadow"][0]["name"], "no_cached_boundaries")
+            self.assertEqual(bench["shadow"], [])
             self.assertEqual(bench["lethal"], [])
 
     def test_one_beaten_card_proposes_nothing(self) -> None:

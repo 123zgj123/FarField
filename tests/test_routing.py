@@ -240,9 +240,9 @@ class AutoUpdateTests(unittest.TestCase):
             log = Path(tmp) / "log.json"
             for _ in range(3):
                 append_mission(log, mission("directional", True))
-            self.assertIsNone(maybe_update(log, Path(tmp) / "p.json"))
+            self.assertFalse(maybe_update(log, Path(tmp) / "p.json")["committed"])
 
-    def test_a_long_consistent_log_commits_through_the_heldout_gate(self) -> None:
+    def test_a_long_log_cannot_replace_a_protected_heldout_receipt(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             log = Path(tmp) / "log.json"
             for _ in range(6):
@@ -252,12 +252,8 @@ class AutoUpdateTests(unittest.TestCase):
             policy_path = Path(tmp) / "p.json"
             decision = maybe_update(log, policy_path)
             self.assertIsNotNone(decision)
-            self.assertTrue(decision["committed"])
-            installed = load_policy(policy_path)
-            self.assertGreater(
-                installed["weights"]["directional"],
-                installed["weights"]["analogy"],
-            )
+            self.assertFalse(decision["committed"])
+            self.assertIsNone(load_policy(policy_path))
 
     def test_a_log_full_of_legacy_missions_settles_nothing(self) -> None:
         # F4: sixteen pre-schema missions must not vote. A log that is
@@ -265,11 +261,11 @@ class AutoUpdateTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             log = Path(tmp) / "log.json"
             legacy_log(log, [mission("directional", True) for _ in range(8)])
-            self.assertIsNone(maybe_update(log, Path(tmp) / "p.json"))
+            self.assertFalse(maybe_update(log, Path(tmp) / "p.json")["committed"])
             # New-schema missions appended on top start the count fresh.
             for _ in range(5):
                 append_mission(log, mission("directional", True))
-            self.assertIsNone(maybe_update(log, Path(tmp) / "p.json"))
+            self.assertFalse(maybe_update(log, Path(tmp) / "p.json")["committed"])
             mixed = mission("directional", True)
             mixed["cards"] += mission("analogy", False)["cards"]
             append_mission(log, mixed)

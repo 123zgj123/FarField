@@ -173,13 +173,26 @@ def _phrase(concept: str) -> str:
 
 
 def object_survey_phrases(topic: str) -> tuple[str, ...]:
-    """Topic object bigrams for a survey. Far nouns are not objects."""
-    from .domain import topic_object_phrases
+    """Raw topic phrases for retrieval, not stems used by semantic matching.
 
-    grams = tuple(gram for gram in topic_object_phrases(topic) if " " in gram)[:3]
-    if grams:
-        return grams
-    return tuple(topic_object_phrases(topic)[:3])
+    Stemming corrupts names (Iris -> iri, species -> specie); external indexes
+    must see the researcher's actual terms. Keep scientific hyphens and short
+    names such as RNA. Do not bridge prepositions into invented noun phrases.
+    """
+    words = re.findall(r"[^\W_]+(?:[-'][^\W_]+)*", topic, flags=re.UNICODE)
+    stop = {"a", "an", "the", "and", "or", "of", "on", "in", "for", "to",
+            "with", "under", "over", "from", "by", "into", "using", "versus",
+            "vs", "is", "are", "research", "study", "investigate"}
+    grams = [f"{left} {right}" for left, right in zip(words, words[1:])
+             if left.casefold() not in stop and right.casefold() not in stop]
+    choices = grams or [word for word in words if word.casefold() not in stop]
+    seen: set[str] = set()
+    phrases: list[str] = []
+    for phrase in choices:
+        if phrase.casefold() not in seen:
+            seen.add(phrase.casefold())
+            phrases.append(phrase)
+    return tuple(phrases[:3])
 
 
 def survey_queries(
@@ -193,25 +206,26 @@ def survey_queries(
     With a topic, the far concept is never queried alone — that is how
     a mechanism noun like 'stochastic reward' pulls knapsack papers.
     """
-    a = str(concept_a or "").strip()
-    b = str(concept_b or "").strip()
+    a = " ".join(str(concept_a or "").split())
+    b = " ".join(str(concept_b or "").split())
     if topic.strip():
         phrases = object_survey_phrases(topic)
         queries: list[str] = []
         if phrases:
             queries.append(" OR ".join(f"all:{_phrase(item)}" for item in phrases[:2]))
             obj = phrases[0]
-            if a:
-                queries.append(f"all:{_phrase(obj)} AND all:{_phrase(a)}")
-            if b:
-                queries.append(f"all:{_phrase(obj)} AND all:{_phrase(b)}")
+            redundant = {obj.casefold(), " ".join(topic.split()).casefold()}
+            for concept in (a, b):
+                if concept and concept.casefold() not in redundant:
+                    queries.append(f"all:{_phrase(obj)} AND all:{_phrase(concept)}")
+                    redundant.add(concept.casefold())
         return tuple(queries) if queries else (f"all:{_phrase(topic.strip()[:80])}",)
     queries = []
     if a:
         queries.append(" OR ".join(f"all:{_phrase(item)}" for item in (a,)))
-    if b:
+    if b and b.casefold() != a.casefold():
         queries.append(" OR ".join(f"all:{_phrase(item)}" for item in (b,)))
-    if a and b:
+    if a and b and b.casefold() != a.casefold():
         queries.append(f"all:{_phrase(a)} AND all:{_phrase(b)}")
     return tuple(queries)
 
@@ -430,20 +444,25 @@ class CompositeFeed:
         last_block: FeedBlocked | None = None
         phrases = object_survey_phrases(topic) if topic.strip() else ()
         if phrases:
-            object_q = " ".join(phrases[:2])
+            # Overlapping bigrams are alternative retrieval anchors, not two
+            # mandatory exact phrases that every paper must contain together.
+            object_q = phrases[0]
             jobs = [
                 lambda: self.arxiv.survey_around(
                     concept_a, concept_b, per_side=per_side, topic=topic
                 ),
                 lambda: self._scholar(object_q, max_results=per_side),
                 lambda: self._openalex(
-                    quoted_query(phrases[:2]) or object_q, max_results=per_side
+                    quoted_query(phrases[:1]) or object_q, max_results=per_side
                 ),
             ]
-            if str(concept_b or "").strip():
+            far_term = " ".join(str(concept_b or "").split())
+            if far_term and far_term.casefold() not in {
+                object_q.casefold(), " ".join(topic.split()).casefold()
+            }:
                 jobs.append(
                     lambda: self._scholar(
-                        f"{phrases[0]} {concept_b}", max_results=per_side
+                        f"{phrases[0]} {far_term}", max_results=per_side
                     )
                 )
         else:

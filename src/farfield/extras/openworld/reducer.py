@@ -10,7 +10,7 @@ from .events import EventLog, ScientificEvent
 from .frontier import debt_from_state, frontier_from_state, graph_from_state
 from .kernel import refuse_generated_promotion
 from .progress import update_metrics
-from .state import ScientificState
+from .state import ScientificState, refresh_research_views
 
 
 def state_digest(state: ScientificState) -> str:
@@ -84,6 +84,7 @@ def reduce_event(
         _touch_theory(current, payload, status="contradicted")
     elif kind == "EvidenceAdded":
         row = dict(payload)
+        row.setdefault("scientific_event_id", event.event_id)
         if refuse_generated_promotion(row) and str(row.get("epistemic") or "") == "WORLD":
             row["epistemic"] = "GENERATED"
             row["promotion_refused"] = refuse_generated_promotion(row)
@@ -97,7 +98,11 @@ def reduce_event(
             None,
         )
         if existing is not None:
-            if row.get("verify_count") is not None or row.get("verify_kind"):
+            same_identity = all(row.get(k) == existing.get(k) for k in
+                                ("world_id", "world_digest", "experiment_digest"))
+            admitted_update = (row.get("epistemic") == "WORLD" and row.get("attested")
+                               and row.get("promotion_ok") and not refuse_generated_promotion(row))
+            if admitted_update and same_identity and (row.get("verify_count") is not None or row.get("verify_kind")):
                 existing.update(
                     {
                         key: row[key]
@@ -107,10 +112,14 @@ def reduce_event(
                             "verified_by",
                             "world_compatible",
                             "replay_ok",
+                            "reproduction_ok", "identity_ok", "executable_ok", "claim_consistent",
+                            "transfer_ok", "transfer_evidence_id", "mechanism_validated",
+                            "host_record", "measured_cost",
                         )
                         if key in row
                     }
                 )
+                existing["verification_event_id"] = event.event_id
             # do not duplicate the same EvidenceID
         else:
             current.evidence_records.append(row)
@@ -178,8 +187,12 @@ def reduce_event(
     elif kind == "HarnessPatchProposed":
         pass
     elif kind == "ActionFailed":
-        current.failed_designs.append(dict(payload))
+        current.failed_designs.append(dict(payload, action_type=event.action_type or payload.get("action_type", "")))
     elif kind == "ActionBlocked":
+        if payload.get("theory_id"):
+            failure = dict(payload, action_type=event.action_type or payload.get("action_type", ""))
+            if failure not in current.failed_designs:
+                current.failed_designs.append(failure)
         qid = str(payload.get("question_id") or payload.get("target") or "")
         if qid and any(row.get("id") == qid for row in current.open_questions):
             current.block_question(qid, reason=str(payload.get("reason") or ""))
@@ -233,6 +246,7 @@ def reduce_event(
             regression=bool(payload.get("regression")),
         )
         return current
+    refresh_research_views(current)
     current.debt = debt_from_state(current)
     current.frontier = frontier_from_state(current)
     current.graph = graph_from_state(current)

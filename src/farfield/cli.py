@@ -34,12 +34,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     research = subparsers.add_parser(
         "research",
-        help="OpenWorld local observations (default); --legacy-pipeline for LLM research packets",
+        help="ScientificState-driven research with literature and executable research workers",
         description=(
-            "Default OpenWorld writes SCIENTIFIC_STATE/EVENTS and RESEARCH_STATUS.md. "
-            "It does not yet run the LLM/literature pipeline or complete a research study. "
-            "Use --legacy-pipeline for generation, review, registered experiments and packets. "
-            "Model, API budget, review, paper, and state-store flags apply to legacy only."
+            "OpenWorld selects scientific actions and writes SCIENTIFIC_STATE/EVENTS. "
+            "Existing literature, hypothesis, probe and writing workers execute actions. "
+            "Missing evidence or services remain explicit blockers, never synthetic results."
         ),
     )
     research.add_argument("project", type=Path)
@@ -102,11 +101,11 @@ def build_parser() -> argparse.ArgumentParser:
         default="auto",
         help=(
             "explicit attested fixture id under worlds/; "
-            "OpenWorld auto/none = no external freeze; "
-            "legacy auto = construct GENERATED from topic/papers, "
-            "legacy none = SYNTHETIC coherence check (cannot corroborate)"
+            "auto/none = no external freeze and no substitute scientific evidence"
         ),
     )
+    research.add_argument('--heldout-world', action='append', default=[],
+                         help='independently frozen world for exact registered replication (repeatable)')
     research.add_argument(
         "--world-sim",
         action=argparse.BooleanOptionalAction,
@@ -182,10 +181,7 @@ def build_parser() -> argparse.ArgumentParser:
         type=float,
         default=None,
         help=(
-            "LLM call envelope for this mission. Default is the "
-            "jump/idea/polish formula (~40 calls). Declare a larger "
-            "envelope before opening a neighbourhood state-store if "
-            "the previous run died on llm_budget_api_calls"
+            "LLM call envelope for this runtime segment (default 100); no automatic budget increase"
         ),
     )
     research.add_argument(
@@ -216,7 +212,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--legacy-pipeline",
         action="store_true",
         dest="legacy_pipeline",
-        help="compat: fixed generate→review→evidence mission stages",
+        help="deprecated compatibility flag; uses the same ScientificState controller",
     )
     research.add_argument(
         "--horizon",
@@ -870,7 +866,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(record, ensure_ascii=False))
         return 0
     if args.command == "research":
-        from .extras.mission import resolve_production_corpus, run_mission
+        from .extras.mission import resolve_production_corpus
         from .extras.openworld.runtime import run_research
         from .extras.workspace import jsonable, mission_dir, var_dir
         import sys
@@ -886,45 +882,22 @@ def main(argv: list[str] | None = None) -> int:
         last = None
         try:
             if args.legacy_pipeline:
-                stream = run_mission(
-                    args.topic,
-                    jumps=args.jumps,
-                    candidates=args.candidates,
-                    reframes=args.reframes,
-                    parallel=args.parallel,
-                    polish_rounds=args.polish_rounds,
-                    explore=args.explore,
-                    experiment_rounds=args.experiment_rounds,
-                    idea_rounds=args.idea_rounds,
-                    venue=args.venue,
-                    world=args.world,
-                    world_sim=args.world_sim,
-                    paper_rounds=args.paper_rounds,
-                    min_ideas=args.min_ideas,
-                    human_gate=args.human_gate,
-                    approved=tuple(args.approve),
-                    fresh=args.fresh,
-                    host_execute=args.host_execute,
-                    host_timeout=args.host_timeout,
-                    model=args.model,
-                    base_url=args.base_url,
-                    api_key=args.api_key,
-                    api_calls=args.api_calls,
-                    corpus_id=resolve_production_corpus(requested=args.corpus),
-                    workspace=dest,
-                    policy_log=args.policy_log or (runtime / "policy_log.json"),
-                    state_store=args.state_store or (runtime / "research_state.json"),
-                    judges_file=args.judges_file or (runtime / "research_judges.json"),
-                    policy_file=args.policy_file or (runtime / "research_policy.json"),
-                )
-            else:
-                stream = run_research(
+                print(json.dumps({"stage": "compatibility", "warning":
+                    "--legacy-pipeline is deprecated; ScientificState remains the only research controller"}))
+            stream = run_research(
                     args.topic,
                     workspace=dest,
                     horizon=args.horizon if args.horizon is not None else args.jumps,
                     world=args.world if args.world not in {"auto", "none", ""} else None,
                     world_id="" if args.world in {"auto", "none", ""} else str(args.world),
                     corpus_id=resolve_production_corpus(requested=args.corpus),
+                    model=args.model,
+                    base_url=args.base_url,
+                    api_key=args.api_key,
+                    api_calls=args.api_calls,
+                    heldout_worlds=tuple(args.heldout_world),
+                    policy_log=args.policy_log or (runtime / "policy_log.json"),
+                    policy_file=args.policy_file or (runtime / "research_policy.json"),
                 )
             for event in stream:
                 last = event

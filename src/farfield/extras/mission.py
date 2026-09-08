@@ -1,4 +1,7 @@
-"""One scientist step. Product path is `farfield research` / `run_mission`.
+"""Legacy regression reference and mature research worker implementations.
+
+The product entry is now openworld.runtime.run_research. The historical
+run_mission loop below is retained for parity tests, not CLI/console routing.
 
 System map (do not collapse the layers):
 
@@ -164,11 +167,8 @@ from .baseline import control_stake, missing_stake
 from .diagnose import judge_probe, judge_replicated, write_diagnosis
 from .routing import append_mission, load_policy, maybe_update, preferred_operators
 from .verifier import (
-    SHADOW_TRIGGER,
     compile_bench,
     load_bench,
-    maybe_promote as maybe_promote_judges,
-    propose_shadow,
     shadow_flags,
 )
 from .value import (
@@ -4223,51 +4223,8 @@ def _run_mission_body(
     if decision is not None:
         yield {"stage": "policy", **decision}
 
-    # The Verifier meta loop, same discipline: a shadow judge becomes
-    # lethal only after held-out missions show its flags anticipated
-    # WORLD-weakens and never hit a WORLD-supports.
-    settlement = maybe_promote_judges(log_path, judges_path)
-    if settlement is not None:
-        yield {"stage": "verifier", **settlement}
-
-    # The proposal source for that loop: when this mission's gates passed
-    # cards the evidence then beat (weakens, or a probe-method death), ask
-    # for one predicate that would have flagged them. It lands on the
-    # shadow bench with no power; a bad proposal is a recorded refusal.
-    failed_views: list[dict[str, Any]] = []
-    passed_views: list[dict[str, Any]] = []
-    for record in found:
-        card = entered_cards.get(record["card_id"])
-        if card is None:
-            continue
-        view = {
-            "claim": card.claim,
-            "mechanism": card.mechanism,
-            "prediction": card.prediction,
-            "falsifier": card.falsifier,
-            "concept_a": card.pair[0],
-            "concept_b": card.pair[1],
-            "alienness": card.alienness,
-            "plausibility_signal": 0.0,
-        }
-        beaten = record.get("verdict") == "weakens" or (
-            record.get("pipeline_bottleneck") == "probe_method"
-        )
-        if beaten:
-            failed_views.append(view)
-        elif record.get("verdict") == "supports":
-            passed_views.append(view)
-    if len(failed_views) >= SHADOW_TRIGGER:
-        try:
-            proposal = propose_shadow(
-                client,
-                failures=failed_views,
-                passes=passed_views,
-                bench_path=judges_path,
-            )
-        except Exception as exc:  # a broken proposer must not end the mission
-            proposal = {"admitted": False, "reason": f"proposer failed: {exc}"}
-        yield {"stage": "shadow_judge", **proposal}
+    # Research-policy admission is the only automatic improvement path.
+    # Retained legacy workers never invent or promote scientific judges.
 
     # Freeze recipes for the host operator. WORLD_INCOMPATIBLE unmatched
     # rows and constructed GENERATED worlds both qualify. A later freeze

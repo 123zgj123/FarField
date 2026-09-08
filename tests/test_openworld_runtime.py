@@ -149,9 +149,9 @@ class ScenarioBTests(unittest.TestCase):
                 )
             self.assertIn("EVOLVE_HARNESS", types_of(env.eligible()))
             result = env.evolve()
-            self.assertEqual(result["status"], "admitted")
+            self.assertEqual(result["status"], "proposed")
             self.assertEqual(env.state.world_id, "W0")
-            self.assertEqual(env.harness.version_id, "H1")
+            self.assertEqual(env.harness.version_id, "H0")
             observed = env.execute(
                 ActionInstance(
                     SPECS[OBSERVE],
@@ -170,16 +170,14 @@ class ScenarioBTests(unittest.TestCase):
                     },
                 )
             )
-            self.assertEqual(observed["status"], "observed")
+            self.assertEqual(observed["status"], "observe_failed")
             self.assertEqual(env.state.world_id, "W0")
             kept = next(
                 row for row in env.state.evidence_records if row.get("evidence_id") == "E-old"
             )
             self.assertEqual(kept["harness_version"], "H0")
             self.assertEqual(kept["world_id"], "W0")
-            cap = env.capabilities.items["compare_validator_snapshots"]
-            self.assertGreaterEqual(cap.activation_count, 1)
-            self.assertIn(cap.trust_level, {"SHADOW", "TRUSTED", "validated", "VALIDATED"})
+            self.assertNotIn("compare_validator_snapshots", env.capabilities.names())
 
 
 class ScenarioCTests(unittest.TestCase):

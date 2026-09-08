@@ -2,231 +2,210 @@
 
 # FarField
 
-**大胆探索。只有同一科学对象撑得住的结果，才能晋升。**
+**研究由状态驱动，结论由证据约束。**
 
-本机自动研究循环：远场搜索、先登记再观察的两臂实验，以及模型改不了的证据合同。
+一个实验性的本地科研运行时：以 ScientificState 统一调度文献检索、假设生成、预注册实验、验证与研究整理。
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [引用](#引用)
+[English](README.md) · [简体中文](README.zh-CN.md) · [系统设计](ARCHITECTURE.md) · [验证记录](VALIDATION.md)
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-003a70)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-9a7b2e)](LICENSE)
 [![CI](https://github.com/123zgj123/FarField/actions/workflows/tests.yml/badge.svg)](https://github.com/123zgj123/FarField/actions/workflows/tests.yml)
-[![Dependencies](https://img.shields.io/badge/stdlib%20only-no%20pip%20deps-5c6b7a)](pyproject.toml)
+[![Core dependencies](https://img.shields.io/badge/core-Python%20stdlib-5c6b7a)](pyproject.toml)
 
 [Guijia Zhang](https://123zgj123.github.io)
 
 </div>
 
-## 近况
+> **这是研究软件，不是已经验证的自主科学家。** 当前可检验的是运行机制和证据准入规则；自主科学发现、通用实验执行以及有效的在线研究策略自改进尚未得到证明。详见[验证与局限](VALIDATION.md)。
 
-- **2026.09** — 喷雾停在 `plan_executable`（已编译、实习生能跑的 brief+plan），不停在「发现」。`SYNTHETIC` / `GENERATED` 支持可以关喷雾，仍然不能佐证、蒸馏或晋升。诊断之后默认走 `--world-sim`；结构洞会在本场对**同一对**做一次 compile refine，再重新登记诊断。`--host-execute` 默认开，记下的是 `protocol_executed`，不是发现。远跳仍是搜索启发：入档负结果还在（post-T 实现率不高于匹配随机）。
-- **2026.08** — 证据合同：只有 attested 的 `WORLD` 探针可以佐证。`--world auto` 必须 domain 正命中才绑目录 freeze；弱 schema 匹配不能顶替。工作记忆按概念对隔离。
-- **演示视频** — 控制台走查稍后单独上传。下方海报为占位。
+## FarField 能做什么
 
-<p align="center">
-  <a href="demo.html">
-    <img src="assets/farfield-demo-poster.png" alt="FarField 控制台（演示录像待上传）" width="920">
-  </a>
-</p>
+用户提出 research intent 后，系统显式维护问题、假设、竞争解释、证据、矛盾与研究债务。OpenWorld 根据当前状态选择可执行行动，由现有 research workers 完成工作。
 
-## 从这里开始
+目标是探索科学推理的变换方式，而不是把概念之间的距离当成科研价值。
 
-| 你想… | 去 |
-|---|---|
-| 理解科学合同 | [为什么做 FarField](#为什么做-farfield) 与 [证据合同](#证据合同) |
-| 安装并跑一场任务 | [安装](#安装) 与 [快速开始](#快速开始) |
-| 打开本机控制台 | [控制台](#控制台) |
-| 复跑已编译协议 | [执行协议](#执行协议) |
-| 引用本软件 | [引用](#引用) |
+- **让研究过程可检查。** 科学事件、证据身份、belief 更新与未解决问题均可追踪和回放。
+- **保留多分支探索。** 历史轨迹变换、假设重构与自由探索共同进入推测前沿。
+- **先实验，再晋升结论。** 预注册双臂实验、精确 world 绑定、复现和适用的 heldout 检验约束结论强度。
+- **区分失败的含义。** 执行受阻、策略拒绝、科学负结果和不确定结果不会混为一谈。
+- **单独验证策略改进。** 没有可信的 heldout 评估，研究策略候选不能安装。
 
-## 摘要
+它适合希望在明确文献来源、冻结实验数据与可执行实验条件下，构建和审计自动科研流程的研究者。它不是“任意输入一个题目就自动得到可信论文”的工具。
 
-自动研究系统已经能写出像样的想法、实验，甚至一篇像论文的草稿。真正开放的问题不是生成，而是：**什么时候，一个 AI 给出的结果值得相信。**
-
-FarField 是一套可检查的本机循环。给它一个题目，它从已验证文献恢复发展轨迹并做远场跳跃，提出可证伪的假设，在**看到任何数字之前登记两臂实验**，并输出别人可以复跑的方案。模型可以写主张、机制和脚本。图上的查重、已有工作检查、世界绑定，以及 treatment / control 的算术，都由普通 Python 完成——这些门上没有模型。
-
-一次确认只允许在这条谓词成立时发生：**绑定、构造、杠杆和探针度量必须是同一个科学对象。** schema 相同不是科学对象相同。合成或构造数据可以削弱假设，不能确认假设。
-
-终点不是会议 PDF，而是一份研究包。
-
-## 为什么做 FarField
-
-自动研究里很容易出现三类失败：
-
-1. 模型把自己的解释当成支持自己假设的证据；
-2. 先看到数字，再改实验或重新定义成功标准；
-3. 用「为这条假设临时生成的数据」来确认这条假设。
-
-FarField 围绕一条更严格的原则：
-
-> **大胆探索，谨慎相信。**
-
-搜索阶段可以激进，证据阶段不可以。排名、Elo、评审分数是同事意见，不能接受、拒绝或提升科学结论。
-
-<p align="center">
-  <img src="assets/overview.png" alt="FarField 循环：题目、检索、假设、筛选、已登记两臂实验、研究包" width="920">
-</p>
-
-## 研究循环
-
-| 阶段 | 做什么 |
-|---|---|
-| **检索** | 题目变成研究位置；已验证论文恢复发展轨迹；远跳把观察到的演变套到当前位置。概念图只做 scout / baseline / 旧图 continue 的 oracle，不发明 `pair[1]`。距离是搜索启发，不是新颖性证明。 |
-| **假设** | 模型写主张、机制、预测和已放弃的路径。这些是提案，不是证据。 |
-| **筛选** | 确定性图检查与文本检查拒绝已知组合和结构不合格的主张。 |
-| **已有工作** | 检索到的文献可以在烧计算之前关闭主张（`closed_by_prior`）。 |
-| **打磨** | 同一对、同一 freeze。文本门杀和 `no_handle` 走 `idea_rounds`（产品默认最多两轮）。world-sim 点名的结构洞再花一次 compile refine，然后重新登记诊断。不是新的远跳。 |
-| **登记** | 竞争解释、两臂、指标、预期方向和计算档位在执行前固定。 |
-| **实验** | 两臂调用同一个 `measure`，只差一个机制开关。产品 `experiment_rounds=-1` 允许在首次登记后再加试两次。 |
-| **证据** | `supports` / `weakens` / `uninformative` 是科学结果。超时和缺文件不是。20 秒 WORLD `supports` 只到 speculative，要等宿主按同一 EvidenceID 重跑。 |
-| **方案** | 完整研究方案在 `RESEARCH_PACKET.md`（中文）和 `RESEARCH_PACKET_EN.md`（英文），主张、文献、实验设计和下一步都写在文件里。每条可继续的 idea 另有独立文件夹 `ideas/<idea-name>/`（中英 `RESEARCH_BRIEF` + `EXPERIMENT_PLAN`）以及 `AGENT_PACKET.md`（开工指令）和 `protocol.json`。已被削弱或无法继续的卡不占 `ideas/`。 |
-
-远探喷雾在**计划可执行**时停止：WORLD 支持、已编译 brief+plan 的 uninformative / SYNTHETIC / GENERATED 支持、邻域里已有该计划，或跳数上限。剩下的工作是 `farfield execute`，不是再开一场 `farfield research`。一条可执行的 SYNTHETIC 计划只说明自洽检查做完了——去 freeze，不是发现。
-
-## 证据合同
+## 唯一的科研控制循环
 
 ```text
-synthetic / generated result
-        |
-        +-- weakens    →  可以成为负面科学证据
-        |
-        +-- supports   →  一致性检查，不是确认
+ScientificState → Frontier → Scheduler → Action → Existing Research Worker
+       ↑                                                   ↓
+       └── Scientific Event ← Trusted Kernel ← CandidateResult
 ```
 
-| 种类 | 含义 |
+行动顺序取决于状态，而不是固定 pipeline。CLI 和控制台都调用 `run_research`；worker 不启动另一套独立科研任务。
+
+| 行动 | 复用的现有能力 |
 |---|---|
-| `WORLD` | 已冻结夹具拷进 `data/` 且脚本真正读过。匹配宿主 EvidenceID 且机制被隔离后可以爬梯。 |
-| `GENERATED` | 为本次登记构造。可以削弱；不能佐证、蒸馏或晋升。可执行计划**会**停喷雾。 |
-| `SYNTHETIC` | 编造的一致性检查。同样：可以停喷雾，不能变成发现。 |
-| `WORLD_SIM` | idea 演练（`farfield world-sim`，默认开）。想象的 best / median / worst。能改计划结构，不能改真，不能挡住 `farfield execute`。 |
+| SURVEY | 文献检索、引文与来源核验、最接近的已有工作、原文片段 |
+| THEORIZE | 假设生成、探索、重构、诊断 |
+| PROBE | 诊断、预注册 probe 构建、实际执行 |
+| VERIFY | 精确对象与产物检查、复现、显式 heldout world |
+| SYNTHESIZE | 研究简报、研究包、事实表、论文规划与草稿 |
 
-`--world auto` 按**本任务课题**和本场已检索论文构造一个 GENERATED 世界。它**不会**自动绑 Pride、phage、A2A 或任何目录亲戚。schema 提示不能顶替 freeze。产品路径上只有显式 `--world <id>` 才绑目录夹具。未命中对佐证而言是 `WORLD_INCOMPATIBLE`：绝不静默顶替。构造出的探针可以削弱，不能佐证。前向模拟把已登记杠杆逐步执行到吸收、平台或时域上限。那是主张分析，不能爬梯。
+Trusted Kernel、事件溯源、provenance 与 WORLD/GENERATED 分离仍是信任边界。模型可以提出 claim 和脚本，不能自行宣布生成内容已经成为科学证据。
 
-「world」三层不要混：夹具（显式 `--world <id>` 的 `worlds/`，以及使命根 `workspace/world/` 的构造实例）、动力学（`dynworld` 杠杆）、idea 演练（`ideas/<name>/world-sim/`，`farfield world-sim`）。演练读 brief + plan + 已检索论文，不要求目录 freeze，也不要求已经焊上杠杆。演练数字不能佐证、不能改 `expected_direction`、不能挡住 `farfield execute`。
+轨迹抽取、后续跳转条件、belief 记账、实验选择与策略准入的详细说明见[系统设计](ARCHITECTURE.md)。
 
-工作记忆只升级**同一概念对**。蒸馏技能写在 `candidates/<card_id>/skills/`。仓库里受信任的 `plugin.py` 才是共享能力。
+## 快速开始
 
-确认逢缺即拒。缺 digest、缺 EvidenceID、协议不完整都是拒绝。`farfield execute` / 默认 `--host-execute` 记为 `protocol_executed`，不是发现。多数话题仍落在 `SYNTHETIC` / `GENERATED`，因为夹具目录薄——未命中是 `WORLD_INCOMPATIBLE`（进 wishlist），绝不静默顶替。
-
-## 安装
-
-需要 Python 3.11+。核心运行时和测试只用标准库。
+需要 **Python 3.11+**。核心运行时与离线测试只依赖标准库；具体实验程序可能需要独立执行环境和额外依赖。
 
 ```bash
 git clone https://github.com/123zgj123/FarField.git
 cd FarField
+
+# 离线验证，不需要 API Key。
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src FARFIELD_LLM_MODE=replay \
+  python3.11 -m unittest discover -s tests -q
 ```
 
-不需要 `pip install`。把 `src/` 加到 `PYTHONPATH`。
+### 启动有预算边界的真实研究会话
+
+将服务商密钥保存到仓库之外的私有本地文件。不要写入源码，也不要把密钥本身放进命令参数。[.env.example](.env.example) 列出了配置变量；以下示例显式导出环境变量。
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -q
+mkdir -p "$HOME/.config/farfield"
+chmod 700 "$HOME/.config/farfield"
+# 请先自行将服务商密钥私密保存到 ~/.config/farfield/llm.key。
+chmod 600 "$HOME/.config/farfield/llm.key"
+
+export FARFIELD_LLM_KEY_FILE="$HOME/.config/farfield/llm.key"
+export FARFIELD_LLM_BASE_URL=https://api.openai.com/v1
+export FARFIELD_LLM_MODEL=gpt-5.6-sol
+
+PYTHONPATH=src python3.11 -m farfield research /tmp/farfield-research \
+  --topic "Does sepal geometry predict iris species?" \
+  --world fisher-iris --horizon 20 --api-calls 30
 ```
 
-测试不需要 API key。仓库自带 `concepts/attn-concepts-s1/`（约 8 MB），足够跑通循环。更大的概念图超过 GitHub 单文件限制；有已记录的原始页面时可用 `python3 scripts/build_concepts.py --replay` 重建。
+该命令允许**真实且可能计费的模型调用**和联网文献检索。请使用你的服务商账户可访问的模型。缺少凭证、限流、文献不足或不支持的实验绑定均可能阻止继续执行，系统不会补造证据。
 
-## 快速开始
+位置参数是**项目根目录**，不是已有 mission 的目录。每次 CLI 调用都会在 `/tmp/farfield-research/var/missions/` 下创建新的时间戳 workspace。Iris fixture 使示例有明确数据对象，但不保证产生新颖假设或成功实验。`--horizon` 限制调度步数，`--api-calls` 限制模型调用次数，不是金额预算。
 
-当前 CLI 有两条路径：默认 OpenWorld 运行本地控制器和探索性观测，输出 `SCIENTIFIC_STATE.json`、`SCIENTIFIC_EVENTS.json` 和 `RESEARCH_STATUS.md`。它尚未接通通用 LLM 检索、实验编译和研究包输出；结束事件中的 `research_complete: false` 表示研究未完成。模型、API 预算、评审和 `--state-store` 参数目前用于 `--legacy-pipeline`。
+需要独立验证时，可重复指定 `--heldout-world <world-id>`，前提是目录中存在科学上适用的 fixture。对同一份数据重跑只算复现，不算独立重复验证。
 
-无需 API 的真实数据检查：
+### 恢复已有研究状态
+
+当前 CLI 会新建 mission。继续已有研究应通过 Python API，指定**原 workspace、相同 topic 与兼容的 world**，并沿用上述环境配置：
+
+```python
+from pathlib import Path
+from farfield.extras.openworld.runtime import run_research
+
+for event in run_research(
+    "Does sepal geometry predict iris species?",
+    workspace=Path("/path/to/existing/var/missions/<mission-id>"),
+    world="fisher-iris",
+    horizon=20,
+    api_calls=30,
+):
+    print(event)
+```
+
+运行 Python 时设置 `PYTHONPATH=src`。状态从科学事件中恢复，未解决行动进入新的有界会话。这是可恢复运行，不是无人值守的常驻服务。
+
+### 本地控制台
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3.11 -m farfield research /tmp/farfield-iris \
-  --topic "萼片几何能否预测 Iris 类别？" --world fisher-iris --horizon 4
+PYTHONPATH=src python3.11 scripts/console.py
 ```
 
-显式 world 会校验 manifest 和预先登记的摘要，并复制原始数据。不存在的 world 直接报错。默认 `auto/none` 不会制造对照观测；缺少采集配方时记录能力缺口。内置表格、图、序列等摘要是探索性结果，原始科学问题仍保持开放。构造数据及其派生版本不能晋升为 WORLD。
+访问 `http://localhost:8765/`。控制台使用同一科研入口，默认只监听 loopback；远程使用建议通过 SSH 转发。
 
-要运行下文介绍的文献检索、候选生成、评审、预登记实验与研究包流程，请使用 `--legacy-pipeline` 并配置模型：
+## 什么可以算作证据？
 
-```bash
-mkdir -p ~/.config/farfield
-chmod 700 ~/.config/farfield
-# 写入供应商密钥后：
-chmod 600 ~/.config/farfield/llm.key
+**大胆生成，谨慎晋升。**
 
-export FARFIELD_LLM_KEY_FILE=$HOME/.config/farfield/llm.key
-export FARFIELD_LLM_BASE_URL=https://api.deepseek.com/v1
-export FARFIELD_LLM_MODEL=deepseek-v4-pro
+假设与论文解读保持推测性质。生成的实验计划、想象场景、reviewer 意见与模型自洽性都不能成为 WORLD 证据。
 
-PYTHONPATH=src python3.11 -m farfield research /tmp/farfield-research --legacy-pipeline \
-  --topic "compress genomic sequence collections with succinct data structures"
-```
+可晋升结果需要对应的文献与证伪检查、针对精确绑定对象的可执行 probe、已准入测量、验证，以及结论范围要求的复现或迁移检查。描述性关联不等于因果机制。
 
-沿着同一条科学线继续时，复用同一个 `--state-store` 和 `--world`。新的任务文件夹是账本，不是新身份。不要把 API key 提交进 git 或放进命令行。环境变量见 `.env.example`。
+Probe 明确记录五类结果：
 
-### 控制台
+| 状态 | 含义 |
+|---|---|
+| `probe_execution_blocked` | 未取得可用实验结果 |
+| `probe_policy_refused` | 执行或准入不被允许 |
+| `probe_scientifically_negative` | 实际测量提供反对假设的证据 |
+| `probe_positive` | 在该 probe 的范围内测得支持 |
+| `probe_inconclusive` | 尚不足以区分解释 |
 
-```bash
-PYTHONPATH=src python3 scripts/console.py
-```
+Positive probe 不自动等于 verified finding。无证据的结论升级、缺失 world digest、协议字节变化与 EvidenceID 不一致均应拒绝通过。详见[证据与晋升](ARCHITECTURE.md#evidence-and-promotion)。
 
-然后打开 `http://localhost:8765/`。默认绑定 `127.0.0.1`。远程访问优先用 SSH 端口转发。
+## 研究产物
 
-### 执行协议
-
-```bash
-PYTHONPATH=src python3 -m farfield execute /path/to/candidate-folder --on-slice
-```
-
-`--on-slice` 重跑探针见过的字节（E1）。默认 `execute` 在冻结缓存存在时重建母数据（E2）。其他命令：`freeze`、`run`、`attest-run`、`campaign`、`world-sim`。见 `python3 -m farfield --help`。
-
-## 输出
-
-以下为 `--legacy-pipeline` 的输出。默认 OpenWorld 的输出见“快速开始”。
+每个 mission workspace 内：
 
 ```text
-RESEARCH_PACKET.md      完整研究方案（中文；含实验设计）
-RESEARCH_PACKET_EN.md   同一方案的英文副本
-ideas/<idea-name>/      每条可继续的 idea 一个文件夹（用主张核心命名，不是 gen_ 编号）
-  README.md            本文件夹目录
-  idea-stage/RESEARCH_BRIEF.md     完整研究方案（中文，含实验设计）
-  idea-stage/RESEARCH_BRIEF_EN.md  同一方案英文副本
-  refine-logs/EXPERIMENT_PLAN.md   完整实验设计（中文）
-  refine-logs/EXPERIMENT_PLAN_EN.md 同一设计英文副本
-  AGENT_PACKET.md      开工指令（只谈这一条）
-  world-sim/           idea 演练（想象数字；不能爬梯）
-protocol.json          已登记实验
-experiment.py          两臂脚本
-metrics.json           treatment / control
-evidence_snapshot/     本场冻结检索
+SCIENTIFIC_STATE.json   问题、理论、证据、belief 与 frontier
+SCIENTIFIC_EVENTS.json 可回放的科学事件日志
+RESEARCH_STATUS.md     已验证范围与剩余缺口
+literature/            文献来源、论文状态与轨迹
+llm_cache/             模型请求与响应记录
+worlds/<world-id>/     已绑定的 fixture 数据与 manifest
+research_workers/<evidence-id>/candidates/<card-id>/
+  protocol.json        注册协议与身份信息
+  experiment.py        可执行源码
+  probe.json           测量、结论、来源与范围
+  metrics.json         执行指标
+  research_note.md     调度到整理行动后产生的研究说明
+  PAPER_FACTS.json     调度到整理行动后产生的事实表
+  paper/               可选论文草稿
 ```
 
-任务状态写在 `var/`，已被 git 忽略。
+只有对应行动实际产出后才有相应文件。受阻任务可能没有测量值。`research_complete: false` 表示研究仍开放，不表示已经成功完成论文。运行目录与凭证不上传公共仓库。
 
-## 目录
+复现已有注册协议：
 
-```text
-src/farfield/       核心运行时
-tests/              标准库 unittest
-worlds/             已冻结夹具
-corpora/            引文图资源
-concepts/           概念共现图
-scripts/            控制台与重建
-examples/           小型账本示例
-webui/              本机控制台
-assets/             配图
-.agents/skills/     受信任的研究钩子
+```bash
+PYTHONPATH=src python3.11 -m farfield execute /path/to/candidate-folder --on-slice
 ```
 
-公开仓库包含可运行 runtime、测试、小型可复现资源和夹具。不含密钥、本机 mission 目录和内部设计笔记。
+这只复现原注册实例，不证明结果能够迁移到新 world。
 
-## 当前状态
+## 当前验证与局限
 
-FarField 仍是实验性系统。这个仓库让研究循环和失败方式可被检查，而不是把它包装成已经完成的「自主科学家」。它也还没有证明远场搜索优于匹配随机。
+[验证记录](VALIDATION.md) 将需求映射到测试，并区分离线回归与真实服务观察。
 
-- 入档负结果还在：远跳 post-T 实现率不高于匹配随机；后来的进化代没有翻案。距离是搜索启发，不是新颖性。
-- 便宜的 WORLD `supports` 是过滤器（`speculative`）。`corroborated` 要宿主按同一 EvidenceID 重跑，且机制被隔离。
-- 多数话题仍落在 `SYNTHETIC` / `GENERATED`。一条 SYNTHETIC 支持按合同会关喷雾；科学上只是「自洽检查做完了，去 freeze」。
-- `world-sim` 能改计划结构，不能改真。排演失败不能挡 execute。
-- refine 预算很短：文本最多两轮，实验最多两次加试；排演点名结构洞后再打磨一次。第二次 uninformative 换杠杆是纪律，不是搜索已经够深。
-- 夹具目录仍然薄。未匹配对象进 wishlist，不会被绑到无关 freeze。
+- **离线验证：** 主测试集 1,202 项，其中跳过 6 项；另有 30 项合同测试、2 项历史回归通过。
+- **真实集成：** 有界 Iris 任务检索到真实论文、生成结构化假设，并进入诊断和 probe 构建。最后记录的会话在执行前拒绝了指标不一致的方案，随后生成失败重构分支；没有产生 WORLD probe evidence 或已验证发现。
+- **轨迹覆盖：** 已有抽取和结构检索，但尚无广泛、可靠的轨迹库，也没有学得的 operator 选择分布。
+- **实验覆盖：** world 目录与数据获取能力有限；注册身份并不能完整证明任意生成代码实现了文字所述的科学机制。
+- **估计性质：** belief 是确定性记账，不是校准后的 Bayesian 置信度；调度优先级是 heuristic，不是实测 information gain。
+- **自改进：** 已实现本地策略准入约束，尚未证明在线 research-policy RSI 能改善科研能力。
+
+历史 far-jump 实验未证明优于匹配的随机搜索。Embedding 距离既不是新颖性证明，也不是科学价值信号。
+
+## 目录与兼容性
+
+| 路径 | 用途 |
+|---|---|
+| [src/farfield/extras/openworld/](src/farfield/extras/openworld/) | 科研控制器、状态、调度器与 worker adapter |
+| [src/farfield/](src/farfield/) | 可信运行时与现有研究能力 |
+| [tests/](tests/) | 离线、合同、parity 与回归测试 |
+| [worlds/](worlds/) | 小型可核验实验 fixture |
+| [scripts/](scripts/) / [webui/](webui/) | 本地控制台与维护工具 |
+| [corpora/](corpora/) / [concepts/](concepts/) | 文献与历史图资产 |
+
+历史 Python pipeline 函数保留为回归参考。`--legacy-pipeline` 已废弃且转入同一控制器，不恢复旧的阶段式流程。旧版双语 `RESEARCH_PACKET*.md` 是历史产物格式，不是当前命令保证输出的文件。
+
+CLI help 中仍保留部分未转发给当前控制器的旧参数。尤其不要依赖 `--no-host-execute` 或旧 human-gate 参数来禁止执行。无真实服务调用的检查请使用离线测试；真实研究可能调度预注册实验执行。
+
+另见 [CHANGELOG.md](CHANGELOG.md)、[CONTRIBUTING.md](CONTRIBUTING.md) 与 `PYTHONPATH=src python3.11 -m farfield --help`。
 
 ## 引用
 
-若在研究中使用 FarField，请通过 [`CITATION.cff`](CITATION.cff) 引用。
+研究中使用 FarField 时，请引用 [CITATION.cff](CITATION.cff)。
 
 ## 许可证
 
-MIT，见 [LICENSE](LICENSE)。
+[MIT](LICENSE)。

@@ -183,7 +183,7 @@ class CreditGateTests(unittest.TestCase):
 
 
 class CapabilityTests(unittest.TestCase):
-    def test_case_f_validated_skill_unlocks_observe(self) -> None:
+    def test_case_f_proposed_skill_does_not_unlock_observe(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             env = OpenWorld(workspace=Path(tmp), state=_question_state())
             for _ in range(3):
@@ -192,10 +192,10 @@ class CapabilityTests(unittest.TestCase):
                     why="cannot_align_versioned_records",
                 )
             result = env.evolve()
-            self.assertEqual(result["status"], "admitted")
-            self.assertIn("compare_validator_snapshots", env.capabilities.names())
+            self.assertEqual(result["status"], "proposed")
+            self.assertNotIn("compare_validator_snapshots", env.capabilities.names())
             types = types_of(env.eligible())
-            self.assertIn(OBSERVE, types)
+            self.assertIn(ACQUIRE, types)
 
 
 class ProvenanceTests(unittest.TestCase):
@@ -234,10 +234,10 @@ class ProvenanceTests(unittest.TestCase):
                     why="cannot_align_versioned_records",
                 )
             result = env.evolve()
-            self.assertEqual(result["status"], "admitted")
+            self.assertEqual(result["status"], "proposed")
             self.assertEqual(env.state.world_id, "W0")
             self.assertTrue(result["world_unchanged"])
-            self.assertEqual(env.harness.version_id, "H1")
+            self.assertEqual(env.harness.version_id, "H0")
 
 
 class EpistemicTests(unittest.TestCase):
@@ -346,16 +346,13 @@ class DryRunTests(unittest.TestCase):
             summary = events[-1]
             self.assertEqual(summary["stage"], "dry_run_summary")
             self.assertEqual(summary["world_id"], "W0")
-            self.assertEqual(summary["harness_version"], "H1")
-            self.assertIn("compare_validator_snapshots", summary["capabilities"])
+            self.assertEqual(summary["harness_version"], "H0")
+            self.assertNotIn("compare_validator_snapshots", summary["capabilities"])
             self.assertNotIn("Q13", summary["resolved"], "generated comparison cannot settle acceptance hypothesis")
             observed = [row for row in events if row.get("stage") == "observe_after_h1"]
             self.assertTrue(observed)
-            evidence = observed[0]["evidence"]
-            self.assertEqual(evidence["role"], "QuestionEvidence")
-            self.assertEqual(evidence["harness_version"], "H1")
-            self.assertEqual(evidence["world_id"], "W0")
-            self.assertEqual(evidence["causal_scope"], "none")
+            self.assertNotIn("evidence", observed[0])
+            self.assertEqual(observed[0]["harness_version"], "H0")
             theory = [row for row in events if row.get("stage") == "theory_eligible"]
             self.assertTrue(theory)
             env = OpenWorld.load(Path(tmp))

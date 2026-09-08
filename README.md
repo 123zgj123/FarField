@@ -2,231 +2,210 @@
 
 # FarField
 
-**Explore far. Promote only what the same scientific object can bear.**
+**State-driven research. Evidence-gated conclusions.**
 
-A local research loop for automated scientific inquiry: far-field search, registered two-arm experiments, and an evidence contract the language model cannot rewrite.
+An experimental local research runtime that uses ScientificState to coordinate literature, hypotheses, registered experiments, verification, and synthesis.
 
-[English](README.md) · [简体中文](README.zh-CN.md) · [Citation](#citation)
+[English](README.md) · [简体中文](README.zh-CN.md) · [System design](ARCHITECTURE.md) · [Validation](VALIDATION.md)
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-003a70)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-9a7b2e)](LICENSE)
 [![CI](https://github.com/123zgj123/FarField/actions/workflows/tests.yml/badge.svg)](https://github.com/123zgj123/FarField/actions/workflows/tests.yml)
-[![Dependencies](https://img.shields.io/badge/stdlib%20only-no%20pip%20deps-5c6b7a)](pyproject.toml)
+[![Core dependencies](https://img.shields.io/badge/core-Python%20stdlib-5c6b7a)](pyproject.toml)
 
 [Guijia Zhang](https://123zgj123.github.io)
 
 </div>
 
-## News
+> **Research software, not a validated autonomous scientist.** The runtime and its admission rules are testable; autonomous discovery, general-purpose experiment execution, and beneficial live policy self-improvement have not been demonstrated. See [validation and limitations](VALIDATION.md).
 
-- **2026.09** — Spray stops on `plan_executable` (a compiled brief+plan the intern can run), not on a discovery. `SYNTHETIC` / `GENERATED` supports can close spray; they still cannot corroborate, distill, or promote. After diagnosis, `--world-sim` (default on) rehearses the plan; a structural hole spends one same-pair compile refine before the first probe. `--host-execute` is on by default and records `protocol_executed` — that is not a finding. Far-field search remains a heuristic: the archived negative result still stands (post-T realization is not above matched random).
-- **2026.08** — Evidence contract: only an attested `WORLD` probe may corroborate. A catalog miss is diagnosed and wait-listed; schema hints cannot bind a cousin freeze. Per-idea working memory stays on that concept pair.
-- **Demo video** — A console walkthrough will be uploaded separately. The poster below is a placeholder.
+## What FarField does
 
-<p align="center">
-  <a href="demo.html">
-    <img src="assets/farfield-demo-poster.png" alt="FarField console (demo recording forthcoming)" width="920">
-  </a>
-</p>
+Given a research intent, FarField maintains explicit questions, hypotheses, competing explanations, evidence, contradictions, and research debt. OpenWorld selects eligible actions from that state; existing research workers carry them out.
 
-## Start here
+The aim is to explore transformations of scientific reasoning—not to treat distance between ideas as scientific value.
 
-| You want to… | Go to |
-|---|---|
-| Understand the scientific contract | [Why FarField](#why-farfield) and [Evidence contract](#evidence-contract) |
-| Install and run a mission | [Install](#install) and [Quick start](#quick-start) |
-| Open the local console | [Console](#console) |
-| Rerun a compiled protocol | [Execute a protocol](#execute-a-protocol) |
-| Cite the software | [Citation](#citation) |
+- **Inspect the reasoning state.** Scientific events, evidence identities, belief updates, and unresolved gaps remain replayable.
+- **Explore several branches.** Historical transformations, assumption reframing, and unconstrained exploration share one speculative frontier.
+- **Test before promoting.** Registered two-arm probes, exact world binding, reproduction, and applicable heldout checks constrain conclusions.
+- **Keep failure informative.** Execution failures, policy refusals, scientific negatives, and inconclusive results remain distinct.
+- **Evaluate policy changes separately.** A research-policy candidate cannot be installed without trusted heldout evaluation.
 
-## Abstract
+FarField is useful for researchers building and auditing automated-research workflows with explicit literature sources and executable, frozen experimental worlds. It is not a one-command route from an arbitrary topic to a verified paper.
 
-Automated research systems can now draft plausible ideas, experiments, and paper-shaped text. The open problem is not generation. It is **when an AI-produced result should be believed**.
-
-FarField is an inspectable local loop. Given a topic, it recovers development trajectories from verified papers and makes far-field jumps, proposes a falsifiable hypothesis, **registers a two-arm experiment before any number is observed**, and emits a protocol another researcher can rerun. The model may write the claim, the mechanism, and the script. Graph checks, prior-art checks, world binding, and treatment–control arithmetic are ordinary Python — the model does not sit on those gates.
-
-A confirmation is allowed only when **binding, construction, lever, and probe measure the same scientific object**. Schema match is not scientific match. Synthetic or constructed data may weaken a hypothesis. They cannot corroborate it.
-
-The finish line is not a conference PDF. It is a research packet.
-
-## Why FarField
-
-Three failure modes are easy to introduce in auto-research:
-
-1. the model's explanation is treated as evidence for its own hypothesis;
-2. an experiment is rewritten after the numbers are seen;
-3. a claim is “confirmed” on data created for that claim.
-
-FarField is built around a stricter rule:
-
-> **Explore broadly; promote conclusions conservatively.**
-
-Search may be speculative. Evidence may not. Ranking, Elo, and reviewer scores are recorded colleague opinions. They cannot accept, reject, or promote a scientific result.
-
-<p align="center">
-  <img src="assets/overview.png" alt="FarField loop: topic, search, hypothesis, screening, registered two-arm experiment, research packet" width="920">
-</p>
-
-## Research loop
-
-| Stage | What happens |
-|---|---|
-| **Search** | The topic becomes a research position; verified papers recover development trajectories; a far jump applies an observed move to the current position. The concept graph is a scout / baseline / continue oracle and does not mint `pair[1]`. Distance is a search heuristic, not a novelty proof. |
-| **Hypothesis** | The model writes a claim, mechanism, prediction, and a discarded approach. These fields are proposals, not evidence. |
-| **Screening** | Deterministic graph and text checks refuse already-known pairs and structurally weak claims. |
-| **Prior art** | Retrieved literature can close a claim (`closed_by_prior`) before compute is spent rediscovering it. |
-| **Compile** | Same pair, same freeze. Text-gate deaths and `no_handle` rewrite in `idea_rounds` (product: up to two). A world-sim structural hole spends one compile refine, then re-registers the diagnosis. Not a new far jump. |
-| **Registration** | Competing explanation, arms, metric, expected direction, and compute tier are fixed before execution. |
-| **Experiment** | Both arms call the same `measure`; they differ only by a mechanism flag. Product `experiment_rounds=-1` allows two extra attempts after the first registered run. |
-| **Evidence** | `supports` / `weakens` / `uninformative` are scientific. Timeouts and missing files are not. A 20s WORLD `supports` is speculative until the host reruns the same EvidenceID. |
-| **Packet** | Complete research plan in `RESEARCH_PACKET.md` (Chinese) and `RESEARCH_PACKET_EN.md` (English), with claim, literature, experiment design, and next steps in the file. Each live idea also has `ideas/<idea-name>/` (bilingual brief + plan), `AGENT_PACKET.md` (execute order), and `protocol.json`. Weakened or unrunnable cards do not occupy `ideas/`. |
-
-Far-field spray stops when the **plan is executable**: a WORLD support, an uninformative or SYNTHETIC / GENERATED support with a compiled brief+plan, a neighbourhood line that already has that plan, or the jump cap. Remaining work is `farfield execute`, not another `farfield research`. An executable SYNTHETIC plan is a finished coherence check — go freeze — not a discovery.
-
-## Evidence contract
+## One scientific control loop
 
 ```text
-synthetic / generated result
-        |
-        +-- weakens    →  scientific negative evidence
-        |
-        +-- supports   →  coherence check, not confirmation
+ScientificState → Frontier → Scheduler → Action → Existing Research Worker
+       ↑                                                   ↓
+       └── Scientific Event ← Trusted Kernel ← CandidateResult
 ```
 
-| Kind | Meaning |
+This is a state-dependent loop, not a fixed sequence of stages. CLI and console both use `run_research`. Workers do not start independent research missions.
+
+| Action | Existing capabilities used |
 |---|---|
-| `WORLD` | Attested fixture copied into `data/` and actually read by the script. May climb after a matching host EvidenceID with an isolated mechanism. |
-| `GENERATED` | Constructed for this registration. May weaken; cannot corroborate, distill, or promote. An executable plan **does** stop spray. |
-| `SYNTHETIC` | Invented coherence check. Same asymmetry: can stop spray, cannot become a finding. |
-| `WORLD_SIM` | Idea rehearsal (`farfield world-sim`, default on). Imagined best / median / worst. Can rewrite plan structure. Cannot climb, cannot make a claim true, cannot block `farfield execute`. |
+| SURVEY | Literature retrieval, citation/source verification, prior work, source spans |
+| THEORIZE | Hypothesis generation, exploration, reframing, diagnosis |
+| PROBE | Diagnosis, registered probe construction, actual execution |
+| VERIFY | Exact object and artifact checks, reproduction, explicit heldout worlds |
+| SYNTHESIZE | Research briefs, packets, fact sheets, paper planning and drafting |
 
-`--world auto` constructs one GENERATED world from the **task topic** and papers this mission already retrieved. It does **not** auto-bind Pride, phage, A2A, or any other catalog cousin. Schema hints cannot bind a freeze. Explicit `--world <id>` is the only catalog bind on the product path. A miss is `WORLD_INCOMPATIBLE` for verification (never a silent substitute). The constructed probe can weaken; it cannot corroborate. Forward simulation steps the registered lever until absorbing, plateau, or horizon. Its analysis is idea analysis. It cannot climb the ladder.
+The Trusted Kernel, event sourcing, provenance, and WORLD/GENERATED separation remain the authority boundary. Models propose claims and scripts; they cannot declare their own outputs to be scientific evidence.
 
-Three uses of “world” stay distinct: the **fixture** (`worlds/` via explicit `--world <id>`, and `workspace/world/` for the constructed instance), **dynamics** (`dynworld` levers on evolving state), and **idea rehearsal** (`ideas/<name>/world-sim/`, `farfield world-sim`). Rehearsal reads brief + plan + retrieved papers. It does not require a catalog freeze or a compiled lever. Imagined numbers cannot corroborate, rewrite `expected_direction`, or block `farfield execute`.
+Read the [system design](ARCHITECTURE.md) for trajectory extraction, later-hop conditions, belief accounting, experiment selection, and policy admission.
 
-Working memory (H) upgrades **the same concept pair**. Distilled skills stay under `candidates/<card_id>/skills/`. Trusted `plugin.py` in the repo is the only shared capability.
+## Quick start
 
-Confirmation is fail-closed. A missing digest, a missing EvidenceID, or an incomplete protocol is a refusal. `farfield execute` / default `--host-execute` records `protocol_executed`; that is not a discovery. Most topics still land on `SYNTHETIC` or `GENERATED` because the catalog is thin — a miss is `WORLD_INCOMPATIBLE` (wishlist), never a silent substitute.
-
-## Install
-
-Requires Python 3.11+. The core runtime and tests use the standard library only.
+Requires **Python 3.11+**. The core runtime and offline tests use the standard library. Individual experimental programs may require their own executor environment and dependencies.
 
 ```bash
 git clone https://github.com/123zgj123/FarField.git
 cd FarField
+
+# Offline verification: no API key required.
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src FARFIELD_LLM_MODE=replay \
+  python3.11 -m unittest discover -s tests -q
 ```
 
-There is nothing to install with `pip`. Add `src/` to `PYTHONPATH`.
+### Run a bounded live research session
+
+Save your provider key in a private local file outside the repository. Do not put it in source code or pass the key itself on the command line. See [.env.example](.env.example) for configuration names; the example below uses explicit environment exports.
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -q
+mkdir -p "$HOME/.config/farfield"
+chmod 700 "$HOME/.config/farfield"
+# Save your provider key privately as ~/.config/farfield/llm.key first.
+chmod 600 "$HOME/.config/farfield/llm.key"
+
+export FARFIELD_LLM_KEY_FILE="$HOME/.config/farfield/llm.key"
+export FARFIELD_LLM_BASE_URL=https://api.openai.com/v1
+export FARFIELD_LLM_MODEL=gpt-5.6-sol
+
+PYTHONPATH=src python3.11 -m farfield research /tmp/farfield-research \
+  --topic "Does sepal geometry predict iris species?" \
+  --world fisher-iris --horizon 20 --api-calls 30
 ```
 
-Tests do not need an API key. A clone includes `concepts/attn-concepts-s1/` (~8 MB), enough to run the loop. Larger graphs exceed GitHub's file limit; rebuild from recorded pages with `python3 scripts/build_concepts.py --replay` when you have them.
+This permits **live, potentially billed model requests** and network literature retrieval. Use a model available to your provider account. Missing credentials, rate limits, absent literature, or unsupported experiment bindings can block progress; no stand-in evidence is created.
 
-## Quick start
+The positional path is a **project root**. Each CLI invocation creates a new timestamped workspace under `/tmp/farfield-research/var/missions/`. A bound Iris fixture makes the example concrete; it does not guarantee a novel hypothesis or successful experiment. `--horizon` bounds controller steps and `--api-calls` bounds model calls, not a dollar budget.
 
-The CLI currently has two paths. Default OpenWorld runs the local controller and exploratory observations, writing `SCIENTIFIC_STATE.json`, `SCIENTIFIC_EVENTS.json`, and `RESEARCH_STATUS.md`. General LLM retrieval, experiment compilation, and research packets are not connected to this path yet. Its final event reports `research_complete: false`. Model, API budget, review, and `--state-store` options currently apply to `--legacy-pipeline`.
+For independent validation, add repeatable `--heldout-world <world-id>` arguments using suitable catalog fixtures. A rerun on the same bytes is reproduction, not independent replication.
 
-Check real frozen data without an API:
+### Resume an existing research state
+
+The CLI currently creates a new mission directory. To continue an existing state, use the Python API with the **original workspace, topic, and compatible world**, under the same environment configuration:
+
+```python
+from pathlib import Path
+from farfield.extras.openworld.runtime import run_research
+
+for event in run_research(
+    "Does sepal geometry predict iris species?",
+    workspace=Path("/path/to/existing/var/missions/<mission-id>"),
+    world="fisher-iris",
+    horizon=20,
+    api_calls=30,
+):
+    print(event)
+```
+
+Run Python with `PYTHONPATH=src`. State is reconstructed from scientific events; unresolved work receives a new bounded session. This is resumability, not an unattended daemon.
+
+### Local console
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3.11 -m farfield research /tmp/farfield-iris \
-  --topic "Does sepal geometry predict iris species?" --world fisher-iris --horizon 4
+PYTHONPATH=src python3.11 scripts/console.py
 ```
 
-Explicit world ids load and validate the manifest and recorded digest, then copy the original bytes. Missing ids fail. Default `auto/none` does not invent contrast observations; unavailable acquisition recipes remain capability gaps. Builtin table, graph, and sequence summaries are exploratory and leave the scientific question open. Generated data and its descendants cannot become WORLD evidence.
+Open `http://localhost:8765/`. The console uses the same research entry point and binds to loopback by default. Use SSH forwarding for remote access.
 
-For the literature, candidate, review, registered experiment, and research packet workflow described below, use `--legacy-pipeline` with a configured model:
+## What counts as evidence?
 
-```bash
-mkdir -p ~/.config/farfield
-chmod 700 ~/.config/farfield
-# write the provider key, then:
-chmod 600 ~/.config/farfield/llm.key
+**High-entropy proposals; low-risk promotion.**
 
-export FARFIELD_LLM_KEY_FILE=$HOME/.config/farfield/llm.key
-export FARFIELD_LLM_BASE_URL=https://api.deepseek.com/v1
-export FARFIELD_LLM_MODEL=deepseek-v4-pro
+Hypotheses and paper interpretations remain speculative. Generated plans, imagined scenarios, reviewer opinions, and model self-consistency cannot become WORLD evidence.
 
-PYTHONPATH=src python3.11 -m farfield research /tmp/farfield-research --legacy-pipeline \
-  --topic "compress genomic sequence collections with succinct data structures"
-```
+A promotable result needs the relevant literature and falsification checks, an executable probe on the exact bound scientific object, admitted measurements, verification, and reproduction or transfer checks required by its scope. A descriptive association does not establish a causal mechanism.
 
-To continue a scientific line, reuse the same `--state-store` and `--world`. A new mission folder is an audit trail, not a new identity. Do not commit API keys or pass them on the command line. See `.env.example`.
-
-### Console
-
-```bash
-PYTHONPATH=src python3 scripts/console.py
-```
-
-Then open `http://localhost:8765/`. The console binds to `127.0.0.1` by default. Prefer SSH forwarding for remote access.
-
-### Execute a protocol
-
-```bash
-PYTHONPATH=src python3 -m farfield execute /path/to/candidate-folder --on-slice
-```
-
-`research` product defaults after the cwm-iclr2027 audit: `--min-ideas 3` (breadth floor: an executable plan does not stop the spray before three distinct landings), DV sanity (a measure of an oracle-relative quantity that does not move when the oracle field is permuted is `object_absent`, not `uninformative`), schema tier floors (`program_state` / `labeled_traces` → `host-heavy`, pre-registered before any probe), object-property binding (`object_properties` on manifests vs the claim's stated properties), builtin exploratory descriptives on any acquired world (`farfield analyze`, labelled `cannot_corroborate`), `--human-gate after_review` + `--approve`, and resume-by-replay (rerun the same command; recorded steps replay). `--on-slice` reruns the probe bytes (E1). Default `execute` rebuilds the attested parent (E2) when the freeze cache exists. Other commands: `freeze` (also `--derive-from <world>` and `--dir <run> --format dgm|openevolve`), `analyze`, `harvest` (run a harness under a pre-registered recipe and freeze its history as `provenance: harvested`), `paper` (write the paper-level `RESEARCH_PROPOSAL.md` / `EXPERIMENT_DESIGN.md` for an idea from its attested fact sheet, with one reviewer round; DRAFT, citations audited — also `research --paper-rounds`), `run`, `attest-run`, `campaign`, `world-sim`. See `python3 -m farfield --help`.
-
-## Outputs
-
-These are `--legacy-pipeline` outputs. Default OpenWorld outputs are listed in Quick start.
+The probe records one of five outcomes:
 
 ```text
-RESEARCH_PACKET.md      complete research plan (Chinese; experiment design inlined)
-RESEARCH_PACKET_EN.md   English copy of the same plan
-ideas/<idea-name>/      one folder per live idea (named by core content, not gen_ digest)
-  README.md            this folder's map
-  idea-stage/RESEARCH_BRIEF.md     complete research plan (Chinese)
-  idea-stage/RESEARCH_BRIEF_EN.md  English copy
-  refine-logs/EXPERIMENT_PLAN.md   complete experiment design (Chinese)
-  refine-logs/EXPERIMENT_PLAN_EN.md English copy
-  AGENT_PACKET.md      execute order, this card only
-  world-sim/           idea rehearsal (imagined; cannot climb)
-protocol.json          registered experiment
-experiment.py          two-arm script
-metrics.json           treatment / control
-evidence_snapshot/     frozen retrieval used this run
+probe_execution_blocked       no usable experimental result
+probe_policy_refused          execution/admission not permitted
+probe_scientifically_negative measured evidence against the hypothesis
+probe_positive               measured support within the probe's scope
+probe_inconclusive           insufficient discrimination
 ```
 
-Mission state lives under `var/` and is gitignored.
+A positive probe is not automatically a verified finding. Unsupported claim strengthening, missing world digests, changed protocol bytes, and mismatched EvidenceIDs fail closed. See [evidence and promotion](ARCHITECTURE.md#evidence-and-promotion).
 
-## Repository
+## Research artifacts
+
+Inside each mission workspace:
 
 ```text
-src/farfield/       core runtime
-tests/              stdlib unittest
-worlds/             attested fixtures
-corpora/            citation-graph assets
-concepts/           concept co-occurrence graphs
-scripts/            console and rebuild
-examples/           small ledger examples
-webui/              local console
-assets/             figures
-.agents/skills/     trusted research hooks
+SCIENTIFIC_STATE.json   questions, theories, evidence, beliefs, frontier
+SCIENTIFIC_EVENTS.json replayable scientific event log
+RESEARCH_STATUS.md     verified scope and remaining gaps
+literature/            source artifacts, paper states, transitions
+llm_cache/             recorded model requests and responses
+worlds/<world-id>/     bound fixture bytes and manifests
+research_workers/<evidence-id>/candidates/<card-id>/
+  protocol.json        registration and identities
+  experiment.py        executable source
+  probe.json           measurements, verdict, provenance, scope
+  metrics.json         executable metrics
+  research_note.md     synthesis, when scheduled
+  PAPER_FACTS.json     synthesis facts, when scheduled
+  paper/               optional draft artifacts
 ```
 
-The public tree is the runtime, tests, small replayable assets, and fixtures. Keys, mission folders, and internal design notes are not included.
+Artifacts appear only when the corresponding action produces them. A blocked run may have no measurements. `research_complete: false` describes an open study, not a successfully completed paper. Runtime folders and credentials are excluded from the public repository.
 
-## Status
+To rerun an existing registered protocol:
 
-FarField is an experimental research system. The repository makes the loop and its failure modes inspectable; it is not a finished autonomous scientist, and it has not shown that far-field search beats a matched random draw.
+```bash
+PYTHONPATH=src python3.11 -m farfield execute /path/to/candidate-folder --on-slice
+```
 
-- The archived negative result still stands: far-jump post-T realization is not above matched random; later evolution generations did not reverse it. Distance is a search heuristic, not novelty.
-- A cheap WORLD `supports` is a filter (`speculative`). `corroborated` needs the host to rerun the same EvidenceID with the mechanism isolated.
-- Most topics still land `SYNTHETIC` / `GENERATED`. One SYNTHETIC support correctly stops spray; scientifically that only means the coherence check is done — freeze next.
-- `world-sim` can change plan structure. It cannot change what is true. Rehearsal failure must not block execute.
-- Refine budgets are short on purpose: text at most two extra drafts; experiments at most two extra attempts; one compile rewrite when rehearsal names a hole. A second uninformative result switches the lever — that is discipline, not a deep search.
-- Catalog coverage is still thin. Unmatched objects go to the wishlist; they are not silently bound to a cousin freeze.
+This exact-instance reproduction does not establish transfer to a new world.
+
+## Current validation and limits
+
+The [validation record](VALIDATION.md) maps the requested behaviors to tests and separates offline regressions from live observations.
+
+- **Offline:** 1,202 main-suite tests, including 6 skips; 30 contract tests and 2 historical regressions pass.
+- **Live integration:** bounded Iris sessions retrieved real papers, generated structured hypotheses, and reached diagnosis/probe construction. The final recorded segment blocked a metric mismatch before execution and produced a failure-reframe branch—not WORLD probe evidence or a verified discovery.
+- **Trajectory coverage:** extraction and structural retrieval exist, but a broad grounded transition corpus and learned operator-selection distribution do not.
+- **Experimental coverage:** catalog and acquisition support are limited. Registered identities do not fully prove that arbitrary generated code implements its prose claim.
+- **Estimation:** belief scores are deterministic bookkeeping, not calibrated Bayesian confidence; scheduler priorities are heuristics, not measured information gain.
+- **Self-improvement:** policy admission is enforced locally; beneficial live research-policy RSI has not been demonstrated.
+
+Historical far-jump experiments did not establish an advantage over matched random search. Embedding distance is neither a novelty certificate nor a scientific-value signal.
+
+## Repository and compatibility
+
+| Path | Purpose |
+|---|---|
+| [src/farfield/extras/openworld/](src/farfield/extras/openworld/) | Scientific controller, state, scheduler, worker adapters |
+| [src/farfield/](src/farfield/) | Trusted runtime and existing research capabilities |
+| [tests/](tests/) | Offline, contract, parity, and regression tests |
+| [worlds/](worlds/) | Small attested experimental fixtures |
+| [scripts/](scripts/) / [webui/](webui/) | Local console and maintenance tools |
+| [corpora/](corpora/) / [concepts/](concepts/) | Literature and historical graph assets |
+
+Historical Python pipeline functions remain regression references. `--legacy-pipeline` is deprecated and routes to the same controller; it does not restore the old stage loop. Older bilingual `RESEARCH_PACKET*.md` outputs are archival formats, not promised outputs of the current command.
+
+Some legacy options still appear in CLI help but are not forwarded to the current controller. In particular, do not rely on `--no-host-execute` or old human-gate options to disable execution. Use offline tests for a no-live-service check; live research may schedule registered execution.
+
+See [CHANGELOG.md](CHANGELOG.md), [CONTRIBUTING.md](CONTRIBUTING.md), and `PYTHONPATH=src python3.11 -m farfield --help`.
 
 ## Citation
 
-If you use FarField in research, please cite [`CITATION.cff`](CITATION.cff).
+If you use FarField in research, please cite [CITATION.cff](CITATION.cff).
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+[MIT](LICENSE).

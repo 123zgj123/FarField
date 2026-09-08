@@ -336,6 +336,7 @@ def eligible_actions(
     pathology_ready: bool = False,
     stagnation: bool = False,
     probe_ready: Mapping[str, Any] | None = None,
+    workers_connected: bool = False,
 ) -> list[ActionInstance]:
     """Deterministic eligibility. Not a pipeline stage list."""
     caps = tuple(str(item) for item in capabilities) + tuple(state.available_capabilities)
@@ -353,7 +354,7 @@ def eligible_actions(
                 frontier_target_id=goal_id,
             )
         )
-    if state.goal and not state.open_questions and not state.resolved_questions:
+    if state.goal and not state.open_questions and not state.resolved_questions and not state.blocked_questions:
         found.append(
             ActionInstance(
                 SPECS[ASK],
@@ -492,7 +493,118 @@ def eligible_actions(
             )
         )
 
+    if workers_connected:
+        found = worker_actions(state, found)
     return found
+
+
+def worker_actions(state: ScientificState, actions: list[ActionInstance]) -> list[ActionInstance]:
+    """Readiness from persisted scientific artifacts, not a second pipeline."""
+    surveys = [r for r in state.artifacts if r.get("kind") == "literature_survey" and r.get("works")]
+    # The control-plane observer is still useful, but cannot substitute for survey.
+    found = [a for a in actions if a.action_type not in {SURVEY, THEORIZE, PROBE, VERIFY, SYNTHESIZE}]
+    found = [a for a in found if a.action_type != OBSERVE or not any(
+        r.get("role") == "QuestionEvidence" and r.get("question_id") == a.target
+        and r.get("world_id") == state.world_id for r in state.evidence_records)]
+    for row in state.evidence_records:
+        if row.get("epistemic") == "WORLD" and not row.get("verify_count"):
+            found.append(ActionInstance(SPECS[VERIFY], target=str(row.get("evidence_id") or ""),
+                frontier_target_id=str(row.get("question_id") or "goal:G0"),
+                reason="check_exact_evidence_identity", extra={"verify_kind": VERIFY_REPLICATION,
+                                                               "evidence_role": row.get("role")}))
+        elif row.get("role") == "ProbeEvidence" and row.get("reproduction_ok") and not row.get("replication_of"):
+            for world in state.world_versions:
+                wid = str(world.get("id") or world.get("world_id") or "")
+                if world.get("research_role") != "heldout" or wid == row.get("world_id"):
+                    continue
+                if any(r.get("replication_of") == row.get("evidence_id") and r.get("world_id") == wid for r in state.evidence_records):
+                    continue
+                found.append(ActionInstance(SPECS[VERIFY], target=str(row.get("evidence_id")),
+                    frontier_target_id=str(row.get("question_id") or "goal:G0"), reason="heldout_replication_debt",
+                    extra={"replication_world_id": wid, "evidence_role": "ProbeEvidence"}))
+    if not surveys:
+        questions = state.open_questions + state.blocked_questions
+        target = str(questions[0].get("id")) if questions else "goal:G0"
+        found.append(ActionInstance(SPECS[SURVEY], target=target,
+                                   frontier_target_id=target, reason="literature_gap",
+                                   extra={"extract_trajectories": True}))
+        return unattempted_actions(state, found)
+    questions = state.open_questions + state.blocked_questions + state.resolved_questions
+    for question in questions:
+        qid = str(question.get("id") or "")
+        if not any(r.get("question_id") in {"", qid} for r in surveys):
+            found.append(ActionInstance(SPECS[SURVEY], target=qid, frontier_target_id=qid,
+                reason="question_literature_gap", extra={"extract_trajectories": True}))
+            continue
+        theories = [t for t in state.theories if t.get("question_id") == qid]
+        for lane in ("trajectory_supported", "assumption_reframe", "unconstrained"):
+            if not any(t.get("research_lane") == lane and int(t.get("hop") or 1) == 1 for t in theories):
+                found.append(ActionInstance(SPECS[THEORIZE], target=qid, frontier_target_id=qid,
+                    lineage_id=str(question.get("lineage_id") or ""), reason="first_hop_branch_gap",
+                    extra={"research_lane": lane, "hop": 1}))
+        for theory in theories:
+            if theory.get("role") == "competing_explanation":
+                continue
+            tid = str(theory.get("id") or "")
+            card = theory.get("card") or {}
+            measured = any(r.get("theory_id") == tid for r in state.evidence_records)
+            attempted = any(r.get("theory_id") == tid and r.get("action_type") == PROBE
+                            for r in state.failed_designs)
+            literature_checked = any(r.get("theory_id") == tid for r in surveys)
+            if card and not literature_checked:
+                found.append(ActionInstance(SPECS[SURVEY], target=qid, frontier_target_id=qid,
+                    reason="hypothesis_literature_check", extra={"theory_id": tid, "claim": theory.get("claim") or card.get("claim")}))
+            if card and literature_checked and not measured and not attempted:
+                found.append(ActionInstance(SPECS[PROBE], target=tid, frontier_target_id=qid,
+                    reason="discriminate_competing_hypotheses" if str(card.get("idea_kind") or "probe").lower() == "probe"
+                           else "check_missing_probe_compilation", extra={
+                        "theory_id": tid, "question_id": qid, "card": card,
+                        "causal_handle": card.get("world_lever") or theory.get("mechanism"),
+                        "measure": card.get("world_observable") or card.get("prediction"),
+                        "freeze": state.world_id,
+                        "experiment_proposal": theory.get("experiment_proposal"),
+                    }))
+            if measured:
+                found.append(ActionInstance(SPECS[SYNTHESIZE], target=tid, frontier_target_id=qid,
+                                           reason="synthesize_measured_branch"))
+            evidence = [r for r in state.evidence_records if r.get("theory_id") == tid
+                        and r.get("epistemic") == "WORLD" and r.get("attested")
+                        and r.get("execution_status") == "ran" and r.get("world_digest")
+                        and r.get("experiment_digest")]
+            failures = [r for r in state.failed_designs if r.get("theory_id") == tid]
+            has_child = any(t.get("parent_theory_id") == tid for t in theories)
+            # A blocked method can be reframed once; it is never called an evidence hop.
+            pivot = failures and int(theory.get("failure_pivots") or 0) < 1
+            if not has_child and (evidence or pivot):
+                found.append(ActionInstance(SPECS[THEORIZE], target=qid, frontier_target_id=qid,
+                    lineage_id=str(question.get("lineage_id") or ""),
+                    reason="evidence_driven_transition" if evidence else "failure_driven_reframe",
+                    extra={"research_lane": "trajectory_supported" if evidence else "assumption_reframe",
+                           "hop": int(theory.get("hop") or 1) + 1, "parent_theory_id": tid,
+                           "transition_kind": "evidence_driven" if evidence else "failure_reframe",
+                           "evidence_context": evidence, "failure_context": failures,
+                           "failure_pivots": int(theory.get("failure_pivots") or 0) + (0 if evidence else 1)}))
+    return unattempted_actions(state, found)
+
+
+def action_input_key(state: ScientificState, action: ActionInstance) -> str:
+    """A retry needs changed scientific inputs, not just a later clock tick."""
+    import hashlib
+    import json
+    inputs = {"goal": state.goal, "worlds": state.world_versions,
+              "evidence": [(r.get("evidence_id"), r.get("verify_count")) for r in state.evidence_records],
+              "theories": [r.get("id") for r in state.theories],
+              "surveys": [r.get("id") for r in state.artifacts if r.get("kind") == "literature_survey"],
+              "capabilities": state.available_capabilities,
+              "service_session": next((r.get("id") for r in reversed(state.artifacts) if r.get("kind") == "research_service_session"), ""),
+              "action": action.action_type, "target": action.target,
+              "branch": {k: action.extra.get(k) for k in ("research_lane", "parent_theory_id", "hop", "theory_id", "replication_world_id")}}
+    return hashlib.sha256(json.dumps(inputs, sort_keys=True, default=str).encode()).hexdigest()
+
+
+def unattempted_actions(state: ScientificState, actions: list[ActionInstance]) -> list[ActionInstance]:
+    attempted = {r.get("input_key") for r in state.artifacts if r.get("kind") == "action_attempt"}
+    return [a for a in actions if action_input_key(state, a) not in attempted]
 
 
 def types_of(actions: Iterable[ActionInstance]) -> tuple[str, ...]:

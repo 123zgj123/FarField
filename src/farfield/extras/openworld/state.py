@@ -18,6 +18,103 @@ from .kernel import refuse_generated_promotion
 SCIENTIFIC_STATE_FILE = "SCIENTIFIC_STATE.json"
 
 
+def evidence_reliability(row: Mapping[str, Any]) -> float:
+    """Versioned semi-quantitative accounting rule, not a learned probability.
+
+    Evidence about execution failure, descriptive observations and generated
+    proposals contributes zero. Reproduction improves reliability, not sample size.
+    """
+    if (row.get("epistemic") != "WORLD" or not row.get("attested")
+            or not row.get("promotion_ok") or refuse_generated_promotion(row)
+            or row.get("cannot_corroborate") or row.get("execution_status") != "ran"
+            or not row.get("experiment_digest") or not row.get("world_digest")
+            or not row.get("claim_consistent")):
+        return 0.0
+    if row.get("verify_count") and (row.get("reproduction_ok") is False or row.get("replay_ok") is False):
+        return 0.0
+    return 1.0 if row.get("reproduction_ok") and row.get("identity_ok") else 0.5
+
+
+def refresh_research_views(state: "ScientificState") -> None:
+    """Derived event-replay views; workers cannot supply posterior confidence.
+
+    Beta(2,2) pseudo-counts with reliability-weighted positive/negative evidence.
+    This is deliberately a bounded bookkeeping scale, not calibrated Bayesian
+    inference. Correlated reruns of the same source on the same freeze count once.
+    """
+    beliefs: dict[str, dict[str, Any]] = {}
+    verified: dict[str, dict[str, Any]] = {}
+    for theory in state.theories:
+        tid = str(theory.get("id") or "")
+        if not tid:
+            continue
+        belief: dict[str, Any] = {
+            "rule": "reliability-beta-counts-v1", "prior_confidence": 0.5,
+            "posterior_confidence": 0.5, "supporting_evidence": [],
+            "contradicting_evidence": [], "evidence_reliability": {},
+            "competing_theories": list(theory.get("competing") or theory.get("competing_explanations") or []),
+            "unresolved_assumptions": list(theory.get("assumptions") or []),
+            "update_provenance": [],
+        }
+        positive, negative = 2.0, 2.0
+        seen: set[tuple[str, str]] = set()
+        rows = [r for r in state.evidence_records if r.get("theory_id") == tid]
+        for row in rows:
+            reliability = evidence_reliability(row)
+            identity = (str(row.get("world_digest")), str(row.get("experiment_digest")))
+            eid = str(row.get("evidence_id") or "")
+            outcome = row.get("outcome") or row.get("verdict")
+            if not eid or not reliability or identity in seen or outcome not in {"supports", "weakens", "negative", "contradicted"}:
+                continue
+            seen.add(identity)
+            before = positive / (positive + negative)
+            supports = outcome == "supports"
+            if supports:
+                positive += reliability
+                belief["supporting_evidence"].append(eid)
+            else:
+                negative += reliability
+                belief["contradicting_evidence"].append(eid)
+            belief["evidence_reliability"][eid] = reliability
+            after = positive / (positive + negative)
+            belief["update_provenance"].append({
+                "evidence_id": eid, "event_id": row.get("scientific_event_id", ""),
+                "verification_event_id": row.get("verification_event_id", ""),
+                "prior": round(before, 8), "evidence_contribution": reliability if supports else -reliability,
+                "posterior": round(after, 8), "world_digest": identity[0], "experiment_digest": identity[1],
+            })
+        belief["posterior_confidence"] = round(positive / (positive + negative), 8)
+        theory["prior_confidence"] = belief["prior_confidence"]
+        theory["posterior_confidence"] = belief["posterior_confidence"]
+        theory["belief_state_id"] = tid
+        if belief["contradicting_evidence"]:
+            theory["status"] = "weakened"
+        elif belief["supporting_evidence"]:
+            theory["status"] = "supported"
+        beliefs[tid] = belief
+        # A corroborated execution is not automatically a verified mechanism.
+        for row in rows:
+            if not (evidence_reliability(row) and row.get("outcome") == "supports"
+                    and all(row.get(k) for k in ("literature_checked", "reproduction_ok", "identity_ok",
+                                                 "executable_ok", "mechanism_validated"))):
+                continue
+            replication = next((r for r in rows if r.get("replication_of") == row.get("evidence_id")
+                and r.get("world_digest") != row.get("world_digest") and evidence_reliability(r)
+                and r.get("outcome") == "supports" and r.get("identity_ok") and r.get("reproduction_ok")), None)
+            if row.get("replication_required", True) and replication is None:
+                continue
+            if belief["contradicting_evidence"]:
+                continue  # unresolved contradictions keep the mechanism speculative
+            verified[tid] = {"theory_id": tid, "evidence_id": row["evidence_id"],
+                             "replication_evidence_id": replication["evidence_id"] if replication else "",
+                             "claim_strength": "verified_within_tested_conditions",
+                             "world_id": row.get("world_id"), "world_digest": row.get("world_digest")}
+            break
+    state.belief_states = beliefs
+    state.verified_research_state = verified
+    state.speculative_frontier = [tid for tid in beliefs if tid not in verified]
+
+
 def _copy_rows(rows: Any) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
     for item in rows or []:
@@ -76,6 +173,9 @@ class ScientificState:
     frontier: dict[str, Any] = field(default_factory=dict)
     debt: dict[str, int] = field(default_factory=dict)
     graph: dict[str, Any] = field(default_factory=dict)
+    belief_states: dict[str, dict[str, Any]] = field(default_factory=dict)
+    speculative_frontier: list[str] = field(default_factory=list)
+    verified_research_state: dict[str, dict[str, Any]] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -107,6 +207,9 @@ class ScientificState:
             "frontier": dict(self.frontier),
             "debt": dict(self.debt),
             "graph": dict(self.graph),
+            "belief_states": dict(self.belief_states),
+            "speculative_frontier": list(self.speculative_frontier),
+            "verified_research_state": dict(self.verified_research_state),
         }
 
     def view(self) -> Mapping[str, Any]:
@@ -145,6 +248,9 @@ class ScientificState:
             frontier=dict(row.get("frontier") or {}),
             debt={str(k): int(v) for k, v in dict(row.get("debt") or {}).items()},
             graph=dict(row.get("graph") or {}),
+            belief_states=dict(row.get("belief_states") or {}),
+            speculative_frontier=_copy_text(row.get("speculative_frontier")),
+            verified_research_state=dict(row.get("verified_research_state") or {}),
         )
 
     def add_question(

@@ -123,6 +123,33 @@ class OpenWorld:
     last_scheduled: ScoredAction | None = None
     history: list[dict[str, Any]] = field(default_factory=list)
     log: EventLog = field(default_factory=EventLog)
+    workers_connected: bool = False
+
+    def connect_workers(self, adapter: Any) -> None:
+        """Bind worker services, never their own orchestration loop or state writer."""
+        from copy import deepcopy
+        import time
+
+        for kind, worker in adapter.executors().items():
+            def invoke(env: "OpenWorld", action: ActionInstance, worker: Any = worker) -> Any:
+                if action.action_type == "VERIFY" and action.extra.get("evidence_role") == "QuestionEvidence":
+                    return DEFAULT_EXECUTORS["VERIFY"](env, action)
+                ledger = getattr(getattr(adapter, "client", None), "ledger", None)
+                before_tokens = float(getattr(ledger, "spent_tokens", 0))
+                started = time.monotonic()
+                result = as_candidate(worker(action, deepcopy(env.state.to_dict()), workspace=env.workspace,
+                              world_id=env.state.world_id, projection=env.project_for(action)))
+                cost = {"tokens": float(getattr(ledger, "spent_tokens", 0)) - before_tokens,
+                        "wall_seconds": time.monotonic() - started}
+                result.extras["measured_cost"] = cost
+                if result.evidence is not None:
+                    result.evidence["measured_cost"] = cost
+                result.events = [replace(event, payload={**event.payload, "measured_cost": {
+                    k: float((event.payload.get("measured_cost") or {}).get(k) or 0) + cost[k] for k in cost}})
+                    if event.event_type == "EvidenceAdded" else event for event in result.events]
+                return result
+            self.executors[kind] = invoke
+        self.workers_connected = True
 
     @classmethod
     def load(cls, workspace: Path | None) -> "OpenWorld":
@@ -166,6 +193,7 @@ class OpenWorld:
             pathology_ready=bool(pathology_ready(self.pathologies)),
             stagnation=stagnant,
             probe_ready=probe_ready,
+            workers_connected=self.workers_connected,
         )
 
     def schedule(self, actions: list[ActionInstance] | None = None) -> ScoredAction | None:
@@ -222,6 +250,11 @@ class OpenWorld:
         """TrustedKernel mutation boundary. Executors cannot write WORLD or state."""
         def checked(row: Mapping[str, Any]) -> dict[str, Any]:
             payload = dict(row)
+            generated_origin = any(str(payload.get(k) or "").upper() in {"GENERATED", "SYNTHETIC", "PLACEBO", "E0_SYNTHETIC"}
+                for k in ("kind", "probe_kind", "world_role", "provenance", "world_provenance"))
+            if generated_origin:
+                payload.update(epistemic="GENERATED", attested=False,
+                               promotion_refused="generated provenance cannot be relabelled WORLD")
             if payload.get("epistemic") == "WORLD":
                 wid = str(payload.get("world_id") or "")
                 root = resolve_world_root(self.workspace, wid)
@@ -312,6 +345,17 @@ class OpenWorld:
                 raw = self.evolve()
             candidate = as_candidate(raw)
         admitted = self._admit(action, candidate)
+        if self.workers_connected:
+            from .actions import action_input_key
+            admitted.events.append(make_event("ArtifactAdded", {
+                "kind": "action_attempt", "action_type": action.action_type,
+                "target": action.target, "status": admitted.status,
+                "input_key": action_input_key(before, action),
+                "reason": admitted.extras.get("reason", ""),
+                "theory_id": action.extra.get("theory_id", ""),
+                "question_id": action.extra.get("question_id", ""),
+                "measured_cost": admitted.extras.get("measured_cost", {}),
+            }, action_type=action.action_type))
         preview = apply_events(self.state, admitted.events)
         progress = measure_progress(before, preview)
         tick_event = make_event(
@@ -379,100 +423,54 @@ class OpenWorld:
         return result
 
     def evolve(self, patch: CandidatePatch | None = None, **gate: Any) -> dict[str, Any]:
+        """Record research-time proposals; admission belongs after mission settlement.
+
+        Legacy caller-supplied cases are accepted for API compatibility, but
+        cannot authorize installation during scientific research.
+        """
         ready = pathology_ready(self.pathologies)
         if patch is None:
             if not ready:
                 return {"status": "no_pathology"}
             patch = propose_patch(ready[0])
-        if not gate and patch.capability and patch.capability.name == "compare_validator_snapshots":
-            gate = {
-                "failing": [
-                    {
-                        "records": [
-                            {"validator_version": "v1", "ok": True},
-                            {"validator_version": "v2", "ok": False},
-                        ],
-                        "aligned": True,
-                    }
-                ],
-                "nearby": [
-                    {
-                        "records": [
-                            {"validator_version": "a", "ok": True},
-                            {"validator_version": "b", "ok": True},
-                        ],
-                        "aligned": True,
-                    }
-                ],
-                "regression": [{"name": "prior_survey", "passed": True}],
-                "previous": [{"name": "schema_check", "passed": True}],
-                "sealed": [
-                    {
-                        "records": [
-                            {"validator_version": "s1"},
-                            {"validator_version": "s2"},
-                        ],
-                        "aligned": True,
-                    }
-                ],
-                "cost": {"tokens": 10, "token_cap": 1000},
-            }
-        report = evaluate_patch(patch, **gate)
         parent_world = self.state.world_id
         parent_harness = self.harness.version_id
-        child, registry, status = apply_admitted_patch(
-            self.harness, self.capabilities, patch, report
-        )
-        self.harness = child if status == "admitted" else self.harness
-        self.capabilities = registry
+        reason = "research_policy_requires_completed_mission_and_heldout_receipt"
         events = [
             make_event(
                 "HarnessPatchProposed",
-                {"pathology": patch.pathology, "module": patch.module},
+                {
+                    "pathology": patch.pathology,
+                    "module": patch.module,
+                    "status": "proposed",
+                    "reason": reason,
+                },
                 action_type=EVOLVE_HARNESS,
             )
         ]
-        if status == "admitted" and patch.capability is not None:
-            events.append(
-                make_event(
-                    "HarnessAdmitted",
-                    {
-                        "harness_version": self.harness.version_id,
-                        "capability": patch.capability.name,
-                        "parent": parent_harness,
-                    },
-                    action_type=EVOLVE_HARNESS,
-                )
-            )
-            events.append(
-                make_event(
-                    "CapabilityValidated",
-                    {"name": patch.capability.name, "trust_level": "VALIDATED"},
-                    action_type=EVOLVE_HARNESS,
-                )
-            )
-            add_harness(
-                self.archives,
-                {
-                    "patch": patch.to_dict(),
-                    "report": report.to_dict(),
-                    "harness_version": self.harness.version_id,
-                    "parent": parent_harness,
-                    "world_unchanged": self.state.world_id == parent_world,
-                },
-            )
+        add_harness(
+            self.archives,
+            {
+                "patch": patch.to_dict(),
+                "status": "proposed",
+                "reason": reason,
+                "harness_version": parent_harness,
+                "parent": parent_harness,
+                "world_unchanged": True,
+            },
+        )
         self._ensure_baseline()
         self.state = apply_events(self.state, events, log=self.log)
         return {
-            "status": status,
-            "report": report.to_dict(),
+            "status": "proposed",
+            "reason": reason,
             "harness_version": self.harness.version_id,
             "parent_harness": parent_harness,
             "world_id": self.state.world_id,
             "world_unchanged": self.state.world_id == parent_world,
             "capability": patch.capability.name if patch.capability else "",
-            "unlocked": status == "admitted",
-            "harness_general": report.general,
+            "unlocked": False,
+            "harness_general": False,
             "events_applied": True,
         }
 

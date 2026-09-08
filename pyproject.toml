@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "farfield-runtime"
 version = "0.1.0"
-description = "A local research loop: far-field search, registered two-arm experiments, and a same-object evidence contract"
+description = "An experimental ScientificState-driven research runtime with trajectory-conditioned exploration and evidence-gated conclusions"
 license = {text = "MIT"}
 requires-python = ">=3.11"
 dependencies = []

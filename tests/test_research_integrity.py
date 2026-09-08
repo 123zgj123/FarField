@@ -5,6 +5,7 @@ import io
 import json
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 from farfield.cli import main
@@ -21,6 +22,13 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ResearchIntegrityTests(unittest.TestCase):
+    def setUp(self):
+        # Integrity tests are offline. Live literature parity is separately labelled.
+        from farfield.extras.knowledge import Harvest
+        self.harvest = patch('farfield.extras.openworld.workers.harvest_survey', return_value=Harvest())
+        self.harvest.start()
+        self.addCleanup(self.harvest.stop)
+
     def test_missing_recorded_digest_cannot_become_attested_by_copying(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "source"
@@ -61,6 +69,17 @@ class ResearchIntegrityTests(unittest.TestCase):
             self.assertFalse(env.state.resolved_questions)
             self.assertFalse([r for r in env.state.evidence_records if r.get("epistemic") == "WORLD"])
 
+    def test_matching_world_digest_does_not_erase_generated_origin(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            env = bootstrap_research('iris', Path(tmp), world='fisher-iris')
+            for tag in ('kind', 'probe_kind', 'world_role', 'provenance', 'world_provenance'):
+                forged = {'role': 'ProbeEvidence', 'epistemic': 'WORLD', 'attested': True,
+                    'world_id': env.state.world_id, 'world_digest': env.state.world_versions[0]['digest'],
+                    'evidence_id': 'forged-' + tag, tag: 'GENERATED'}
+                env.executors[OBSERVE] = lambda *_, forged=forged: CandidateResult(status='observed', evidence=forged)
+                env.execute(ActionInstance(SPECS[OBSERVE], target='Q1'))
+            self.assertFalse([r for r in env.state.evidence_records if r.get('epistemic') == 'WORLD'])
+
     def test_cli_iris_binds_exact_bytes_and_keeps_prediction_question_open(self):
         with tempfile.TemporaryDirectory() as tmp, contextlib.redirect_stdout(io.StringIO()) as out:
             rc = main(["research", tmp, "--topic", "does sepal geometry predict iris species?",
@@ -74,7 +93,7 @@ class ResearchIntegrityTests(unittest.TestCase):
             self.assertEqual(iris.read_bytes(), (ROOT / "worlds/fisher-iris/iris.json").read_bytes())
             state = json.loads(states[0].read_text())
             self.assertFalse(state["resolved_questions"])
-            self.assertTrue(state["open_questions"])
+            self.assertTrue(state["open_questions"] + state["blocked_questions"])
             observations = [r for r in state["evidence_records"] if r.get("role") == "QuestionEvidence"]
             self.assertTrue(observations)
             self.assertEqual(observations[0]["result"]["n_rows"], 150)

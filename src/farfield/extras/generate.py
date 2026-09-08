@@ -127,7 +127,7 @@ Answer with JSON:
  "claim": "<=80 words: the research target in prose",
  "mechanism": "<=80 words on why this action is the right next one",
  "pair": ["<topic object, copied exactly>", "<distant concept OR 'local problem structure'>"],
- "falsifier": "<one of: {checks}>",
+ "falsifier": "<{checks}>",
  "prediction": "<=40 words: question contrast / acquire readiness / theory prediction / probe measurable",
  "research_question": "question only",
  "contrast": "question only",
@@ -146,7 +146,7 @@ Answer with JSON:
  "disconfirmation": "theory only",
  "transition_reason": "optional: missing_world | missing_observable | causal_identification_ready | harvest_success | prediction_observable | prediction_manipulable"{compile_json}}}
 
-`pair` must copy two concepts exactly as written above: the first from the seed's field, the second from the distant list. `falsifier` must be exactly one of the listed names; it is the executable check you judge this card most at risk of failing. Anything else voids the card.
+`pair` must copy two concepts exactly as written above: the first from the seed's field, the second from the distant list. {falsifier_contract}
 """
 
 
@@ -268,6 +268,7 @@ class GeneratedCard:
     world_requirements: str = ""
     world_version: str = ""
     kind_fields: dict[str, Any] | None = None
+    research_metadata: dict[str, Any] | None = None
 
     @property
     def idea_id(self) -> str:
@@ -331,6 +332,8 @@ class GeneratedCard:
             payload["world_version"] = self.world_version
         if self.kind_fields:
             payload["kind_fields"] = dict(self.kind_fields)
+        if self.research_metadata:
+            payload["research_metadata"] = dict(self.research_metadata)
         if self.derivation:
             payload["derivation"] = self.derivation
         if self.world_lever:
@@ -599,6 +602,7 @@ def generate_card(
     blocked_handles: tuple[str, ...] = (),
     jump_notes: tuple[str, ...] = (),
     scientific: dict[str, Any] | None = None,
+    research_mode: bool = False,
 ) -> GeneratedCard:
     """One card from one jump. Refuses loudly; never repairs the model's answer.
 
@@ -664,6 +668,7 @@ def generate_card(
                         used_levers=used_levers,
                         jump_notes=jump_notes,
                         scientific=scientific,
+                        research_mode=research_mode,
                     )
                 except LLMUnavailable:
                     # The one retry could not be answered; the original
@@ -696,6 +701,7 @@ def generate_card(
                 used_levers=used_levers,
                 jump_notes=jump_notes,
                 scientific=scientific,
+                research_mode=research_mode,
             )
         except GenerationRefused as exc:
             last = exc
@@ -751,6 +757,15 @@ def generate_card(
     )
 
 
+def validate_research_falsifier(falsifier: str) -> None:
+    """Structural disconfirmation contract; never a scientific truth judge."""
+    if (falsifier in CHECK_CATALOGUE or falsifier == "claim_contains_a_falsifiable_assertion"
+            or len(falsifier.split()) < 5):
+        raise _refuse("register a scientific disconfirmation condition",
+                      "falsifier must describe a concrete observable outcome that would weaken the claim, not a graph check",
+                      capability="scientific_falsifier_required")
+
+
 def _compiled_claim_spec(
     *,
     claim_id: str,
@@ -765,8 +780,19 @@ def _compiled_claim_spec(
     if world_menu is None or not getattr(world_menu, "levers", ()):
         return None
     from .claimspec import WorldObjectRegistry, admit_generated_card, compile_payload
-
-    return compile_payload(
+    registry = WorldObjectRegistry.from_menu(world_menu)
+    world_id = str(getattr(world_menu, "world_id", "") or "")
+    if world_id and target_object != world_id and not registry.exists(target_object):
+        raise _refuse("compile the exact scientific target object",
+                      "target_object must equal the bound world_id or a registered world object",
+                      capability="claim_object_identity")
+    if not world_lever and not world_observable:
+        return None  # speculative theory/acquisition is not an executable claim
+    if not world_lever or not world_observable:
+        raise _refuse("compile a complete handle and observable",
+                      "both world_lever and world_observable are required for a registered claim",
+                      capability="claim_object_identity")
+    payload = compile_payload(
         admit_generated_card(
             claim_id=claim_id,
             statement=claim,
@@ -774,9 +800,12 @@ def _compiled_claim_spec(
             handle_id=world_lever,
             measurement_dv=world_observable,
             target_object=target_object,
-            world=WorldObjectRegistry.from_menu(world_menu),
+            world=registry,
         )
     )
+    if world_id:
+        payload["world_id"] = world_id
+    return payload
 
 
 def _draft_card(
@@ -805,6 +834,7 @@ def _draft_card(
     used_levers: tuple[str, ...] = (),
     jump_notes: tuple[str, ...] = (),
     scientific: dict[str, Any] | None = None,
+    research_mode: bool = False,
 ) -> GeneratedCard:
     if not far_labels:
         far_labels = (LOCAL_ORIGIN_LABEL,)
@@ -813,6 +843,9 @@ def _draft_card(
     compile_json = ""
     if world_menu is not None and getattr(world_menu, "levers", ()):
         compile_block = "\n" + world_menu.prompt_block(used_levers) + "\n"
+        if getattr(world_menu, "world_id", ""):
+            compile_block += (f"Exact bound world_id: {world_menu.world_id}. JSON target_object must equal "
+                              "this ID or an explicitly registered field/handle/observable, never a topic paraphrase.\n")
         compile_json = (
             ',\n "world_lever": "<one declared lever>",\n'
             ' "world_observable": "<one declared observable this lever moves>",\n'
@@ -837,7 +870,10 @@ def _draft_card(
         value=_value_block(tuple(value_criteria)),
         compile_block=compile_block,
         compile_json=compile_json,
-        checks=", ".join(CHECK_CATALOGUE),
+        checks=("concrete observable outcome that would weaken the hypothesis" if research_mode
+                else "one of: " + ", ".join(CHECK_CATALOGUE)),
+        falsifier_contract=("falsifier must state a substantive scientific disconfirmation condition; graph novelty checks are not scientific falsifiers."
+                            if research_mode else "falsifier must be exactly one of the listed executable check names; anything else voids the card."),
     )
     completion = complete_call(
         client,
@@ -915,7 +951,9 @@ def _draft_card(
             )
 
     falsifier = str(payload.get("falsifier") or "").strip()
-    if falsifier not in CHECK_CATALOGUE:
+    if research_mode:
+        validate_research_falsifier(falsifier)
+    elif falsifier not in CHECK_CATALOGUE:
         raise _refuse(
             f"map {falsifier!r} onto an executable check",
             "the falsifier is exactly one of "
@@ -996,7 +1034,7 @@ def _draft_card(
         mechanism=mechanism,
         world_lever=world_lever,
         world_observable=world_observable,
-        target_object=first,
+        target_object=str(payload.get("target_object") or getattr(world_menu, "world_id", "") or first),
         world_menu=world_menu,
     )
 
@@ -1034,6 +1072,7 @@ def _draft_card(
         world_requirements=str(payload.get("required_world_state") or "").strip(),
         transition_reason=str(payload.get("transition_reason") or "").strip(),
         kind_fields=kind_fields,
+        research_metadata=payload.get("research_metadata") if isinstance(payload.get("research_metadata"), dict) else None,
     )
 
 
@@ -1228,7 +1267,8 @@ def refine_card(
         mechanism=card.mechanism,
         world_lever=card.world_lever,
         world_observable=card.world_observable,
-        target_object=card.pair[0] if card.pair else "",
+        target_object=str((card.claim_spec or {}).get("target_object")
+                          or getattr(world_menu, "world_id", "") or (card.pair[0] if card.pair else "")),
         world_menu=world_menu,
     )
     if admitted is not None:

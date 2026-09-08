@@ -555,7 +555,7 @@ def execute_theorize(env: Any, action: ActionInstance) -> CandidateResult:
     if not any("validator" in str(item).lower() for item in [question, view.get("goal")]):
         return CandidateResult(status="blocked", extras={
             "reason": "topic_theory_executor_not_connected",
-            "next": "Supply a topic-specific theory executor or use --legacy-pipeline.",
+            "next": "Connect the research workers through run_research with a configured model.",
         })
     evidence = list(view.get("evidence_records") or [])
     anomalies = list(view.get("anomalies") or [])

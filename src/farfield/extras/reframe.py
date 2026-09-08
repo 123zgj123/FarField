@@ -25,13 +25,20 @@ from typing import Any
 from ..models import BlockedRecord
 from .domain import topic_prompt_block
 from .plugins import refuse_claim
-from .generate import GeneratedCard, GenerationRefused, parse_struggle
+from .generate import GeneratedCard, GenerationRefused, parse_struggle, _compiled_claim_spec, validate_research_falsifier
+from .ideakind import parse_idea_kind
+from .lifecycle import causal_overclaim_reason, parse_kind_fields
 from .llm import Completion
 from .prior import content_tokens
 from .program import block as program_block
 from .wiki import block as wiki_block
 
 OPERATORS: dict[str, str] = {
+    "representation_change": (
+        "Name the representation assumption weakened by the actual prior evidence. "
+        "Change that representation while preserving the research question; state "
+        "the mechanism and discriminating prediction created by the change."
+    ),
     "assumption_removal": (
         "Name ONE assumption this field makes by default, then propose what"
         " becomes possible or true when it is removed."
@@ -119,6 +126,8 @@ def card_from_payload(
     artifact_digest: str,
     artifact_uri: str,
     replay_mode: str,
+    world_menu: Any = None,
+    research_mode: bool = False,
 ) -> GeneratedCard:
     fields = {}
     for name in ("assumption", "claim", "mechanism", "prediction"):
@@ -146,13 +155,28 @@ def card_from_payload(
     card_id = "gen_rf" + hashlib.sha256(
         f"{operator}:{seed_label}:{fields['claim']}".encode()
     ).hexdigest()[:10]
+    falsifier = str(payload.get("falsifier") or "claim_contains_a_falsifiable_assertion")
+    if research_mode:
+        validate_research_falsifier(falsifier)
+    idea_kind = parse_idea_kind(payload.get("idea_kind"))
+    lever = str(payload.get("world_lever") or "").strip()
+    observable = str(payload.get("world_observable") or "").strip()
+    overclaim = causal_overclaim_reason(idea_kind, claim=fields["claim"], lever=lever,
+                                       prediction=fields["prediction"])
+    if overclaim:
+        raise _refuse("keep an observational reframe observational", overclaim)
+    claim_spec = _compiled_claim_spec(
+        claim_id=card_id, claim=fields["claim"], mechanism=fields["mechanism"],
+        world_lever=lever, world_observable=observable,
+        target_object=str(payload.get("target_object") or getattr(world_menu, "world_id", "") or seed_label),
+        world_menu=world_menu)
     return GeneratedCard(
         card_id=card_id,
         operator=operator,
         claim=fields["claim"],
         mechanism=fields["mechanism"],
         prediction=fields["prediction"],
-        falsifier="claim_contains_a_falsifiable_assertion",
+        falsifier=falsifier,
         pair=(seed_label, fields["assumption"]),
         pair_nodes=("concept:seed", "assumption:free"),
         alienness=0.0,
@@ -164,6 +188,11 @@ def card_from_payload(
         why_failed=struggle["why_failed"],
         reframe=struggle["reframe"],
         objection=struggle["objection"],
+        research_metadata=payload.get("research_metadata") if isinstance(payload.get("research_metadata"), dict) else None,
+        claim_spec=claim_spec,
+        world_lever=lever, world_observable=observable,
+        far_maps_to_lever=str(payload.get("far_maps_to_lever") or ""),
+        idea_kind=idea_kind, kind_fields=parse_kind_fields(idea_kind, payload),
     )
 
 
@@ -180,6 +209,8 @@ def generate_reframe(
     skills: str = "",
     program: tuple[str, ...] = (),
     wiki: tuple[str, ...] = (),
+    world_menu: Any = None,
+    research_mode: bool = False,
 ) -> GeneratedCard:
     if operator not in OPERATORS:
         raise KeyError(f"unknown reframe operator {operator!r}; known: {sorted(OPERATORS)}")
@@ -214,6 +245,13 @@ def generate_reframe(
         criteria=criteria_block,
         instruction=OPERATORS[operator],
     )
+    if research_mode:
+        prompt += "\nInclude a falsifier stating a concrete observable outcome that would weaken the claim. Graph novelty checks are not scientific falsifiers.\n"
+    if world_menu is not None and getattr(world_menu, "levers", ()):
+        prompt += "\n" + world_menu.prompt_block() + "\n"
+        prompt += (f"Exact bound world_id: {world_menu.world_id}. target_object must equal this ID "
+                   "or an explicitly registered field/handle/observable, never a topic paraphrase. "
+                   "Retain idea_kind=question/acquire/theory when no lawful intervention exists; do not manufacture a probe.\n")
     completion = client.complete(
         prompt,
         purpose=f"reframe:{operator}:{seed_label}",
@@ -229,6 +267,7 @@ def generate_reframe(
             artifact_digest=completion.digest,
             artifact_uri=completion.artifact_uri,
             replay_mode=completion.mode,
+            world_menu=world_menu, research_mode=research_mode,
         )
     except GenerationRefused as first:
         # cwm-iclr2027-v3 lost an importance-5 reframe to one empty field.
@@ -256,6 +295,7 @@ def generate_reframe(
             artifact_digest=completion.digest,
             artifact_uri=completion.artifact_uri,
             replay_mode=completion.mode,
+            world_menu=world_menu, research_mode=research_mode,
         )
     locked = refuse_claim(card.claim, card.mechanism, topic, seed_label)
     if locked:
@@ -280,6 +320,8 @@ def refine_reframe(
     skills: str = "",
     program: tuple[str, ...] = (),
     wiki: tuple[str, ...] = (),
+    world_menu: Any = None,
+    research_mode: bool = False,
 ) -> GeneratedCard:
     """Rewrite the same field-challenge. Assumption phrase is locked.
 
@@ -307,6 +349,7 @@ def refine_reframe(
         skills=skills,
         program=program,
         wiki=wiki,
+        world_menu=world_menu, research_mode=research_mode,
     )
     if card.pair[1] != parent.pair[1]:
         raise _refuse(

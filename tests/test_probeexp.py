@@ -212,6 +212,12 @@ class ScriptedClient:
 
 
 class RetryTests(unittest.TestCase):
+    def test_registered_measure_is_an_explicit_exact_identifier_in_writer_prompt(self):
+        client = ScriptedClient([GOOD['source']])
+        write_probe(client, CARD, DIAGNOSIS, 'a topic', registered_measure='mean_pairwise_distance')
+        self.assertIn('JSON "measure" must be exactly "mean_pairwise_distance"', client.prompts[0])
+        self.assertIn('Do not substitute a prose description', client.prompts[0])
+
     def test_a_sandbox_refusal_earns_one_quoted_retry(self) -> None:
         # Live missions showed a long tail of one-off refusals (`import
         # time`, `__slots__`); a compiler error is not a scientific verdict,

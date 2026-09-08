@@ -108,6 +108,11 @@ def _author(**over) -> dict:
 
 
 class PaperPlanTests(unittest.TestCase):
+    def test_author_template_is_topic_conditioned_not_validator_bound(self):
+        from farfield.extras.paperplan import AUTHOR_TEMPLATE
+        self.assertIn('research topic in the fact sheet', AUTHOR_TEMPLATE)
+        self.assertNotIn('makes validator reliability the central risk', AUTHOR_TEMPLATE)
+
     def test_card_id_is_read_from_the_agent_packet(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             _ws, idea, card = _workspace(Path(tmp))

@@ -53,8 +53,8 @@ def card_id_for(idea_dir: Path) -> str:
     raise PaperError(f"{idea_dir} names no candidates/<card_id> in AGENT_PACKET.md")
 
 SYSTEM = (
-    "You are the first author of a machine-learning research group preparing an "
-    "ICLR submission. You write from a fact sheet. You never invent a citation, a "
+    "You are a scientific author preparing a research proposal for the domain "
+    "and research intent in a fact sheet. You never invent a citation, a "
     "dataset, or a number: everything numeric or bibliographic in your text must "
     "come from the fact sheet, and anything you propose (a threshold, a budget) "
     "must be labelled as pre-registered proposal, not result. You separate what "
@@ -71,9 +71,9 @@ Language for prose: {lang_name}. Keep technical terms, metric names, field names
 
 ## What the proposal must contain (all sections, in this order, Markdown)
 1. Title (a real paper title, not the claim sentence) and a 150-250 word Abstract.
-2. Background and problem: what a code world model of executable program state is; why an agent harness that rewrites its own cells and validators (recursive self-improvement) makes validator reliability the central risk; define the setting formally (cells, validators, updates, acceptance, false acceptance, divergence) using the schema fields in the fact sheet.
+2. Background and problem: define the research topic in the fact sheet, its scientific question, current bottleneck and relevant objects. Define the setting formally using only the actual schema and object identities in the fact sheet. Do not introduce another domain or an unrelated benchmark.
 3. Related work: group the verified papers with relevance "strong" into themes; for each say precisely what it establishes and what it leaves open. Papers with relevance "weak" were retrieved and verified but are tangential: do not cite them in related work; at most, one sentence may list them as retrieved-but-tangential. Cite ONLY ids from the fact sheet, in the form [arxiv_id] or [doi:...]. Never cite by author name or year without the id. You may mention well-known systems by name without a citation ONLY inside a sentence that says they were not retrieved in this mission.
-4. Motivation and gap: why the obvious approach fails, which assumption is dropped, and what a positive result would change for practitioners building self-improving harnesses.
+4. Motivation and gap: why the existing approach may fail, which assumption or mechanism is changed, the closest prior work, and what discriminating positive or negative evidence would change about this research question.
 5. Method: the mechanism as an algorithm (pseudocode-level detail); the quantities it manipulates; a theory sketch — state the assumptions explicitly, give the argument for the predicted direction, and state what would falsify it. Mark each step "attested" if the fact sheet shows it was run, else "proposed".
 6. Scientific role of this idea (read `idea_kind` / `scientific_role` on the fact sheet):
    - question → research question / motivating analysis. Do not rewrite it as a two-arm H1.
@@ -81,8 +81,8 @@ Language for prose: {lang_name}. Keep technical terms, metric names, field names
    - theory → model / explanation / derived predictions. Unchecked predictions are not WORLD facts.
    - probe → hypotheses H1..Hk aligned with evidence_grid cells; a hypothesis per required cell.
    Never disguise acquire or question as a pseudo two-arm H1 to fit a template.
-7. What the evidence so far actually shows: read the probe attempts in the fact sheet honestly (identical arms, saturated worlds, undefined denominators are findings about testability, not noise). Numbers under `exploratory_analyses` are post hoc descriptives on the attested world: you may use them as MOTIVATION, always labelled "exploratory", never as a result; each hypothesis they motivate must name the pre-registered two-arm test that would establish it.
-8. Limitations and threats to validity: world provenance (derived vs harvested vs published), single-seed harvests, fixed vs mutable validators, construct validity of false_accept_fraction, generalization beyond the harness family.
+7. What the evidence so far actually shows: obey `scientific_scope` as the registered claim ceiling. If `cannot_corroborate` is true, an arithmetic `supports` is only a recorded arm comparison: do not label a hypothesis supported, confirmed, or verified, and do not claim a mechanism or causal effect is established. Preserve `scope_gap`, `prohibited_inferences`, and missing replication. Read the probe attempts honestly (identical arms, saturated worlds, undefined denominators are findings about testability, not noise). Numbers under `exploratory_analyses` are post hoc descriptives on the attested world: you may use them as MOTIVATION, always labelled "exploratory", never as a result; each hypothesis they motivate must name the pre-registered two-arm test that would establish it.
+8. Limitations and threats to validity: world provenance (derived vs harvested vs published), sample dependence, unresolved competing explanations, measurement construct validity, and generalization beyond the tested objects and conditions. Name missing replication and held-out transfer explicitly.
 9. Attested vs draft: a short table of which statements are attested by the fact sheet and which are this draft's proposals.
 
 ## What the experiment design must contain (Markdown)
@@ -180,8 +180,14 @@ def gather_facts(workspace: Path, idea_dir: Path, card_id: str, *, catalog_root:
     probe = _json(cand / "probe.json")
     metrics = _json(cand / "metrics.json")
     host = _json(cand / "host_run.json")
-    world_manifest = _json(workspace / "world" / "world.json")
-    world_payload_summary = _world_summary(workspace / "world" / "data" / "world.json")
+    registered_world = protocol.get("world")
+    world_manifest = (dict(registered_world) if isinstance(registered_world, dict) and registered_world
+                      else _json(workspace / "world" / "world.json"))
+    scientific_scope = _registered_scientific_scope(cand, protocol, probe, world_manifest)
+    world_payload_summary = _world_summary(
+        cand / "probe" / "execution" / "data" / "world.json"
+        if registered_world else workspace / "world" / "data" / "world.json"
+    )
     facts: dict[str, Any] = {
         "topic": str(protocol.get("topic") or _text(workspace / "topic.txt")).strip(),
         "card_id": card_id,
@@ -207,8 +213,12 @@ def gather_facts(workspace: Path, idea_dir: Path, card_id: str, *, catalog_root:
             for k in (
                 "kind", "verdict", "treatment", "control", "measure", "expected_direction",
                 "alternative", "mechanism_identified", "ablation_required", "separation", "margin",
+                "status", "execution_status", "epistemic", "world_id", "world_digest",
+                "experiment_digest", "evidence_id", "cannot_corroborate", "claim_consistent",
+                "scope_gap", "scoped_verdict", "supports_scope", "prohibited_inferences",
             )
         },
+        "scientific_scope": scientific_scope,
         "probe_attempts": probe.get("attempts") or [],
         "metrics": metrics,
         "host_run": {k: host.get(k) for k in ("status", "verdict", "treatment", "control", "kind") if k in host},
@@ -235,6 +245,74 @@ def gather_facts(workspace: Path, idea_dir: Path, card_id: str, *, catalog_root:
         "evidence_grid": _json(idea_dir / "refine-logs" / "EVIDENCE_GRID.json"),
     }
     return facts
+
+
+def _registered_scientific_scope(cand: Path, protocol: dict[str, Any], probe: dict[str, Any],
+                                world: dict[str, Any]) -> dict[str, Any]:
+    """Derive the writing ceiling from registration files, never saved facts.
+
+    Legacy incomplete registrations remain writable as speculative proposals;
+    explicit identity conflicts refuse synthesis. A WORLD arithmetic result
+    alone cannot establish its claim or a mechanism.
+    """
+    from .evidence import sha256_text
+
+    identity_keys = ("experiment_digest", "world_digest", "data_digest", "evidence_id")
+    for key in identity_keys:
+        if protocol.get(key) and probe.get(key) and protocol[key] != probe[key]:
+            raise PaperError(f"registered {key} differs from probe evidence")
+    if probe.get("protocol_digest") and sha256_text((cand / "protocol.json").read_text()) != probe["protocol_digest"]:
+        raise PaperError("registered protocol digest differs from probe evidence")
+    if protocol.get("experiment_digest"):
+        source = cand / "experiment.py"
+        if not source.is_file() or sha256_text(source.read_text()) != protocol["experiment_digest"]:
+            raise PaperError("registered experiment source differs from its digest")
+    if world.get("digest") and protocol.get("world_digest") and world["digest"] != protocol["world_digest"]:
+        raise PaperError("registered world metadata differs from its digest")
+    if world.get("id") and probe.get("world_id") and world["id"] != probe["world_id"]:
+        raise PaperError("registered world identity differs from probe evidence")
+    identity_ok = bool(all(protocol.get(key) and protocol.get(key) == probe.get(key) for key in identity_keys)
+                       and probe.get("protocol_digest") and world.get("id") == probe.get("world_id")
+                       and world.get("digest") == protocol.get("world_digest"))
+    generated = any(str(probe.get(key) or "").upper() in {"GENERATED", "SYNTHETIC"}
+                    for key in ("kind", "probe_kind", "epistemic"))
+    generated = generated or str(world.get("provenance") or "").lower() in {"generated", "synthetic", "constructed"}
+    ran = (probe.get("execution_status") or probe.get("status")) == "ran"
+    world_evidence = bool(not generated and probe.get("epistemic") == "WORLD" and probe.get("attested") is True)
+    gaps = [str(value) for value in probe.get("validation_gaps") or []]
+    if not identity_ok:
+        gaps.append("complete_registration_identity_required")
+    if not world_evidence:
+        gaps.append("attested_WORLD_evidence_required")
+    if not ran:
+        gaps.append("executed_measurement_required")
+    claim_consistent = bool(identity_ok and world_evidence and ran and probe.get("claim_consistent") is True)
+    if not claim_consistent:
+        gaps.append(str(probe.get("scope_gap") or "claim_scope_not_established"))
+    if probe.get("ablation_required"):
+        gaps.append("registered_competing_mechanism_ablation")
+    cannot = bool(probe.get("cannot_corroborate") or gaps or probe.get("dv_blind") or probe.get("world_consumed") is False)
+    prohibited = list(dict.fromkeys(str(value) for value in probe.get("prohibited_inferences") or []))
+    return {
+        "basis": "registered_protocol_and_probe", "registration_identity_ok": identity_ok,
+        "evidence_id": protocol.get("evidence_id", ""), "world_id": world.get("id", ""),
+        "world_digest": protocol.get("world_digest", ""),
+        "experiment_digest": protocol.get("experiment_digest", ""),
+        "epistemic": "WORLD" if world_evidence else "GENERATED",
+        "cannot_corroborate": cannot, "claim_consistent": claim_consistent,
+        "scope_gap": str(probe.get("scope_gap") or (gaps[0] if gaps else "")),
+        "validation_gaps": list(dict.fromkeys(gaps)),
+        "literature_checked": probe.get("literature_checked") is True,
+        "mechanism_validated": bool(not cannot and protocol.get("discriminator_registered") is True
+                                    and probe.get("mechanism_validated")),
+        "causal_scope": "unestablished" if cannot else str(probe.get("causal_scope") or "unestablished"),
+        "replication_required": probe.get("replication_required", True) is not False,
+        "scoped_verdict": str(probe.get("scoped_verdict") or "unestablished"),
+        "supports_scope": [] if cannot else list(probe.get("supports_scope") or []),
+        "prohibited_inferences": prohibited,
+        "claim_strength": "unconfirmed" if cannot else "within_registered_test_only",
+        "arithmetic_verdict": str(probe.get("verdict") or "unavailable"),
+    }
 
 
 def _exploratory(catalog_root: Path | None, world_id: str) -> list[dict[str, Any]]:
@@ -332,6 +410,7 @@ def _write(
     *,
     lang: str,
 ) -> dict[str, Any]:
+    _guard_draft_scope(facts, draft)
     out = idea_dir / "paper"
     out.mkdir(parents=True, exist_ok=True)
     allowed = {str(p["id"]) for p in facts.get("verified_papers", []) if p.get("id")}
@@ -413,6 +492,38 @@ def _write(
     return record
 
 
+def _guard_draft_scope(facts: dict[str, Any], draft: dict[str, Any]) -> None:
+    """Reject explicit claim-strength escalation without another model judge."""
+    scope = facts.get("scientific_scope") or {}
+    cannot = bool(scope.get("cannot_corroborate"))
+    prohibited = {str(value).lower() for value in scope.get("prohibited_inferences") or []}
+    if not cannot and not prohibited:
+        return
+    for hypothesis in draft.get("hypotheses") or []:
+        if cannot and isinstance(hypothesis, dict) and str(hypothesis.get("evidence") or "").lower() in {
+            "supports", "confirmed", "verified", "corroborated", "proven",
+        }:
+            raise PaperError("draft exceeds registered scientific scope: unconfirmed hypothesis labelled supported")
+    prose = "\n".join(str(draft.get(key) or "") for key in (
+        "title", "abstract", "proposal_markdown", "experiment_design_markdown",
+    ))
+    assertion = (
+        r"\b(?:we|(?:these\s+|our\s+|the\s+)?(?:results?|findings?|experiments?))\s+"
+        r"(?:confirm|prove|establish|demonstrate)(?:s|d)?\b|"
+        r"\b(?:mechanism|hypothesis|claim)\s+(?:is|was|has been)\s+(?:confirmed|verified|proven|validated)\b|"
+        r"(?:我们|本研究|这些结果|实验结果)(?:已经|已)?(?:证明|证实|确认)"
+    )
+    for sentence in re.split(r"[.!?。！？\n]", prose):
+        if not re.search(assertion, sentence, re.IGNORECASE):
+            continue
+        forbidden = (bool(prohibited & {"causal", "intervention"})
+                     and bool(re.search(r"\bcausal|\bintervention|因果|干预", sentence, re.IGNORECASE)))
+        forbidden = forbidden or ("mechanism" in prohibited
+                                  and bool(re.search(r"\bmechanism|机制", sentence, re.IGNORECASE)))
+        if cannot or forbidden:
+            raise PaperError("draft exceeds registered scientific scope: confirmation claim without corroborating evidence")
+
+
 def _header(card_id: str, facts: dict[str, Any], world: dict[str, Any], reviews: list[dict[str, Any]], lang: str, draft: dict[str, Any]) -> str:
     probe = facts.get("probe") or {}
     status = (facts.get("ladder_status") or {}).get("status") or "speculative"
@@ -422,7 +533,7 @@ def _header(card_id: str, facts: dict[str, Any], world: dict[str, Any], reviews:
             f"# {title}" if title else f"# 研究方案草稿 `{card_id}`",
             "",
             "> **DRAFT — 由模型从本场 attested 事实表写成，不是结果，不是发现。** 梯子状态不因本文改变。",
-            f"> 事实基础：主张 `{card_id}`；世界 `{world.get('id')}`（schema `{world.get('schema')}`，provenance `{world.get('provenance') or 'published'}`）；"
+            f"> 事实基础：主张 `{card_id}`；世界 `{world.get('id')}`（schema `{world.get('schema')}`，provenance `{world.get('provenance') or 'unknown'}`）；"
             f"探针 kind `{probe.get('kind')}`，判决 `{probe.get('verdict')}`；梯子 `{status}`。",
             f"> 引用只允许事实表内已验证论文；`paper/AUDIT.md` 列出被改写的引用与未见于事实表的数字。评审轮次 {len(reviews)}，末轮分 {reviews[-1].get('score') if reviews else '—'}/10（同模型意见，不是证据）。",
             "",
@@ -432,11 +543,16 @@ def _header(card_id: str, facts: dict[str, Any], world: dict[str, Any], reviews:
             f"# {title}" if title else f"# Research proposal draft `{card_id}`",
             "",
             "> **DRAFT — written by a model from this mission's attested fact sheet. Not a result, not a discovery.** The ladder does not move because of this file.",
-            f"> Facts: claim `{card_id}`; world `{world.get('id')}` (schema `{world.get('schema')}`, provenance `{world.get('provenance') or 'published'}`); "
+            f"> Facts: claim `{card_id}`; world `{world.get('id')}` (schema `{world.get('schema')}`, provenance `{world.get('provenance') or 'unknown'}`); "
             f"probe kind `{probe.get('kind')}`, verdict `{probe.get('verdict')}`; ladder `{status}`.",
             f"> Citations only from verified papers in the fact sheet; see `paper/AUDIT.md`. Reviewer rounds {len(reviews)}, last score {reviews[-1].get('score') if reviews else '—'}/10 (same-model opinion, not evidence).",
             "",
         ]
+    scope = facts.get("scientific_scope") or {}
+    lines.extend([
+        "> Scientific scope / 科学范围: " + json.dumps(scope, ensure_ascii=False, sort_keys=True),
+        "",
+    ])
     return "\n".join(lines) + "\n"
 
 
